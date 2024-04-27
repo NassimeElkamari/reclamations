@@ -1,5 +1,8 @@
-// ignore_for_file: file_names, prefer_const_constructors
 
+
+// ignore_for_file: prefer_const_constructors
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,6 +21,7 @@ class SignupPage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
+      
           icon: Icon(
             Icons.arrow_back_ios,
             size: 20,
@@ -97,7 +101,10 @@ class SignupPage extends StatelessWidget {
                   const Text("Already have an account?"),
                   GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/LoginPage');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
                       },
                       child:  const Text(
                         " Login ",
