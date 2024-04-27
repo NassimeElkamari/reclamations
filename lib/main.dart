@@ -1,8 +1,12 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+
+
+void main() async{
+
+    runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +24,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      home:WelcomeScreen(),
+      home:SignInEnseignant(),
 
  
     );

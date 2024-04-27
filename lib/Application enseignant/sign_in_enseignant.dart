@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,8 @@ class SignInEnseignant extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInEnseignant> {
+  late String email;
+  late String password;
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
   @override
@@ -78,6 +82,9 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 30.0,
                       ),
                       TextFormField(
+                        onChanged: (value) {
+                          email=value;
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
@@ -114,6 +121,9 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 25.0,
                       ),
                       TextFormField(
+                        onChanged: (value) {
+                          password=value;
+                        },
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
@@ -196,6 +206,7 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
+                            /*
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -207,10 +218,14 @@ class _SignInScreenState extends State<SignInEnseignant> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text(
-                                        'Please agree to the processing of personal data')),
-                              );
-                            }
-                          },
+                                        'Please agree to the processing of personal data')
+                                        ),
+                                        
+                              );*/
+                              print(email);
+                              print(password);
+                            },
+                          
                           child: const Text('Sign up'),
                         ),
                       ),

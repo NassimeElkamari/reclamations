@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "542494010671",
+    "project_id": "final-pfe-project",
+    "storage_bucket": "final-pfe-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542494010671:android:d0cdcc52b1b5a47fe645da",
+        "android_client_info": {
+          "package_name": "com.example.application_gestion_des_reclamations_pfe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuUe4qAerlbV9Nbhdk2LaSxmj0SDUveXo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
