@@ -1,5 +1,6 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/AjouterReclamation.dart';
 import 'package:flutter/material.dart';
 
 
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      home:SignInEnseignant(),
+      home:AjouterReclamation(),
 
  
     );

@@ -102,6 +102,7 @@ class Etudiant_details extends StatelessWidget {
                                 ),
                                 Icon(Icons.badge_outlined)
                               ],
+                              
                             ),
                             decoration: BoxDecoration(
                               color: Colors.grey,

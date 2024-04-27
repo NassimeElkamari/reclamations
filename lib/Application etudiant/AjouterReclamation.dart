@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 
 class AjouterReclamation extends StatefulWidget {
@@ -261,6 +263,26 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
             ),
 
             //entrer le professor
+
+            //button ajouter 
+          Row(
+            children: [
+              Container(
+                width:120,
+                height:60,
+                child: ElevatedButton(
+                  onPressed: (){},
+                 child: Text("Ajouter")
+                 ),
+              ),
+               SizedBox(width: 30,),
+
+              ElevatedButton(
+                onPressed: (){},
+               child: Text("Ajouter")
+               )
+            ],
+          )
            
           ],
         ),
