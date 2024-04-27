@@ -277,10 +277,14 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
               ),
                SizedBox(width: 30,),
 
-              ElevatedButton(
-                onPressed: (){},
-               child: Text("Ajouter")
-               )
+              Container(
+                width:120,
+                height:60,
+                child: ElevatedButton(
+                  onPressed: (){},
+                 child: Text("Ajouter")
+                 ),
+              ),
             ],
           )
            
