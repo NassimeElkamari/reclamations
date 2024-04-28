@@ -99,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                     email: email.text,
                     password: password.text,
                   );
-                  Navigator.of(context).pushReplacementNamed("Login");
+                  Navigator.of(context).pushReplacementNamed(" HomeEtudiant");
 
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'weak-password') {
