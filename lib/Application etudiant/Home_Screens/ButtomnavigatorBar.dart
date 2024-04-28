@@ -23,13 +23,15 @@ class _NavigatorBarEtudiantState extends State<NavigatorBarEtudiant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 168, 198, 255),
+      extendBody: true,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Color.fromARGB(255, 168, 198, 255),
-        color: Color.fromARGB(255, 225, 235, 253),
+        backgroundColor: Colors.transparent,
+        color: Color.fromARGB(255, 88, 146, 255),
         height: 60,
         animationDuration: Duration(milliseconds: 300),
         index: _selecedIndex,
+        
         onTap: (index) {
           setState(() {
             _selecedIndex = index;
