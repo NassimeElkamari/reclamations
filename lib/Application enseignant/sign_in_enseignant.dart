@@ -2,6 +2,7 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInEnseignant extends StatefulWidget {
@@ -12,8 +13,10 @@ class SignInEnseignant extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInEnseignant> {
-  late String email;
-  late String password;
+  
+
+
+
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
   @override
@@ -82,8 +85,9 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 30.0,
                       ),
                       TextFormField(
+                       
                         onChanged: (value) {
-                          email=value;
+                          //_emailController=value;
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -121,8 +125,9 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 25.0,
                       ),
                       TextFormField(
+                      
                         onChanged: (value) {
-                          password=value;
+                         // password=value;
                         },
                         obscureText: true,
                         obscuringCharacter: '*',
@@ -205,7 +210,8 @@ class _SignInScreenState extends State<SignInEnseignant> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: 
+                            (){},
                             /*
                             if (_formSignInKey.currentState!.validate() &&
                                 rememberPassword) {
@@ -222,9 +228,7 @@ class _SignInScreenState extends State<SignInEnseignant> {
                                         ),
                                         
                               );*/
-                              print(email);
-                              print(password);
-                            },
+                              
                           
                           child: const Text('Sign up'),
                         ),

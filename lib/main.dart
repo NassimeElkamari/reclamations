@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/authentification.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/AjouterReclamation.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Login.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
 
-      home:LoginPage(),
+      home:Authentification(),
 
  
       
