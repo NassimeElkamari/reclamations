@@ -55,8 +55,6 @@ List<Reclamation> reclamations = [
 
 
 
-
-
 /*
 // Utilisation d'une variable statique pour suivre le dernier ID utilisé
 int _lastId = 0;

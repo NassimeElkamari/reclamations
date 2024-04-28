@@ -1,4 +1,10 @@
 {
+<<<<<<< HEAD
     "java.configuration.updateBuildConfiguration": "interactive",
     "cmake.sourceDirectory": "C:/programmation/pfe/application_gestion_des_reclamations_pfe/linux"
 }
+=======
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cSpell.words": ["Signup", "textformfield"]
+}
+>>>>>>> 07f3836b3a34ceef0e21bccd3176eee9b6a7b4a1

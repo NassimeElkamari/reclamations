@@ -4,9 +4,10 @@
 
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
 import 'package:flutter/material.dart';
-class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
+class ForgotPasswordEtudiant extends StatelessWidget {
+  const ForgotPasswordEtudiant({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class ForgotPassword extends StatelessWidget {
             onPressed: (){
               Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignInEnseignant()),
+                    MaterialPageRoute(builder: (context) => SignUp()),
                   );
             }, 
             icon: Icon(Icons.arrow_back,color: Colors.white70,)),
@@ -109,19 +110,19 @@ class ForgotPassword extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,   //au centre 
                       children: [
                         Text(
-                          "Doesn't active your account yet ? ",
+                          "Doesn't have account yet ? ",
                            style: TextStyle(
                             color: Color.fromARGB(255, 12, 25, 80),
                           fontSize: 18
                         ),
                         ),
                         TextButton(
-                          onPressed: (){/*Navigator.pushReplacement(      // quand je click sur sign up  il va me donner la âge sign in 
+                          onPressed: (){Navigator.pushReplacement(      // quand je click sur sign up  il va me donner la âge sign in 
                               context, 
-                               MaterialPageRoute(builder: (context) =>const SignInEnseignant()
+                               MaterialPageRoute(builder: (context) =>const SignUp()
                                 
                                ),
-                              );*/},
+                              );},
                            child:   Text(
                             'Sign Up',
                             style: TextStyle(
