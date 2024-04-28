@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ensHomePage extends StatefulWidget {
@@ -137,15 +138,15 @@ class _ensHomePageState extends State<ensHomePage> {
             ListTile(
               title: Text('Déconnexion'),
               trailing: Icon(Icons.login),
-              onTap: () {
-                // Action à effectuer lors du clic sur Déconnexion
+              onTap: ()  async {await FirebaseAuth.instance.signOut();
+                
               },
             ),
             ListTile(
               title: Text('Paramètres'),
               trailing: Icon(Icons.settings),
-              onTap: () {
-                // Action à effectuer lors du clic sur Paramètres
+              onTap: ()  {
+                
               },
             ),
           ],

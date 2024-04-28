@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/attende.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/custombuttonauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/customlogoauth.dart';
@@ -98,12 +99,11 @@ class _SignUpState extends State<SignUp> {
                       .createUserWithEmailAndPassword(
                     email: email.text,
                     password: password.text,
-                  );
-                  Navigator.of(context).pushReplacementNamed(" HomeEtudiant");
-
+                  );   Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminWaiting ()));
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'weak-password') {
                     print('The password provided is too weak.');
+                  
                   } else if (e.code == 'email-already-in-use') {
                     print('The account already exists for that email.');
                   }
