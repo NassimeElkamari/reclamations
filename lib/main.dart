@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
     'HomeEnseignant': (context) => HomeEnseignant(),
     'LoginEnseignant': (context) => SignInEnseignant(),
-    'HomeEtudiant': (context) => HomeEtudiant(),
+    'HomeEtudiant': (context) => NavigatorBarEtudiant(),
         },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
