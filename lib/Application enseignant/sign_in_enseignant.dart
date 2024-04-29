@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, avoid_single_cascade_in_expression_statements
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,8 @@ class SignInEnseignant extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInEnseignant> {
-  
-
-
+  TextEditingController emailAddress = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
@@ -35,8 +35,10 @@ class _SignInScreenState extends State<SignInEnseignant> {
               ),
               IconButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WelcomeScreen()));
                   },
                   icon: Icon(
                     Icons.arrow_back,
@@ -85,7 +87,7 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 30.0,
                       ),
                       TextFormField(
-                       
+                        controller: emailAddress,
                         onChanged: (value) {
                           //_emailController=value;
                         },
@@ -125,9 +127,9 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 25.0,
                       ),
                       TextFormField(
-                      
+                        controller: password,
                         onChanged: (value) {
-                         // password=value;
+                          // password=value;
                         },
                         obscureText: true,
                         obscuringCharacter: '*',
@@ -192,7 +194,8 @@ class _SignInScreenState extends State<SignInEnseignant> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ForgotPasswordOld()));
+                                      builder: (context) =>
+                                          ForgotPasswordOld()));
                             },
                             child: Text(
                               'Forget password?',
@@ -210,28 +213,45 @@ class _SignInScreenState extends State<SignInEnseignant> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: 
-                            (){},
-                            /*
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data')
-                                        ),
-                                        
-                              );*/
-                              
-                          
-                          child: const Text('Sign up'),
+                          onPressed: () async {
+                            
+                            try {
+                              final credential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: emailAddress.text,
+                                      password: password.text);
+                              Navigator.of(context)
+                                  .pushReplacementNamed("HomeEnseignant");
+                            } on FirebaseAuthException catch (e) {
+                              String errorMessage = 'An error occurred';
+                              if (e.code == 'user-not-found') {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.rightSlide,
+                                  title: 'Error',
+                                  desc: 'No user found for that email.',
+                                  btnCancelOnPress: () {},
+                                  btnOkOnPress: () {},
+                                ).show();
+                              } else if (e.code == 'wrong-password') {
+                                errorMessage ='Wrong password provided for that user.';
+                              }
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                title: 'Error',
+                                desc: 'No user found for that email.',
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: () {},
+                              ).show();
+                            }
+                          },
+                          child: Text('Sign In'),
                         ),
+
+                        
                       ),
                       const SizedBox(
                         height: 25.0,

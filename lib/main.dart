@@ -2,6 +2,7 @@
 
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
@@ -24,9 +25,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+    'HomeEnseignant': (context) => HomeEnseignant(),
+    'LoginEnseignant': (context) => SignInEnseignant(),
+    'HomeEtudiant': (context) => HomeEtudiant(),
+        },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-       home: NavigatorBarEtudiant(),
+       home: SignInEnseignant(),
     );
   }
 }
