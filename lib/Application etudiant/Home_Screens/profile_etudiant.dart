@@ -10,7 +10,7 @@ class _ListeReclamations_etudiantState extends State<ProfileEtudiant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 168, 198, 255),
+      backgroundColor: Color.fromARGB(255, 185, 255, 168),
      body: Center(child: Text("profile")),
     );
   }

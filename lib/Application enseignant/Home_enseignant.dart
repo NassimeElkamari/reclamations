@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 class HomeEnseignant extends StatefulWidget {
   const HomeEnseignant({super.key});
@@ -138,8 +139,9 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
             ListTile(
               title: Text('Déconnexion'),
               trailing: Icon(Icons.login),
-              onTap: () {
-                // Action à effectuer lors du clic sur Déconnexion
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil("LoginEnseignant", (route) => false);
               },
             ),
             ListTile(

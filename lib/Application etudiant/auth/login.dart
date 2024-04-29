@@ -1,10 +1,12 @@
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Forgot_password.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/custombuttonauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/customlogoauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/textformfield.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,143 +18,173 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<void> signIn() async {
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      // Si la connexion réussit, vous pouvez naviguer vers une autre page, par exemple
-      if (userCredential.user != null) {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeEtudiant ()));
-
-        // Navigation vers la page suivante
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Gestion des erreurs, par exemple afficher un message à l'utilisateur
-    }
-  }
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 0),
-                Row(
-                  children: [
-                    SizedBox(width: 5),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Color.fromARGB(179, 57, 33, 88),
-                      ),
-                    ),
-                  ],
-                ),
-                Center(
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 300,
-                    height: 210,
-                    padding: const EdgeInsets.only(top: 0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(70)
-                    ),
-                    child: Image.asset(
-                      "images/login.png",
-                      height: 230,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                Container(height: 20),
-                const Text("Login",
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                Container(height: 10),
-                const Text("Login To Continue Using The App",
-                    style: TextStyle(color: Color.fromARGB(255, 44, 36, 68))),
-                Container(height: 20),
-                const Text(
-                  "Email",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 10),
-                CustomTextForm(
-                  hinttext: "Enter Your Email",
-                  mycontroller: emailController,
-                  obscureText: false,
-                ),
-                Container(height: 10),
-                const Text(
-                  "Password",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 10),
-                CustomTextForm(
-                  hinttext: "Enter Your Password",
-                  mycontroller: passwordController,
-                  obscureText: true,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 20),
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ForgotPasswordEtudiant()),
-                      );
-                    },
-                    child: const Text(
-                      "Forgot Password ?",
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomButtonAuth(title: "Login", onPressed: signIn),
-                Container(height: 20),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
-                    );
-                  },
-                  child: const Center(
-                    child: Text.rich(TextSpan(children: [
-                      TextSpan(
-                        text: "Don't Have An Account ? ",
-                      ),
-                      TextSpan(
-                        text: "Signup",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 166, 134, 243),
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ])),
-                  ),
-                ),
-              ],
+        child: ListView(children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            SizedBox(
+              height: 0,
             ),
-          ],
-        ),
+              Row(
+            children: [
+              SizedBox(
+                width: 5,
+                
+              ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Color.fromARGB(179, 57, 33, 88),
+                  )),
+            ],
+          ),
+              
+              Center(
+                child: Container(
+                      alignment: Alignment.center,
+                      width: 300,
+                      height: 210,
+                      padding: const EdgeInsets.only(top: 0),
+                      decoration: BoxDecoration(
+                          
+                          borderRadius: BorderRadius.circular(70)),
+                      child: Image.asset(
+                        "images/login.png",
+                        height: 230,
+                         fit: BoxFit.fill,
+                      )
+                      ),
+              ),
+              Container(height: 20),
+              const Text("Login",
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+              Container(height: 10),
+              const Text("Login To Continue Using The App",
+                  style: TextStyle(color: Color.fromARGB(255, 44, 36, 68))),
+              Container(height: 20),
+              const Text(
+                "Email",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              Container(height: 10),
+              CustomTextForm(
+                  hinttext: "ُEnter Your Email", mycontroller: email,obscureText: false),
+              Container(height: 10),
+              const Text(
+                "Password",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              Container(height: 10),
+              CustomTextForm(
+                  hinttext: "ُEnter Your Password", mycontroller: password,obscureText: true),
+              Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 20),
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                   onTap: (){
+                     Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ForgotPasswordEtudiant()));
+                  },
+                  child: const Text(
+                    "Forgot Password ?",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          CustomButtonAuth(title: "login", onPressed: () async {
+
+            ///fonction login 
+
+            try {
+                              final credential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: email.text,
+                                      password: password.text);
+                              Navigator.of(context)
+                                  .pushReplacementNamed("HomeEtudiant");
+                            } on FirebaseAuthException catch (e) {
+                              String errorMessage = 'An error occurred';
+                              if (e.code == 'user-not-found') {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.rightSlide,
+                                  title: 'Error',
+                                  desc: 'No user found for that email.',
+                                  btnCancelOnPress: () {},
+                                  btnOkOnPress: () {},
+                                ).show();
+                              } else if (e.code == 'wrong-password') {
+                                errorMessage ='Wrong password provided for that user.';
+                              }
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                title: 'Error',
+                                desc: 'No user found for that email.',
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: () {},
+                              ).show();
+                            }
+            
+          }),
+          Container(height: 20),
+
+          /* MaterialButton(
+              height: 40,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              color: Colors.red[700],
+              textColor: Colors.white,
+              onPressed: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Login With Google  "),
+                  Image.asset(
+                    "images/4.png",
+                    width: 20,
+                  )
+                ],
+              )),*/
+          Container(height: 20),
+          // Text("Don't Have An Account ? Resister" , textAlign: TextAlign.center,)
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => SignUp()));
+            },
+            child: const Center(
+              child: Text.rich(TextSpan(children: [
+                TextSpan(
+                  text: "Don't Have An Account ? ",
+                ),
+                TextSpan(
+                    text: "Signup",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 166, 134, 243),
+                        fontWeight: FontWeight.bold)),
+              ])),
+            ),
+          )
+        ]),
       ),
     );
   }
