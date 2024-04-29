@@ -12,8 +12,8 @@ class HomeEtudiantBody extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          SizedBox(height: 30),
-          Container(
+         
+        /*  Container(
   margin: EdgeInsets.only(right: 18, left: 18),
   decoration: BoxDecoration(
     color: Color.fromARGB(255, 233, 106, 106),
@@ -21,7 +21,15 @@ class HomeEtudiantBody extends StatelessWidget {
   ),
   height: 250,
  // child:Image.asset("images/anonce.png",fit: BoxFit.cover,)
-),
+),*/
+
+
+        Container(
+
+           height: 100,
+           width: 100,
+          child: Image.asset("images/education (2).png")
+          ),
 
           SizedBox(height: 20),
 
