@@ -1,4 +1,5 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
-  "cSpell.words": ["Signup", "textformfield"]
+  "cmake.sourceDirectory": "C:/programmation/pfe/application_gestion_des_reclamations_pfe/linux",
+  "cSpell.words": ["Signup", "textformfield"],
 }

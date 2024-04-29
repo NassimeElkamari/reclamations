@@ -1,7 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_ens.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInEnseignant extends StatefulWidget {
@@ -12,10 +14,32 @@ class SignInEnseignant extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInEnseignant> {
-  late String email;
-  late String password;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      if (_formSignInKey.currentState!.validate()) {
+        UserCredential userCredential =
+            await _auth.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        // Si la connexion réussit, vous pouvez naviguer vers une autre page, par exemple
+        if (userCredential.user != null) {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>ensHomePage ()));
+          // Navigation vers la page suivante
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Gestion des erreurs, par exemple afficher un message à l'utilisateur
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,9 +106,7 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 30.0,
                       ),
                       TextFormField(
-                        onChanged: (value) {
-                          email=value;
-                        },
+                        controller: _emailController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
@@ -121,9 +143,7 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         height: 25.0,
                       ),
                       TextFormField(
-                        onChanged: (value) {
-                          password=value;
-                        },
+                        controller: _passwordController,
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
@@ -165,21 +185,7 @@ class _SignInScreenState extends State<SignInEnseignant> {
                         children: [
                           Row(
                             children: [
-                              /* Checkbox(
-                                value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
-                                },
-                                activeColor: Colors.pink,
-                              ),
-                              const Text(
-                                'Remember me',
-                                style: TextStyle(
-                                  color: Colors.black45,
-                                ),
-                              ),*/
+            
                             ],
                           ),
                           GestureDetector(
@@ -205,28 +211,8 @@ class _SignInScreenState extends State<SignInEnseignant> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            /*
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data')
-                                        ),
-                                        
-                              );*/
-                              print(email);
-                              print(password);
-                            },
-                          
-                          child: const Text('Sign up'),
+                          onPressed: _signInWithEmailAndPassword,
+                          child: const Text('Sign in'),
                         ),
                       ),
                       const SizedBox(

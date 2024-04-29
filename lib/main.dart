@@ -1,9 +1,21 @@
 /// ignore_for_file: unused_import
 
+// ignore_for_file: prefer_const_constructors, avoid_print, library_private_types_in_public_api, use_super_parameters
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_ens.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/attende.dart';
+
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +53,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
+
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {

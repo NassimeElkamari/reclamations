@@ -1,9 +1,15 @@
+
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/attende.dart';
+
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously, avoid_print
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Forgot_password.dart';
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/custombuttonauth.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/customlogoauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/textformfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,60 +37,88 @@ class _SignUpState extends State<SignUp> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(height: 50),
-              const CustomLogoAuth(),
-              Container(height: 20),
-              const Text("SignUp",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              Row(
+            children: [
+              SizedBox(
+                width: 10,
+              ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Color.fromARGB(179, 45, 11, 90),
+                  )),
+            ],
+          ),
+              
+              SizedBox(
+                  height: 10,
+              ),
+              
+              Center(
+                child: const Text("SignUp",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              ),
               Container(height: 10),
-              const Text("SignUp To Continue Using The App",
-                  style: TextStyle(color: Colors.grey)),
+              Center(
+                child: const Text("SignUp To Continue Using The App",
+                    style: TextStyle(color: Colors.grey)),
+              ),
               Container(height: 20),
               const Text(
                 "Nom ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              Container(height: 10),
-              CustomTextForm(hinttext: "ُEnter votre nom", mycontroller: nom),
+              Container(height: 8),
+              CustomTextForm(hinttext: "ُEnter votre nom", mycontroller: nom,obscureText: false),
               Container(height: 20),
               const Text(
                 "Prenom ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              Container(height: 10),
+              Container(height: 8),
               CustomTextForm(
-                  hinttext: "ُEnter votre prenom", mycontroller: Prenom),
+                  hinttext: "ُEnter votre prenom", mycontroller: Prenom,obscureText: false),
               Container(height: 20),
               const Text(
                 "Appoge ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              Container(height: 10),
+              Container(height: 8),
               CustomTextForm(
-                  hinttext: "ُEnter votre Appoge", mycontroller: Appoge),
+                  hinttext: "ُEnter votre Appoge", mycontroller: Appoge,obscureText: false),
               Container(height: 20),
               const Text(
                 "Email",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              Container(height: 10),
+              Container(height: 8),
               CustomTextForm(
-                  hinttext: "ُEnter Your Email", mycontroller: email),
-              Container(height: 10),
+                  hinttext: "ُEnter Your Email", mycontroller: email,obscureText: false),
+              Container(height: 8),
               const Text(
                 "Password",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              Container(height: 10),
+              Container(height: 8),
               CustomTextForm(
-                  hinttext: "ُEnter Your Password", mycontroller: password),
+                  hinttext: "ُEnter Your Password", mycontroller: password,obscureText: false),
               Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 20),
                 alignment: Alignment.topRight,
-                child: const Text(
-                  "Forgot Password ?",
-                  style: TextStyle(
-                    fontSize: 14,
+                child: GestureDetector(
+                  onTap: (){
+                     Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ForgotPasswordEtudiant()));
+                  },
+                  child: const Text(
+                    "Forgot Password ?",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
@@ -111,8 +145,7 @@ class _SignUpState extends State<SignUp> {
                   print(e);
                 }
               }),
-          Container(height: 20),
-          // Text("Don't Have An Account ? Resister" , textAlign: TextAlign.center,)
+          
           InkWell(
             onTap: () {
               Navigator.push(
@@ -126,7 +159,7 @@ class _SignUpState extends State<SignUp> {
                 TextSpan(
                     text: "Login",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 43, 119, 211),
+                        color: Color.fromARGB(255, 25, 5, 80),
                         fontWeight: FontWeight.bold)),
               ])),
             ),

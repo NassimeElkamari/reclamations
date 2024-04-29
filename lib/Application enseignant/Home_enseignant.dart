@@ -1,14 +1,14 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, camel_case_types, library_private_types_in_public_api, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+class HomeEnseignant extends StatefulWidget {
+  const HomeEnseignant({super.key});
 
-class ensHomePage extends StatefulWidget {
   @override
-  _ensHomePageState createState() => _ensHomePageState();
+  State<HomeEnseignant> createState() => _HomeEnseignantState();
 }
 
-class _ensHomePageState extends State<ensHomePage> {
+class _HomeEnseignantState extends State<HomeEnseignant> {
   final TextEditingController searchController = TextEditingController();
   bool isSearchClicked = false;
 
@@ -138,15 +138,15 @@ class _ensHomePageState extends State<ensHomePage> {
             ListTile(
               title: Text('Déconnexion'),
               trailing: Icon(Icons.login),
-              onTap: ()  async {await FirebaseAuth.instance.signOut();
-                
+              onTap: () {
+                // Action à effectuer lors du clic sur Déconnexion
               },
             ),
             ListTile(
               title: Text('Paramètres'),
               trailing: Icon(Icons.settings),
-              onTap: ()  {
-                
+              onTap: () {
+                // Action à effectuer lors du clic sur Paramètres
               },
             ),
           ],
