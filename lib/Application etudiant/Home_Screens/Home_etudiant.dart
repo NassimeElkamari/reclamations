@@ -41,6 +41,7 @@ class _HomeEtudiantState extends State<HomeEtudiant> {
 
   AppBar homeAppBar() {
     return AppBar(
+    
      backgroundColor: Color.fromARGB(255, 168, 198, 255),
        title: Center(
         child: Text(
@@ -59,15 +60,16 @@ class _HomeEtudiantState extends State<HomeEtudiant> {
             color: Colors.white,
            )
           ),
+           IconButton(
+          onPressed: (){}, 
+          icon: Icon(
+            Icons.notifications,
+            color: Colors.white,
+           )
+          ), 
         
        ],
-       leading: IconButton(
-        onPressed: (){}, 
-        icon:Icon(
-          Icons.menu,
-          color: Colors.white,
-          )
-        ),
+       
     );
   }
 }
