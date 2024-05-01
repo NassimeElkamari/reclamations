@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:flutter/material.dart';
 
 class AjouterReclamation extends StatefulWidget {
@@ -38,7 +39,10 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
                 children: [
                   IconButton(
                       //button pour retour a la page principale
-                      onPressed: () {},
+                      onPressed: () {
+                         Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()));
+                      },
                       icon: Icon(
                         Icons.arrow_back,
                         color: Colors.white,

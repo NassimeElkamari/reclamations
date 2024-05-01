@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-       home: SignInEnseignant(),
+       home: NavigatorBarEtudiant(),
     );
   }
 }
