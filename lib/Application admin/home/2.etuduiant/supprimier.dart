@@ -16,14 +16,12 @@ class _SuppEtudiantState extends State<SuppEtudiant> {
     String appoge = appogeController.text;
 
     if (appoge.isNotEmpty) {
-      // Rechercher l'étudiant dans la collection "etudiants" de Firestore
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('etudiants')
           .where('appoge', isEqualTo: appoge)
           .get();
 
       if (querySnapshot.docs.isEmpty) {
-        // Afficher un message d'erreur si aucun document correspondant n'est trouvé
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -42,13 +40,11 @@ class _SuppEtudiantState extends State<SuppEtudiant> {
           },
         );
       } else {
-        // Supprimer l'étudiant de la collection "etudiants" de Firestore
         await FirebaseFirestore.instance
             .collection('etudiants')
             .doc(querySnapshot.docs.first.id)
             .delete();
 
-        // Afficher un message de succès
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -69,7 +65,6 @@ class _SuppEtudiantState extends State<SuppEtudiant> {
         );
       }
 
-      // Effacer le champ de saisie après la suppression
       appogeController.clear();
       setState(() {
         errorMessage = '';
@@ -86,26 +81,64 @@ class _SuppEtudiantState extends State<SuppEtudiant> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Supprimer un étudiant'),
+        backgroundColor: Color.fromRGBO(89, 139, 231, 1),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: appogeController,
-              decoration: InputDecoration(
-                labelText: 'Numéro d\'appoge de l\'étudiant',
-                errorText: errorMessage.isNotEmpty ? errorMessage : null,
+      body: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromRGBO(206, 232, 250, 1),
+                  Color.fromRGBO(245, 245, 245, 1),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: supprimerEtudiant,
-              child: Text('Supprimer l\'étudiant'),
-            ),
-          ],
-        ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/background_image.jpg', // Chemin de l'image
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  controller: appogeController,
+                  decoration: InputDecoration(
+                    labelText: 'Numéro d\'appoge de l\'étudiant',
+                    errorText: errorMessage.isNotEmpty ? errorMessage : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: supprimerEtudiant,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.redAccent,
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text('Supprimer l\'étudiant'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

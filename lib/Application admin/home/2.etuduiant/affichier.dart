@@ -30,10 +30,18 @@ class AffichierEtud extends StatelessWidget {
           }
 
           return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+            scrollDirection: Axis.vertical,
             child: DataTable(
+              headingTextStyle:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              dataTextStyle: TextStyle(color: Colors.black),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+              ),
               columns: [
-                DataColumn(label: Text('Appoge')),
+                DataColumn(
+                  label: Text('Appoge'),
+                ),
                 // Ajoutez d'autres colonnes si nécessaire
               ],
               rows: snapshot.data!.docs.map((etudiant) {
