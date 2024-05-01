@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
     try {
       // Vérifier si l'apogée de l'étudiant existe dans la base de données
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('students')
+          .collection('etudiants')
           .where('appoge', isEqualTo: appoge.text)
           .get();
 
