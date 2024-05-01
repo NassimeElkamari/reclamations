@@ -1,15 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AffichierEtud extends StatefulWidget {
-  const AffichierEtud({super.key});
-
-  @override
-  State<AffichierEtud> createState() => _AffichierEtudState();
-}
-
-class _AffichierEtudState extends State<AffichierEtud> {
+class AffichierEtud extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Liste des étudiants'),
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('etudiants').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Erreur de chargement des données'),
+            );
+          }
+
+          if (snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text('Aucun étudiant trouvé'),
+            );
+          }
+
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text('Appoge')),
+                // Ajoutez d'autres colonnes si nécessaire
+              ],
+              rows: snapshot.data!.docs.map((etudiant) {
+                return DataRow(cells: [
+                  DataCell(Text(etudiant['appoge'])),
+                  // Ajoutez d'autres cellules pour d'autres champs d'information si nécessaire
+                ]);
+              }).toList(),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
