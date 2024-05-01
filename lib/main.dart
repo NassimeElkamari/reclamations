@@ -1,9 +1,6 @@
 /// ignore_for_file: unused_import
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/authenAdmin.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/homeAdmin.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/etudiant_details.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
