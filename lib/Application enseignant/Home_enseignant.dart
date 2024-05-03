@@ -1,9 +1,12 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/traiter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 class HomeEnseignant extends StatefulWidget {
-  const HomeEnseignant({super.key});
+  const HomeEnseignant({Key? key}) : super(key: key);
 
   @override
   State<HomeEnseignant> createState() => _HomeEnseignantState();
@@ -26,14 +29,17 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
         title: isSearchClicked
             ? Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 104, 126, 158),
+                  color: Color.fromARGB(255, 241, 243, 244),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: TextField(
@@ -42,11 +48,11 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                     // Gérez les changements de texte de recherche ici
                   },
                   decoration: InputDecoration(
-                    hintText: 'Search reclamtion...',
+                    hintText: 'Search...',
                     border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search, color: Colors.black),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: Icon(Icons.close, color: Colors.black),
                       onPressed: () {
                         setState(() {
                           searchController.clear();
@@ -56,13 +62,13 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   ),
                 ),
               )
-            : Text("Search"),
+            : Text("home", style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
             onPressed: () {
               _toggleSearch();
             },
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search, color: Colors.black),
           ),
         ],
       ),
@@ -82,7 +88,8 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text('Contenu de la réclamation...'),
-                trailing: Icon(Icons.arrow_forward),
+                trailing: Icon(Icons.arrow_forward,
+                    color: Color.fromARGB(255, 14, 118, 168)),
               ),
             ),
           );
@@ -94,16 +101,17 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 106, 187, 254),
+                color: Color.fromARGB(255, 14, 118, 168),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/profile_pic.jpg'),
-                  ),
+                      radius: 30,
+                      backgroundImage: AssetImage('assets/profile_pic.jpg'),
+                      
+                      ),
                   SizedBox(height: 10),
                   Text(
                     'Nom de l\'enseignant',
@@ -112,42 +120,43 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                       fontSize: 18,
                     ),
                   ),
-                  Text(
-                    'Adresse e-mail de l\'enseignant',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
                 ],
               ),
             ),
             ListTile(
-              title: Text('Réclamation pas traitée'),
-              trailing: Icon(Icons.schedule),
+              title: Text('Réclamation pas traitée',
+                  style: TextStyle(color: Colors.black)),
+              trailing: Icon(Icons.schedule, color: Colors.black),
               onTap: () {
-                pastraite();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Traiter()));
               },
             ),
             ListTile(
-              title: Text('Réclamation traitée'),
-              trailing: Icon(Icons.check),
+              title: Text('Réclamation traitée',
+                  style: TextStyle(color: Colors.black)),
+              trailing: Icon(Icons.check, color: Colors.black),
               onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Traiter()));
                 // Action à effectuer lors du clic sur Réclamation traitée
               },
             ),
             ListTile(
-              title: Text('Déconnexion'),
-              trailing: Icon(Icons.login),
+              title: Text('Déconnexion', style: TextStyle(color: Colors.black)),
+              trailing: Icon(Icons.login, color: Colors.black),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil("LoginEnseignant", (route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "LoginEnseignant", (route) => false);
               },
             ),
             ListTile(
-              title: Text('Paramètres'),
-              trailing: Icon(Icons.settings),
+              title: Text('Paramètres', style: TextStyle(color: Colors.black)),
+              trailing: Icon(Icons.settings, color: Colors.black),
               onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => setting()));
                 // Action à effectuer lors du clic sur Paramètres
               },
             ),

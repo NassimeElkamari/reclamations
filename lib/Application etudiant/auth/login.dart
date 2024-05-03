@@ -2,9 +2,9 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Forgot_password.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/custombuttonauth.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/customlogoauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/textformfield.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,42 +30,40 @@ class _LoginState extends State<Login> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            SizedBox(
-              height: 0,
-            ),
-              Row(
-            children: [
               SizedBox(
-                width: 5,
-                
+                height: 0,
               ),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Color.fromARGB(179, 57, 33, 88),
-                  )),
-            ],
-          ),
-              
+              Row(
+                children: [
+                  SizedBox(
+                    width: 5,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WelcomeScreen()));
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Color.fromARGB(179, 57, 33, 88),
+                      )),
+                ],
+              ),
               Center(
                 child: Container(
-                      alignment: Alignment.center,
-                      width: 300,
-                      height: 210,
-                      padding: const EdgeInsets.only(top: 0),
-                      decoration: BoxDecoration(
-                          
-                          borderRadius: BorderRadius.circular(70)),
-                      child: Image.asset(
-                        "images/login.png",
-                        height: 230,
-                         fit: BoxFit.fill,
-                      )
-                      ),
+                    alignment: Alignment.center,
+                    width: 300,
+                    height: 210,
+                    padding: const EdgeInsets.only(top: 0),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(70)),
+                    child: Image.asset(
+                      "images/login.png",
+                      height: 230,
+                      fit: BoxFit.fill,
+                    )),
               ),
               Container(height: 20),
               const Text("Login",
@@ -80,7 +78,9 @@ class _LoginState extends State<Login> {
               ),
               Container(height: 10),
               CustomTextForm(
-                  hinttext: "ُEnter Your Email", mycontroller: email,obscureText: false),
+                  hinttext: "ُEnter Your Email",
+                  mycontroller: email,
+                  obscureText: false),
               Container(height: 10),
               const Text(
                 "Password",
@@ -88,14 +88,18 @@ class _LoginState extends State<Login> {
               ),
               Container(height: 10),
               CustomTextForm(
-                  hinttext: "ُEnter Your Password", mycontroller: password,obscureText: true),
+                  hinttext: "ُEnter Your Password",
+                  mycontroller: password,
+                  obscureText: true),
               Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 20),
                 alignment: Alignment.topRight,
                 child: GestureDetector(
-                   onTap: (){
-                     Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ForgotPasswordEtudiant()));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPasswordEtudiant()));
                   },
                   child: const Text(
                     "Forgot Password ?",
@@ -107,44 +111,41 @@ class _LoginState extends State<Login> {
               ),
             ],
           ),
-          CustomButtonAuth(title: "login", onPressed: () async {
-
-            ///fonction login 
-
-            try {
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                      email: email.text,
-                                      password: password.text);
-                              Navigator.of(context)
-                                  .pushReplacementNamed("HomeEtudiant");
-                            } on FirebaseAuthException catch (e) {
-                              String errorMessage = 'An error occurred';
-                              if (e.code == 'user-not-found') {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  title: 'Error',
-                                  desc: 'No user found for that email.',
-                                  btnCancelOnPress: () {},
-                                  btnOkOnPress: () {},
-                                ).show();
-                              } else if (e.code == 'wrong-password') {
-                                errorMessage ='Wrong password provided for that user.';
-                              }
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.rightSlide,
-                                title: 'Error',
-                                desc: 'No user found for that email.',
-                                btnCancelOnPress: () {},
-                                btnOkOnPress: () {},
-                              ).show();
-                            }
-            
-          }),
+          CustomButtonAuth(
+              title: "login",
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeEtudiant()));
+                try {
+                  final credential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                          email: email.text, password: password.text);
+                } on FirebaseAuthException catch (e) {
+                  String errorMessage = 'An error occurred';
+                  if (e.code == 'user-not-found') {
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.error,
+                      animType: AnimType.rightSlide,
+                      title: 'Error',
+                      desc: 'No user found for that email.',
+                      btnCancelOnPress: () {},
+                      btnOkOnPress: () {},
+                    ).show();
+                  } else if (e.code == 'wrong-password') {
+                    errorMessage = 'Wrong password provided for that user.';
+                  }
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.error,
+                    animType: AnimType.rightSlide,
+                    title: 'Error',
+                    desc: 'No user found for that email.',
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: () {},
+                  ).show();
+                }
+              }),
           Container(height: 20),
 
           /* MaterialButton(
