@@ -3,10 +3,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class setting extends StatelessWidget {
-  const setting({super.key});
+class Setting extends StatelessWidget {
+  const Setting({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +27,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-         decoration: const BoxDecoration(
-         gradient: LinearGradient(
-           colors: [
-             Color.fromARGB(255, 99, 147, 250),
-             Color.fromARGB(255, 209, 116, 209),
-           ]
-         )
-       ),
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color.fromARGB(255, 114, 117, 122),
+          Color.fromARGB(255, 172, 164, 172),
+        ])),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -48,17 +44,21 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
               itemProfile('Name', 'Elmhouti Abderrahim', CupertinoIcons.person),
               const SizedBox(height: 10),
-              itemProfile('Address', 'abc address, xyz city', CupertinoIcons.location),
+              itemProfile(
+                  'Address', 'abc address, xyz city', CupertinoIcons.location),
               const SizedBox(height: 10),
-              itemProfile('Email', 'ElmahoutiAbderrahim@gmail.com', CupertinoIcons.mail),
-              const SizedBox(height: 20,),
+              itemProfile('Email', 'ElmahoutiAbderrahim@gmail.com',
+                  CupertinoIcons.mail),
+              const SizedBox(
+                height: 20,
+              ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:  () async {
+                  onPressed: () async {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                      "LoginEnseignant", (route) => false);
+                        "LoginEnseignant", (route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(15),
@@ -83,10 +83,8 @@ class ProfileScreen extends StatelessWidget {
                 offset: Offset(0, 5),
                 color: Colors.deepOrange.withOpacity(.2),
                 spreadRadius: 2,
-                blurRadius: 10
-            )
-          ]
-      ),
+                blurRadius: 10)
+          ]),
       child: ListTile(
         title: Text(title),
         subtitle: Text(subtitle),

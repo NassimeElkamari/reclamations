@@ -112,14 +112,19 @@ class _LoginState extends State<Login> {
             ],
           ),
           CustomButtonAuth(
-              title: "login",
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeEtudiant()));
+            title: "login",
+            onPressed: () async {
+              if (email.text.isNotEmpty && password.text.isNotEmpty) {
                 try {
-                  final credential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: email.text, password: password.text);
+                  final credential =
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email.text,
+                    password: password.text,
+                  );
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeEtudiant()),
+                  );
                 } on FirebaseAuthException catch (e) {
                   String errorMessage = 'An error occurred';
                   if (e.code == 'user-not-found') {
@@ -140,31 +145,19 @@ class _LoginState extends State<Login> {
                     dialogType: DialogType.error,
                     animType: AnimType.rightSlide,
                     title: 'Error',
-                    desc: 'No user found for that email.',
+                    desc: errorMessage,
                     btnCancelOnPress: () {},
                     btnOkOnPress: () {},
                   ).show();
                 }
-              }),
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Veuillez remplir tous les champs'),
+                ));
+              }
+            },
+          ),
           Container(height: 20),
-
-          /* MaterialButton(
-              height: 40,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              color: Colors.red[700],
-              textColor: Colors.white,
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Login With Google  "),
-                  Image.asset(
-                    "images/4.png",
-                    width: 20,
-                  )
-                ],
-              )),*/
           Container(height: 20),
           // Text("Don't Have An Account ? Resister" , textAlign: TextAlign.center,)
           InkWell(

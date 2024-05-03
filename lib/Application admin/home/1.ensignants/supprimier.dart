@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SupprimierEns extends StatefulWidget {
-  const SupprimierEns({super.key});
+class SupprimierEn extends StatefulWidget {
+  const SupprimierEn({super.key});
 
   @override
-  State<SupprimierEns> createState() => _SupprimierEnsState();
+  State<SupprimierEn> createState() => _SupprimierEnState();
 }
 
-class _SupprimierEnsState extends State<SupprimierEns> {
+class _SupprimierEnState extends State<SupprimierEn> {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();

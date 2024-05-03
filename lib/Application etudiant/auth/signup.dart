@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
@@ -25,54 +25,62 @@ class _SignUpState extends State<SignUp> {
   TextEditingController password = TextEditingController();
 
   Future<void> signUp() async {
-    try {
-      // Vérifier si l'apogée de l'étudiant existe dans la base de données
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('etudiants')
-          .where('appoge', isEqualTo: appoge.text)
-          .get();
+    if (appoge.text.isNotEmpty &&
+        email.text.isNotEmpty &&
+        password.text.isNotEmpty) {
+      try {
+        // Vérifier si l'apogée de l'étudiant existe dans la base de données
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('etudiants')
+            .where('appoge', isEqualTo: appoge.text)
+            .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        // Créer le compte de l'utilisateur avec email et mot de passe
-        final credential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email.text,
-          password: password.text,
-        );
+        if (querySnapshot.docs.isNotEmpty) {
+          // Créer le compte de l'utilisateur avec email et mot de passe
+          final credential =
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email.text,
+            password: password.text,
+          );
 
-        // Enregistrer les informations de l'utilisateur dans Firestore
-        await FirebaseFirestore.instance.collection('users').add({
-          'nom': nom.text,
-          'prenom': prenom.text,
-          'appoge': appoge.text,
-          'email': email.text,
-        });
+          // Enregistrer les informations de l'utilisateur dans Firestore
+          await FirebaseFirestore.instance.collection('users').add({
+            'nom': nom.text,
+            'prenom': prenom.text,
+            'appoge': appoge.text,
+            'email': email.text,
+          });
 
-        // Rediriger vers l'interface HomeEtudiant
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeEtudiant()),
-        );
+          // Rediriger vers l'interface HomeEtudiant
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeEtudiant()),
+          );
 
-        // Afficher un message de confirmation d'activation du compte
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Compte activé avec succès!'),
-        ));
-      } else {
-        // Afficher une interface d'erreur si l'apogée n'est pas trouvé
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ErrorPage()),
-        );
+          // Afficher un message de confirmation d'activation du compte
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Compte activé avec succès!'),
+          ));
+        } else {
+          // Afficher une interface d'erreur si l'apogée n'est pas trouvé
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ErrorPage()),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
       }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Veuillez remplir les champs obligatoires'),
+      ));
     }
   }
 
