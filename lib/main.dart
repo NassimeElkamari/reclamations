@@ -1,6 +1,7 @@
 /// ignore_for_file: unused_import
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/homeAdmin.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-      home:AdminHome(),
+      home:NavigatorBarEtudiant(),
     );
   }
 }
