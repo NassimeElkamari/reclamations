@@ -32,7 +32,7 @@ class _LogoScreenState extends State<LogoScreen>
     _controller.forward();
 
     // Naviguer vers l'écran principal après l'animation
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => WelcomeScreen()),
