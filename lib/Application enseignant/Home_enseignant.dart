@@ -29,18 +29,17 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         title: isSearchClicked
             ? Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 241, 243, 244),
-                  borderRadius: BorderRadius.circular(30),
+                  color: Color.fromARGB(255, 227, 224, 231),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
                   controller: searchController,
@@ -50,7 +49,8 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   decoration: InputDecoration(
                     hintText: 'Search...',
                     border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search, color: Colors.black),
+                    prefixIcon: Icon(Icons.search,
+                        color: const Color.fromARGB(255, 49, 35, 35)),
                     suffixIcon: IconButton(
                       icon: Icon(Icons.close, color: Colors.black),
                       onPressed: () {
@@ -62,38 +62,74 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   ),
                 ),
               )
-            : Text("home", style: TextStyle(color: Colors.black)),
+            : Text(
+                "Home",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 23, // Taille du texte
+                  fontWeight: FontWeight.bold, // Gras
+                  fontFamily: 'Roboto', // Police personnalisée
+                  shadows: [
+                    Shadow(
+                      color: const Color.fromARGB(255, 188, 78, 78)
+                          .withOpacity(0.5), // Couleur de l'ombre
+                      blurRadius: 6, // Rayon du flou
+                      offset: Offset(2, 2), // Décalage de l'ombre
+                    ),
+                  ],
+                ),
+              ),
         actions: [
           IconButton(
             onPressed: () {
               _toggleSearch();
             },
-            icon: Icon(Icons.search, color: Colors.black),
+            icon: Icon(Icons.search,
+                color: const Color.fromARGB(255, 62, 39, 39)),
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: 6, // Nombre de réclamations à afficher
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              // Action à effectuer lors du clic sur une réclamation
-            },
-            child: Card(
-              elevation: 4,
-              margin: EdgeInsets.all(8),
-              child: ListTile(
-                title: Text(
-                  'Réclamation ${index + 1}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                offset: Offset(0, 5),
+                color: Color.fromARGB(255, 10, 9, 9).withOpacity(.2),
+                spreadRadius: 2,
+                blurRadius: 10)
+          ],
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 188, 154, 199),
+              Color.fromARGB(255, 138, 103, 178),
+            ],
+          ),
+        ),
+        child: ListView.builder(
+          itemCount: 6, // Nombre de réclamations à afficher
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                // Action à effectuer lors du clic sur une réclamation
+              },
+              child: Card(
+                elevation: 4,
+                margin: EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text(
+                    'Réclamation ${index + 1}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text('Contenu de la réclamation...'),
+                  trailing: Icon(Icons.arrow_forward,
+                      color: Color.fromARGB(255, 14, 118, 168)),
                 ),
-                subtitle: Text('Contenu de la réclamation...'),
-                trailing: Icon(Icons.arrow_forward,
-                    color: Color.fromARGB(255, 14, 118, 168)),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -101,17 +137,23 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 14, 118, 168),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromARGB(255, 188, 154, 199),
+                    Color.fromARGB(255, 110, 81, 143),
+                  ],
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/profile_pic.jpg'),
-                      
-                      ),
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/profile_pic.jpg'),
+                  ),
                   SizedBox(height: 10),
                   Text(
                     'Nom de l\'enseignant',
@@ -156,7 +198,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
               trailing: Icon(Icons.settings, color: Colors.black),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => setting()));
+                    MaterialPageRoute(builder: (context) => Setting()));
                 // Action à effectuer lors du clic sur Paramètres
               },
             ),

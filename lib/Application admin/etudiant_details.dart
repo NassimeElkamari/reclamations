@@ -1,5 +1,3 @@
-
-
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, camel_case_types
 
 import 'package:flutter/material.dart';
@@ -102,7 +100,6 @@ class Etudiant_details extends StatelessWidget {
                                 ),
                                 Icon(Icons.badge_outlined)
                               ],
-                              
                             ),
                             decoration: BoxDecoration(
                               color: Colors.grey,

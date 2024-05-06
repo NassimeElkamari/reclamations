@@ -26,6 +26,7 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 245, 233, 255),
       body: Column(
         children: [
           Container(

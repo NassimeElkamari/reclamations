@@ -18,14 +18,7 @@ class HomeEtudiant extends StatefulWidget {
   State<HomeEtudiant> createState() => _HomeEtudiantState();
 }
 
-List Screens =[
-    HomeEtudiant(),
-    ListeReclamations_etudiant(),
-    ProfileEtudiant(),
 
-    
-];
-int _selecedIndex=0;
 
 class _HomeEtudiantState extends State<HomeEtudiant> {
   @override

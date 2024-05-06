@@ -1,20 +1,18 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
-
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/affichier.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/ajouter.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/supprimier.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_enseignants.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_reclamations.dart';
 import 'package:flutter/material.dart';
-
-class AdminHome extends StatelessWidget {
-  AdminHome({Key? key});
-  
-
+class Liste_des_etudiants extends StatefulWidget {
+  const Liste_des_etudiants({super.key});
 
   @override
+  State<Liste_des_etudiants> createState() => _Liste_des_etudiantsState();
+}
+
+class _Liste_des_etudiantsState extends State<Liste_des_etudiants> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       appBar: AppBar(
         title: Text(
           "Home Admin",
@@ -111,5 +109,4 @@ class AdminHome extends StatelessWidget {
       ),
       
     );
-  }
-}
+}}

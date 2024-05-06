@@ -76,8 +76,6 @@ class _SitesFaculteState extends State<SitesFaculte> {
                   SizedBox(
                     height: 40,
                   ),
-        
-        
                   //affichage des notes 
               ElevatedButton(
                   style: TextButton.styleFrom(backgroundColor: Colors.blue),

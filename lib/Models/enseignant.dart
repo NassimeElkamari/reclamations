@@ -4,17 +4,27 @@ class Enseignant {
   String prenom;
   String filliere;
   String email;
-  String cin;
+  
 
   Enseignant({
-    required this.cin,
+    
     required this.nom,
     required this.prenom,
     required this.filliere,
     required this.email,
   });
-}
 
+  toJson(){
+    return {
+      "nom":nom,
+      "prenom":prenom,
+      "email":email,
+      "filiere":filliere
+
+    };
+  }
+}
+/*
 List<Enseignant> enseignants = [
   Enseignant(
       cin: "le1234",
@@ -46,4 +56,4 @@ List<Enseignant> enseignants = [
       ),
       
 
-];
+];*/
