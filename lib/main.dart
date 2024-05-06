@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/homeAdmin.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 
@@ -41,11 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        /* 'HomeEnseignant': (context) => HomeEnseignant(),
-    'LoginEnseignant': (context) => SignInEnseignant(),
-    'HomeEtudiant': (context) => NavigatorBarEtudiant(),*/
-      },
+      routes: { },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
 

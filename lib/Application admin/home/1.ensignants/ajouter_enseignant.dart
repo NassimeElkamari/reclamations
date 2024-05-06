@@ -3,18 +3,19 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 class AjouterEnseignant extends StatefulWidget {
   const AjouterEnseignant({Key? key}) : super(key: key);
 
   @override
   State<AjouterEnseignant> createState() => _AjouterEnseignantState();
 }
+
 class _AjouterEnseignantState extends State<AjouterEnseignant> {
   String? _selectedFiliere; // Variable pour stocker la filière sélectionnée
   final nomController = TextEditingController();
   final prenomController = TextEditingController();
   final emailController = TextEditingController();
-
 
   List<String> _filieres = [
     'Sciences Mathématiques Appliquées (SMA)',
@@ -24,15 +25,16 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
     'Sciences de la Vie (SVI)',
     "Sciences de la Terre et de l'Univers (STU)",
   ];
-   
 
-   
   void ajouterEnseignant() {
     String nom = nomController.text;
     String prenom = prenomController.text;
-    String apoge = emailController.text;
+    String email = emailController.text;
 
-    if (nom.isEmpty || prenom.isEmpty || apoge.isEmpty || _selectedFiliere == null) {
+    if (nom.isEmpty ||
+        prenom.isEmpty ||
+        email.isEmpty ||
+        _selectedFiliere == null) {
       // Gérer les champs vides
       return;
     }
@@ -41,7 +43,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
     FirebaseFirestore.instance.collection('enseignants').add({
       'nom': nom,
       'prenom': prenom,
-      'apoge': apoge,
+      'email': email,
       'filiere': _selectedFiliere,
     }).then((value) {
       // Enseignant ajouté avec succès
@@ -57,7 +59,6 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
       print("Erreur lors de l'ajout de l'enseignant: $error");
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +200,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  labelText: 'Apoge',
+                  labelText: 'Email',
                   hintText: 'Entrer votre Email',
                   hintStyle: TextStyle(
                     color: Color.fromARGB(66, 0, 8, 53),
@@ -244,7 +245,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                         child: Text(
                           value,
                           style: TextStyle(
-                            fontSize: 12,
+                              fontSize: 12,
                               color: Color.fromARGB(255, 9, 61, 156)),
                         ),
                       );
@@ -274,7 +275,14 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                   height: 60,
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      nomController.clear();
+                      prenomController.clear();
+                      emailController.clear();
+                      setState(() {
+                        _selectedFiliere = null;
+                      });
+                    },
                     child: Text("Annuler"),
                   ),
                 ),
