@@ -1,3 +1,4 @@
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/homeAdmin.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/logo.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-      home: LogoScreen(),
+      home: AdminHome(),
     );
   }
 }

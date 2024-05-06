@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/affichier.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/ajouter.dart';
@@ -21,8 +20,16 @@ class AdminHome extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        backgroundColor:
-            Colors.blueAccent, // Couleur de la barre d'applications
+        backgroundColor: Color.fromARGB(255, 39, 45, 55),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            color: Colors.white,
+            onPressed: () {
+              // Ajoutez ici la logique de déconnexion
+            },
+          ),
+        ], // Couleur de la barre d'applications
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -38,7 +45,7 @@ class AdminHome extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.blueAccent,
+                primary: Color.fromARGB(255, 206, 217, 248),
                 padding: EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -60,7 +67,7 @@ class AdminHome extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.redAccent,
+                primary: Color.fromARGB(255, 206, 217, 248),
                 padding: EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -82,7 +89,7 @@ class AdminHome extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.greenAccent,
+                primary: Color.fromARGB(255, 206, 217, 248),
                 padding: EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -106,7 +113,7 @@ class AdminHome extends StatelessWidget {
 Widget navigatorBarFunction() {
   return BottomNavigationBar(
     type: BottomNavigationBarType.fixed,
-    backgroundColor: Colors.blueAccent,
+    backgroundColor: Color.fromARGB(255, 39, 46, 58),
     selectedItemColor: Colors.white,
     unselectedItemColor: Colors.white.withOpacity(0.6),
     items: [
@@ -117,10 +124,6 @@ Widget navigatorBarFunction() {
       BottomNavigationBarItem(
         icon: Icon(Icons.group),
         label: 'Enseignants',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.account_circle),
-        label: 'Profil',
       ),
     ],
   );
