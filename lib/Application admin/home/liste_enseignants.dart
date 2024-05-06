@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/1.ensignants/ajouter_enseignant.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,7 +29,8 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
         await FirebaseFirestore.instance.collection("enseignants").get();
     setState(() {
       data = querySnapshot.docs.toList();
-      filteredData = data; // Initialisez également filteredData avec la liste complète au début
+      filteredData =
+          data; // Initialisez également filteredData avec la liste complète au début
     });
   }
 
@@ -37,14 +40,20 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
       resultat = data;
     } else {
       resultat = data
-          .where((enseignant) =>
-              enseignant["nom"]
-                  .toLowerCase()
-                  .contains(enteredKeyWord.toLowerCase()))
+          .where((enseignant) => enseignant["nom"]
+              .toLowerCase()
+              .contains(enteredKeyWord.toLowerCase()))
           .toList();
     }
     setState(() {
       filteredData = resultat;
+    });
+  }
+
+  //fonction de supprimer un enseignant
+  void supprimerEnseignant(int index) {
+    setState(() {
+      filteredData.removeAt(index);
     });
   }
 
@@ -61,7 +70,7 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
         ),
         title: Center(
           child: Text(
-            "          Enseignants",
+            "Enseignants",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -75,8 +84,8 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
             icon: Icon(Icons.person_add),
             color: Colors.white,
             onPressed: () {
-               Navigator.push(context,
-                         MaterialPageRoute(builder: (context) =>AjouterEnseignant()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AjouterEnseignant()));
             },
           ),
         ],
@@ -100,8 +109,8 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Container(
                 height: 40,
-                margin: EdgeInsets.only(
-                    top: 10, left: 16, right: 16, bottom: 10),
+                margin:
+                    EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 10),
                 child: TextFormField(
                   controller: _searchController,
                   onChanged: (value) => chercher(value),
@@ -133,8 +142,38 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
                       ),
                       title: Text(
                           '${filteredData[i]['nom']} ${filteredData[i]['prenom']}'),
-                      onTap: () {
+                      onLongPress: () {
                         // Action à effectuer lorsque l'utilisateur appuie sur le ListTile
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Confirmation'),
+                              content:
+                                  Text('Do you want to delete this teacher?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    supprimerEnseignant(i);
+                                    // Supprimer l'enseignant de la base de données
+                                    FirebaseFirestore.instance
+                                        .collection('enseignants')
+                                        .doc(filteredData[i].id)
+                                        .delete();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                     ),
                   );
