@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_enseignants.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
   final nomController = TextEditingController();
   final prenomController = TextEditingController();
   final emailController = TextEditingController();
+  final profileController = TextEditingController();
 
   List<String> _filieres = [
     'Sciences Mathématiques Appliquées (SMA)',
@@ -30,6 +32,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
     String nom = nomController.text;
     String prenom = prenomController.text;
     String email = emailController.text;
+    String? profile = profileController.text;
 
     if (nom.isEmpty ||
         prenom.isEmpty ||
@@ -45,12 +48,14 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
       'prenom': prenom,
       'email': email,
       'filiere': _selectedFiliere,
+      'profile': profile, // Ajout du champ 'profil' avec la valeur de l'URL
     }).then((value) {
       // Enseignant ajouté avec succès
       // Réinitialiser les champs
       nomController.clear();
       prenomController.clear();
       emailController.clear();
+      profileController.clear();
       setState(() {
         _selectedFiliere = null;
       });
@@ -63,57 +68,41 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            // Revenir à la page précédente avec la barre de navigation actuelle
+            Navigator.pop(context);
+          },
+        ),
+
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(3),
+            bottomRight: Radius.circular(3),
+          ),
+        ),
+        title: Center(
+          child: Text(
+            "Ajouter un enseignant ",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        backgroundColor:
+            Color.fromARGB(255, 28, 51, 128), // Couleur de fond de l'AppBar
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: 30,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(255, 10, 30, 97),
-                  Color.fromARGB(255, 101, 162, 243),
-                ]),
-              ),
-            ),
-            Container(
-              height: 70,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(255, 10, 30, 97),
-                  Color.fromARGB(255, 101, 162, 243),
-                ]),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    //button pour retour a la page principale
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NavigatorBarAdmin(),
-                        ),
-                      );
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Center(
-                    child: Text(
-                      "Ajouter votre réclamation",
-                      style: TextStyle(fontSize: 25, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             //column pour les elements de l etudiant ajouter par admin
             SizedBox(
               height: 30,
@@ -127,7 +116,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                 controller: nomController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter Email';
+                    return 'Please enter Nom';
                   }
                   return null;
                 },
@@ -161,7 +150,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                 controller: prenomController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter Email';
+                    return 'Please enter Prenom';
                   }
                   return null;
                 },
@@ -260,45 +249,63 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                     ),
                   ),
                   SizedBox(
-                    height: 80,
+                    height: 20,
                   )
                 ],
               ),
             ),
 
-            //button ajouter
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 120,
-                  height: 60,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      nomController.clear();
-                      prenomController.clear();
-                      emailController.clear();
-                      setState(() {
-                        _selectedFiliere = null;
-                      });
-                    },
-                    child: Text("Annuler"),
+            ////pour entrer url du profile
+            Container(
+              height: 50,
+              margin: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 10),
+              child: TextFormField(
+                controller: profileController,
+                decoration: InputDecoration(
+                  labelText: 'Profil', // Modifier le libellé du champ
+                  hintText:
+                      'Entrer le profil de l\'enseignant', // Modifier le texte d'aide
+                  hintStyle: TextStyle(
+                    color: Color.fromARGB(66, 0, 8, 53),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(31, 13, 39, 95),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(31, 12, 23, 71),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                Container(
-                  width: 120,
-                  height: 60,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ajouterEnseignant();
-                    },
-                    child: Text("Ajouter"),
+              ),
+            ),
+
+            Container(
+              height: 40,
+              margin: EdgeInsets.all(30),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 28, 51, 128),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-              ],
-            )
+                onPressed: ajouterEnseignant,
+                child: Center(
+                  child: Text(
+                    'Ajouter Enseignant',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
