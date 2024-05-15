@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+=======
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+>>>>>>> 27af836529cf33bdf5ce1b43ab77bb2fa601447a
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_enseignants.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_etudiants.dart';
@@ -42,8 +46,16 @@ class _NavigatorBarEtudiantState extends State<NavigatorBarAdmin> {
         },
        
         items: [
-          Icon(Icons.article, size: 30,color: Colors.white,),
-          Icon(Icons.school, size: 30,color: Colors.white,),
+          Icon(
+            Icons.article,
+            size: 30,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.school,
+            size: 30,
+            color: Colors.white,
+          ),
           Icon(
             Icons.group,
             size: 30,
