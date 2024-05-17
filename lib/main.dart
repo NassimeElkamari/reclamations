@@ -1,13 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/homeAdmin.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
-
-import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
-
-import 'package:application_gestion_des_reclamations_pfe/Application%20commune/logo.dart';
-
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -43,13 +36,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: { },
+      routes: {},
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-
-      home:NavigatorBarAdmin(),
-
-
+      home: HomeEtudiant(),
     );
   }
 }

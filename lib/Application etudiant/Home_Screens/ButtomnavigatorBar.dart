@@ -31,7 +31,6 @@ class _NavigatorBarEtudiantState extends State<NavigatorBarEtudiant> {
         height: 60,
         animationDuration: Duration(milliseconds: 300),
         index: _selecedIndex,
-        
         onTap: (index) {
           setState(() {
             _selecedIndex = index;
@@ -39,9 +38,12 @@ class _NavigatorBarEtudiantState extends State<NavigatorBarEtudiant> {
           print(index);
         },
         items: [
-          Icon(Icons.home,size: 30),
-          Icon(Icons.favorite,size: 30),
-          Icon(Icons.person,size: 30,),
+          Icon(Icons.home, size: 30),
+          Icon(Icons.notifications, size: 30),
+          Icon(
+            Icons.person,
+            size: 30,
+          ),
           // IconButton(onPressed: (){}, icon:Icons.check_circle_outline_outlined )
         ],
       ),

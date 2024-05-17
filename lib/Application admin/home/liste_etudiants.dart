@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, camel_case_types
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/ajouter.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/supprimier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +17,7 @@ class _Liste_des_etudiantsState extends State<Liste_des_etudiants> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "          Etudiants",
+          "                   Etudiants",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -27,16 +26,6 @@ class _Liste_des_etudiantsState extends State<Liste_des_etudiants> {
         ),
         backgroundColor: Color.fromARGB(255, 50, 93, 150),
         actions: [
-          IconButton(
-            icon: Icon(Icons.person_remove),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SuppEtudiant()),
-              );
-            },
-          ),
           IconButton(
             icon: Icon(Icons.person_add),
             color: Colors.white,
@@ -47,7 +36,7 @@ class _Liste_des_etudiantsState extends State<Liste_des_etudiants> {
               );
             },
           ),
-        ], // Couleur de la barre d'applications
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('etudiants').snapshots(),
@@ -113,50 +102,80 @@ class _Liste_des_etudiantsState extends State<Liste_des_etudiants> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Modifier '),
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        labelText: 'Nouveau numéro d\'appoge',
-                                      ),
-                                      onChanged: (value) {
-                                        appoge = value;
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        // Mettre à jour les informations dans la base de données
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Modifier'),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TextField(
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          'Nouveau numéro d\'appoge',
+                                                    ),
+                                                    onChanged: (value) {
+                                                      appoge = value;
+                                                    },
+                                                  ),
+                                                  TextField(
+                                                    decoration: InputDecoration(
+                                                      labelText: 'Nouveau nom',
+                                                    ),
+                                                    onChanged: (value) {
+                                                      nom = value;
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Annuler'),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    // Mettre à jour les informations dans la base de données
+                                                    FirebaseFirestore.instance
+                                                        .collection('etudiants')
+                                                        .doc(etudiant.id)
+                                                        .update({
+                                                      'appoge': appoge,
+                                                      'nom': nom,
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Enregistrer'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       },
+                                      child: Text('Modifier'),
                                     ),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        labelText: 'Nouveau nom',
-                                      ),
-                                      onChanged: (value) {
-                                        nom = value;
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        // Supprimer l'étudiant de la base de données
+                                        FirebaseFirestore.instance
+                                            .collection('etudiants')
+                                            .doc(etudiant.id)
+                                            .delete();
+                                        Navigator.of(context).pop();
                                       },
+                                      child: Text('Supprimer'),
                                     ),
                                   ],
                                 ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Annuler'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Mettre à jour les informations dans la base de données
-                                      FirebaseFirestore.instance
-                                          .collection('etudiants')
-                                          .doc(etudiant.id)
-                                          .update({
-                                        'appoge': appoge,
-                                        'nom': nom,
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Enregistrer'),
-                                  ),
-                                ],
                               );
                             },
                           );

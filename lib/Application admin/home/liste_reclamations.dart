@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class Liste_des_reclamations extends StatefulWidget {
@@ -10,31 +12,42 @@ class Liste_des_reclamations extends StatefulWidget {
 class _MyWidgetState extends State<Liste_des_reclamations> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            "   Réclamations",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    return Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Text(
+              "     Réclamations",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
+
+          backgroundColor: Color.fromARGB(255, 50, 93, 150),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              color: Colors.white,
+              onPressed: () {
+                // Ajoutez ici la logique de déconnexion
+              },
+            ),
+          ], // Couleur de la barre d'applications
         ),
-        backgroundColor: Color.fromARGB(255, 39, 45, 55),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            color: Colors.white,
-            onPressed: () {
-              // Ajoutez ici la logique de déconnexion
-            },
+        body: Container(
+          // ignore: prefer_const_constructors
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 10, 30, 97),
+                Color.fromARGB(255, 101, 162, 243),
+              ],
+            ),
           ),
-        ], // Couleur de la barre d'applications
-      ),
-      backgroundColor: Color.fromARGB(255, 235, 104, 158),
-     body: Center(child: Text("liste")),
-    );
+        ));
   }
 }
