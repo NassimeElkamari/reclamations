@@ -1,21 +1,9 @@
-<<<<<<< HEAD
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/etudiant_details.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application admin/home/etudiant_details.dart';
 
 class ListeDesEtudiants extends StatefulWidget {
   const ListeDesEtudiants({Key? key}) : super(key: key);
-=======
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/ajouter.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/2.etuduiant/supprimier.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
-class Liste_des_etudiants extends StatefulWidget {
-  const Liste_des_etudiants({super.key});
->>>>>>> 27af836529cf33bdf5ce1b43ab77bb2fa601447a
 
   @override
   State<ListeDesEtudiants> createState() => _ListeDesEtudiantsState();
@@ -34,15 +22,12 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
-        title: Center(
-          child: Text(
-            "Liste des Étudiants",
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+        title: Text(
+          "Liste des Étudiants",
+          style: TextStyle(
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Color.fromARGB(255, 28, 51, 128),
@@ -66,46 +51,11 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                 setState(() {}); // Rafraîchir l'affichage lors de la saisie
               },
             ),
-=======
-        title: Text(
-          "          Etudiants",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
           ),
-        ),
-        backgroundColor: Color.fromARGB(255, 50, 93, 150),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person_remove),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SuppEtudiant()),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.person_add),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AjouterEtudiant()),
-              );
-            },
->>>>>>> 27af836529cf33bdf5ce1b43ab77bb2fa601447a
-          ),
-          SizedBox(height: 20),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("etudiantsActives")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: FirebaseFirestore.instance.collection("etudiantsActives").snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Une erreur est survenue');
                 }
@@ -114,18 +64,14 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                final List<QueryDocumentSnapshot> documents =
-                    snapshot.data!.docs;
+                final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
                 final filteredData = _searchController.text.isEmpty
                     ? documents
                     : documents.where((doc) {
-                        final String searchTerm =
-                            _searchController.text.toLowerCase();
+                        final String searchTerm = _searchController.text.toLowerCase();
                         final String nom = doc['nom'].toString().toLowerCase();
-                        final String prenom =
-                            doc['prenom'].toString().toLowerCase();
-                        final String apoge =
-                            doc['apoge'].toString().toLowerCase();
+                        final String prenom = doc['prenom'].toString().toLowerCase();
+                        final String apoge = doc['apoge'].toString().toLowerCase();
 
                         return nom.startsWith(searchTerm) ||
                             prenom.startsWith(searchTerm) ||
@@ -144,12 +90,13 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: Color.fromARGB(255, 13, 41, 133), width: 2),
+                          color: Color.fromARGB(255, 13, 41, 133),
+                          width: 2
+                        ),
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(255, 210, 225, 255)
-                                .withOpacity(0.5),
+                            color: Color.fromARGB(255, 210, 225, 255).withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 5,
                             offset: Offset(0, 3), // changes position of shadow
@@ -175,8 +122,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailsEtudiant(documentId: document.id),
+                              builder: (context) => DetailsEtudiant(documentId: document.id),
                             ),
                           );
                         },
@@ -189,131 +135,6 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
           ),
         ],
       ),
-<<<<<<< HEAD
-=======
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('etudiants').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Erreur de chargement des données'),
-            );
-          }
-
-          if (snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text('Aucun étudiant trouvé'),
-            );
-          }
-
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(255, 10, 30, 97),
-                  Color.fromARGB(255, 101, 162, 243),
-                ],
-              ),
-            ),
-            child: ListView(
-              children: snapshot.data!.docs.map((etudiant) {
-                String appoge = etudiant['appoge'];
-                String nom = etudiant['nom'];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 7, horizontal: 18),
-                  child: Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        appoge,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      subtitle: Text(
-                        nom,
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                      trailing: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Modifier '),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        labelText: 'Nouveau numéro d\'appoge',
-                                      ),
-                                      onChanged: (value) {
-                                        appoge = value;
-                                      },
-                                    ),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        labelText: 'Nouveau nom',
-                                      ),
-                                      onChanged: (value) {
-                                        nom = value;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Annuler'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Mettre à jour les informations dans la base de données
-                                      FirebaseFirestore.instance
-                                          .collection('etudiants')
-                                          .doc(etudiant.id)
-                                          .update({
-                                        'appoge': appoge,
-                                        'nom': nom,
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Enregistrer'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Icon(Icons.edit),
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          );
-        },
-      ),
->>>>>>> 27af836529cf33bdf5ce1b43ab77bb2fa601447a
     );
   }
 }

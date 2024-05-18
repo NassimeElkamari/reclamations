@@ -44,16 +44,16 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
-      routes: {
+      
+            routes: {
         'Welcome':(context) => WelcomeScreen(),
-        // 'HomeEnseignant': (context) => HomeEnseignant(),
-    //'LoginEnseignant': (context) => SignInEnseignant(),
-    //'HomeEtudiant': (context) => NavigatorBarEtudiant(),
+         // 'HomeEnseignant': (context) => HomeEnseignant(),
+        //'LoginEnseignant': (context) => SignInEnseignant(),
+       //'HomeEtudiant': (context) => NavigatorBarEtudiant(),
       },
-=======
-      routes: { },
->>>>>>> 27af836529cf33bdf5ce1b43ab77bb2fa601447a
+
+     
+
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
 
