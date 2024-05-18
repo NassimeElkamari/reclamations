@@ -12,54 +12,56 @@ class AdminProfilePage extends StatefulWidget {
 class _AdminProfilePageState extends State<AdminProfilePage> {
   bool isLoggedIn = true;
 
-  Future<void> _logout(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Déconnexion',
-            style: TextStyle(
-              color: Color.fromARGB(255, 28, 51, 128),
+ Future<void> _logout(BuildContext context) async {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'Déconnexion',
+          style: TextStyle(
+            color: Color.fromARGB(255, 28, 51, 128),
+          ),
+        ),
+        content: Text('Voulez-vous vraiment vous déconnecter?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'Annuler',
+              style: TextStyle(
+                color: Color.fromARGB(255, 28, 51, 128),
+              ),
             ),
           ),
-          content: Text('Voulez-vous vraiment vous déconnecter?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Annuler',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 28, 51, 128),
-                ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              // Déconnexion de Firestore (aucune méthode signOut nécessaire)
+              // Réinitialisez les données d'authentification ou tout autre état utilisateur si nécessaire
+              setState(() {
+                isLoggedIn = false;
+              });
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => WelcomeScreen()),
+              );
+            },
+            child: Text(
+              'Déconnecter',
+              style: TextStyle(
+                color: Color.fromARGB(255, 28, 51, 128),
               ),
             ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                await FirebaseAuth.instance.signOut();
-                setState(() {
-                  isLoggedIn = false;
-                });
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
-                );
-              },
-              child: Text(
-                'Déconnecter',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 28, 51, 128),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +69,12 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
       appBar: AppBar(
         title: Center(
           child: Text(
-            'Profil Admin',
-            style: TextStyle(color: Colors.white),
+            "  Admin profil",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
         backgroundColor: Color.fromARGB(255, 28, 51, 128),

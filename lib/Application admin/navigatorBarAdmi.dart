@@ -1,9 +1,11 @@
+
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_enseignants.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_etudiants.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_reclamations.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/profileAdmin.dart';
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/gestion%20enseignant/liste_enseignants.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/gestion%20etudiants/liste_etudiants.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/gestion%20reclamation/liste_reclamations.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/profileAdmin.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 

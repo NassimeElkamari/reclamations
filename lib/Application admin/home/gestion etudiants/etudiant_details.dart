@@ -1,4 +1,4 @@
-
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,8 +11,9 @@ class DetailsEtudiant extends StatelessWidget {
 
   Widget buildInfoContainer(String label, String value) {
     return Container(
-      height: 50,
-      width: 500,
+      margin: EdgeInsets.only(left :8,right:8,bottom: 8,top: 9),
+      height:60 ,
+      width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(
           color: Color.fromARGB(255, 4, 19, 105),
@@ -21,25 +22,12 @@ class DetailsEtudiant extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: Row(
-          children: [
-            SizedBox(width: 20,),
-            Text(
-              '$label: ',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 4, 19, 105),
-              ),
-            ),
-            Text(
-              ' $value',
-              style: TextStyle(
-                fontSize: 18,
-                color: Color.fromARGB(255, 4, 19, 105),
-              ),
-            ),
-          ],
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 20,
+            color: Color.fromARGB(255, 4, 19, 105),
+          ),
         ),
       ),
     );
@@ -98,7 +86,7 @@ class DetailsEtudiant extends StatelessWidget {
           final String apoge = document['apoge'].toString(); // Convertir en chaîne de caractères
           final String filiere = document['filiere'];
           final String email = document['email'];
-           final String sexe = document['sexe'] ?? 'male';
+           final String sexe = document['sexe']; // Ajouter la récupération de l'attribut sexe
 
           return Padding(
             padding: EdgeInsets.all(16),
@@ -108,33 +96,20 @@ class DetailsEtudiant extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                 Center(
-                  child: Image.asset(
-                    sexe == 'male' ? 'images/student_boy.png' : 'images/student_girl.png',
-                    height: 250,
-                    width: 150,
-                  ),
+                
+               Center(
+                  child: sexe == 'femelle'
+                      ? Image.asset("images/student_girl.png", height: 200)
+                      : Image.asset("images/student_boy.png", height: 200),
                 ),
                 
-                SizedBox(
-                  height: 40,
+                 SizedBox(
+                  height: 10,
                 ),
                 buildInfoContainer('Nom', nom),
-                SizedBox(
-                  height: 15,
-                ),
                 buildInfoContainer('Prénom', prenom),
-                SizedBox(
-                  height: 15,
-                ),
                 buildInfoContainer('Apogée', apoge),
-                SizedBox(
-                  height: 15,
-                ),
                 buildInfoContainer('Filière', filiere),
-                SizedBox(
-                  height: 15,
-                ),
                 buildInfoContainer('Email', email),
               ],
             ),

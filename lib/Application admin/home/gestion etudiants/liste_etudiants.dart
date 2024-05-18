@@ -1,4 +1,6 @@
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/etudiant_details.dart';
+// ignore_for_file: prefer_const_constructors
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/gestion%20etudiants/etudiant_details.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -24,7 +26,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
       appBar: AppBar(
         title: Center(
           child: Text(
-            "Liste des Étudiants",
+            " Liste des Étudiants",
             style: TextStyle(
               fontSize: 24,
               color: Colors.white,
@@ -54,14 +56,10 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
               },
             ),
           ),
-          SizedBox(height: 20),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("etudiantsActives")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: FirebaseFirestore.instance.collection("etudiantsActives").snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Une erreur est survenue');
                 }
@@ -70,18 +68,14 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                final List<QueryDocumentSnapshot> documents =
-                    snapshot.data!.docs;
+                final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
                 final filteredData = _searchController.text.isEmpty
                     ? documents
                     : documents.where((doc) {
-                        final String searchTerm =
-                            _searchController.text.toLowerCase();
+                        final String searchTerm = _searchController.text.toLowerCase();
                         final String nom = doc['nom'].toString().toLowerCase();
-                        final String prenom =
-                            doc['prenom'].toString().toLowerCase();
-                        final String apoge =
-                            doc['apoge'].toString().toLowerCase();
+                        final String prenom = doc['prenom'].toString().toLowerCase();
+                        final String apoge = doc['apoge'].toString().toLowerCase();
 
                         return nom.startsWith(searchTerm) ||
                             prenom.startsWith(searchTerm) ||
@@ -100,12 +94,13 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: Color.fromARGB(255, 13, 41, 133), width: 2),
+                          color: Color.fromARGB(255, 13, 41, 133),
+                          width: 2
+                        ),
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(255, 210, 225, 255)
-                                .withOpacity(0.5),
+                            color: Color.fromARGB(255, 210, 225, 255).withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 5,
                             offset: Offset(0, 3), // changes position of shadow
@@ -131,8 +126,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailsEtudiant(documentId: document.id),
+                              builder: (context) => DetailsEtudiant(documentId: document.id),
                             ),
                           );
                         },
