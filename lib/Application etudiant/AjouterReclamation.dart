@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AjouterReclamation extends StatefulWidget {
@@ -11,9 +10,68 @@ class AjouterReclamation extends StatefulWidget {
 }
 
 class _AjouterReclamationState extends State<AjouterReclamation> {
-  @override
   String _selectedChoice = 'Vérification de note';
-  
+  String? _selectedProfessor;
+
+  final TextEditingController _nomController = TextEditingController();
+  final TextEditingController _prenomController = TextEditingController();
+  final TextEditingController _apogeController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  List<DropdownMenuItem<String>> _professorItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfessors();
+  }
+
+  Future<void> _loadProfessors() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('enseignants').get();
+      List<DropdownMenuItem<String>> items = querySnapshot.docs.map((doc) {
+        return DropdownMenuItem<String>(
+          value: doc.id,
+          child: Text(doc['nom']),
+        );
+      }).toList();
+      setState(() {
+        _professorItems = items;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors du chargement des professeurs')),
+      );
+    }
+  }
+
+  Future<void> _ajouterReclamation() async {
+    try {
+      await FirebaseFirestore.instance.collection('reclamations').add({
+        'nom': _nomController.text,
+        'prenom': _prenomController.text,
+        'apoge': _apogeController.text,
+        'sujet': _selectedChoice,
+        'description': _descriptionController.text,
+        'professeurId': _selectedProfessor,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Réclamation ajoutée avec succès')),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -23,38 +81,46 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
             Container(
               height: 30,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Color.fromARGB(255, 17, 58, 180),
-                Color.fromARGB(255, 249, 248, 255),
-              ])),
+                gradient: LinearGradient(colors: [
+                  Color.fromARGB(255, 17, 58, 180),
+                  Color.fromARGB(255, 249, 248, 255),
+                ]),
+              ),
             ),
             Container(
               height: 70,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Color.fromARGB(255, 17, 58, 180),
-                Color.fromARGB(255, 249, 248, 255),
-              ])),
+                gradient: LinearGradient(colors: [
+                  Color.fromARGB(255, 17, 58, 180),
+                  Color.fromARGB(255, 249, 248, 255),
+                ]),
+              ),
               child: Row(
                 children: [
                   IconButton(
-                      //button pour retour a la page principale
-                      onPressed: () {
-                         Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()));
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      )),
+                    //button pour retour a la page principale
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavigatorBarEtudiant(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
                   SizedBox(
                     width: 20,
                   ),
                   Center(
-                      child: Text(
-                    "Ajouter votre réclamation",
-                    style: TextStyle(fontSize: 25, color: Colors.white),
-                  )),
+                    child: Text(
+                      "Ajouter votre réclamation",
+                      style: TextStyle(fontSize: 25, color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -69,6 +135,7 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
               height: 50,
               margin: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 10),
               child: TextFormField(
+                controller: _nomController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Email';
@@ -107,6 +174,7 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
               height: 50,
               margin: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 10),
               child: TextFormField(
+                controller: _prenomController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Email';
@@ -145,6 +213,7 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
               height: 50,
               margin: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 10),
               child: TextFormField(
+                controller: _apogeController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter Email';
@@ -187,7 +256,9 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
                   Text(
                     'Choisissez le sujet de la réclamation:',
                     style: TextStyle(
-                        fontSize: 17, color: Color.fromARGB(255, 9, 61, 156)),
+                      fontSize: 17,
+                      color: Color.fromARGB(255, 9, 61, 156),
+                    ),
                   ),
                   DropdownButtonFormField<String>(
                     value: _selectedChoice,
@@ -205,8 +276,9 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
                         child: Text(
                           value,
                           style: TextStyle(
-                              color: Color.fromARGB(
-                                  255, 9, 61, 156)), // Changer la couleur ici
+                            color: Color.fromARGB(
+                                255, 9, 61, 156), // Changer la couleur ici
+                          ),
                         ),
                       );
                     }).toList(),
@@ -223,11 +295,46 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
               ),
             ),
 
+            //pour choisir le professeur
+            Container(
+              margin: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Choisissez le professeur:',
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: Color.fromARGB(255, 9, 61, 156),
+                    ),
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: _selectedProfessor,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedProfessor = newValue;
+                      });
+                    },
+                    items: _professorItems,
+                    decoration: InputDecoration(
+                      hintText: 'Sélectionnez un professeur',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             //entrer la descripiton de la reclamation
             Container(
               height: 200,
               margin: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 10),
               child: TextFormField(
+                controller: _descriptionController,
                 minLines: 2,
                 maxLines: 10,
                 validator: (value) {
@@ -266,32 +373,15 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
               ),
             ),
 
-            //entrer le professor
-
-            //button ajouter 
-          Row(
-            children: [
-              Container(
-                width:120,
-                height:60,
-                child: ElevatedButton(
-                  onPressed: (){},
-                 child: Text("Ajouter")
-                 ),
+            //button ajouter
+            Container(
+              width: 120,
+              height: 60,
+              child: ElevatedButton(
+                onPressed: _ajouterReclamation,
+                child: Text("Ajouter"),
               ),
-               SizedBox(width: 30,),
-
-              Container(
-                width:120,
-                height:60,
-                child: ElevatedButton(
-                  onPressed: (){},
-                 child: Text("Ajouter")
-                 ),
-              ),
-            ],
-          )
-           
+            ),
           ],
         ),
       ),

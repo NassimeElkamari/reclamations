@@ -119,10 +119,7 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                     ),
                   ),
                 ),
-
                 SizedBox(width: 16),
-
-
                 //open page facultes des sciences
                 GestureDetector(
                   onTap: () {

@@ -15,6 +15,25 @@ class HomeEnseignant extends StatefulWidget {
 class _HomeEnseignantState extends State<HomeEnseignant> {
   final TextEditingController searchController = TextEditingController();
   bool isSearchClicked = false;
+  final _auth = FirebaseAuth.instance;
+  late User signedInUser;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        signedInUser = user;
+        print(signedInUser.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _toggleSearch() {
     setState(() {

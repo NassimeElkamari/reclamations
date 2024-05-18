@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/gestion%20etudiants/etudiant_details.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application admin/home/etudiant_details.dart';
 
 class ListeDesEtudiants extends StatefulWidget {
   const ListeDesEtudiants({Key? key}) : super(key: key);
@@ -22,12 +24,14 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Liste des Étudiants",
-          style: TextStyle(
-            fontSize: 24,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+        title: Center(
+          child: Text(
+            " Liste des Étudiants",
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         backgroundColor: Color.fromARGB(255, 28, 51, 128),

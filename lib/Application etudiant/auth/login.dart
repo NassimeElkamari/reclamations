@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
               const Text("Login To Continue Using The App",
                   style: TextStyle(color: Color.fromARGB(255, 44, 36, 68))),
               Container(height: 20),
-              const Text(
+              Text(
                 "Email",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/homeAdmin.dart';
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +32,7 @@ class _SignUpAdminState extends State<SignUpAdmin> {
         'displayName': displayNameController.text,
       });
         Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AdminHome()));
+                    MaterialPageRoute(builder: (context) => NavigatorBarAdmin()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

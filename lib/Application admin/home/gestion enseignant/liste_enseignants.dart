@@ -1,4 +1,6 @@
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/1.ensignants/ajouter_enseignant.dart';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_super_parameters
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/gestion%20enseignant/ajouter_enseignant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +26,7 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
       appBar: AppBar(
         title: Center(
           child: Text(
-            "          Enseignants",
+            "      Enseignants",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
