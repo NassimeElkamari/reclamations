@@ -1,15 +1,30 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/reclamation_details.dart';
 
-class Liste_des_reclamations extends StatefulWidget {
-  const Liste_des_reclamations({super.key});
+enum SortingOrder { ascending, descending }
+
+class ListeDesReclamations extends StatefulWidget {
+  const ListeDesReclamations({Key? key}) : super(key: key);
 
   @override
-  State<Liste_des_reclamations> createState() => _MyWidgetState();
+  State<ListeDesReclamations> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<Liste_des_reclamations> {
+class _MyWidgetState extends State<ListeDesReclamations> {
+  final TextEditingController _searchController = TextEditingController();
+  SortingOrder sortingOrder = SortingOrder.descending;
+  bool showResolved = true; // Afficher initialement les réclamations traitées
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

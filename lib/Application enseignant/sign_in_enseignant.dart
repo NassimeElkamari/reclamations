@@ -1,49 +1,88 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, avoid_single_cascade_in_expression_statements
-
+ // Importez la page d'accueil de l'admin
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';// Importez la page de récupération du mot de passe
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInEnseignant extends StatefulWidget {
-  const SignInEnseignant({super.key});
+  const SignInEnseignant({Key? key}) : super(key: key);
 
   @override
-  State<SignInEnseignant> createState() => _SignInScreenState();
+  _SignInEnseignantState createState() => _SignInEnseignantState();
 }
 
-class _SignInScreenState extends State<SignInEnseignant> {
+class _SignInEnseignantState extends State<SignInEnseignant> {
   TextEditingController emailAddress = TextEditingController();
   TextEditingController password = TextEditingController();
 
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+
+  Future<void> _signIn(BuildContext context) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailAddress.text,
+        password: password.text,
+      );
+
+      // Récupérer l'utilisateur actuellement connecté
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Si l'utilisateur est un admin
+        if (user.email == 'adminappreclamation@gmail.com' && password.text == 'fst2024') {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NavigatorBarAdmin()));
+        } else {
+          // Si l'utilisateur est un enseignant
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeEnseignant()));
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'An error occurred';
+      if (e.code == 'user-not-found') {
+        errorMessage = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Wrong password provided for that user.';
+      }
+      // Afficher une boîte de dialogue avec le message d'erreur
+      // ignore: use_build_context_synchronously
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        title: 'Error',
+        desc: errorMessage,
+        btnCancelOnPress: () {},
+        btnOkOnPress: () {},
+      ).show();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 87, 118, 184),
       body: Column(
         children: [
-          SizedBox(
-            height: 38,
-          ),
+          SizedBox(height: 38),
           Row(
             children: [
-              SizedBox(
-                width: 10,
-              ),
+              SizedBox(width: 10),
               IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WelcomeScreen()));
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white70,
-                  )),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                  );
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white70,
+                ),
+              ),
             ],
           ),
           Container(
@@ -63,8 +102,8 @@ class _SignInScreenState extends State<SignInEnseignant> {
           Expanded(
             flex: 9,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
+              decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40.0),
@@ -78,19 +117,16 @@ class _SignInScreenState extends State<SignInEnseignant> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                          margin: EdgeInsets.only(top: 1, left: 40),
-                          child: Image.asset(
-                            "images/login.png",
-                            height: 260,
-                          )),
-                      const SizedBox(
-                        height: 30.0,
+                        margin: EdgeInsets.only(top: 1, left: 40),
+                        child: Image.asset(
+                          "images/login.png",
+                          height: 260,
+                        ),
                       ),
+                      SizedBox(height: 30.0),
                       TextFormField(
                         controller: emailAddress,
-                        onChanged: (value) {
-                          //_emailController=value;
-                        },
+                        onChanged: (value) {},
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
@@ -98,39 +134,26 @@ class _SignInScreenState extends State<SignInEnseignant> {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text(
+                          label: Text(
                             'Email',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 9, 61, 156)),
+                            style: TextStyle(color: Color.fromARGB(255, 9, 61, 156)),
                           ),
                           hintText: 'Enter Email',
-                          hintStyle: const TextStyle(
-                            color: Color.fromARGB(66, 0, 8, 53),
-                          ),
+                          hintStyle: TextStyle(color: Color.fromARGB(66, 0, 8, 53)),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(
-                                  31, 2, 19, 56), // Default border color
-                            ),
+                            borderSide: BorderSide(color: Color.fromARGB(31, 2, 19, 56)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(
-                                  31, 1, 4, 51), // Default border color
-                            ),
+                            borderSide: BorderSide(color: Color.fromARGB(31, 1, 4, 51)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      SizedBox(height: 25.0),
                       TextFormField(
                         controller: password,
-                        onChanged: (value) {
-                          // password=value;
-                        },
+                        onChanged: (value) {},
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {
@@ -140,62 +163,32 @@ class _SignInScreenState extends State<SignInEnseignant> {
                           return null;
                         },
                         decoration: InputDecoration(
-                          label: const Text(
+                          label: Text(
                             'Password',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 9, 61, 156)),
+                            style: TextStyle(color: Color.fromARGB(255, 9, 61, 156)),
                           ),
                           hintText: 'Enter Password',
-                          hintStyle: const TextStyle(
-                            color: Color.fromARGB(31, 2, 19, 56),
-                          ),
+                          hintStyle: TextStyle(color: Color.fromARGB(31, 2, 19, 56)),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(
-                                  31, 1, 4, 51), // Default border color
-                            ),
+                            borderSide: BorderSide(color: Color.fromARGB(31, 1, 4, 51)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
+                            borderSide: BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
+                      SizedBox(height: 10.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              /* Checkbox(
-                                value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
-                                },
-                                activeColor: Colors.pink,
-                              ),
-                              const Text(
-                                'Remember me',
-                                style: TextStyle(
-                                  color: Colors.black45,
-                                ),
-                              ),*/
-                            ],
-                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ForgotPasswordOld()));
+                                context,
+                                MaterialPageRoute(builder: (context) => ForgotPasswordOld()),
+                              );
                             },
                             child: Text(
                               'Forget password?',
@@ -207,55 +200,17 @@ class _SignInScreenState extends State<SignInEnseignant> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      SizedBox(height: 25.0),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            
-                            try {
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                      email: emailAddress.text,
-                                      password: password.text);
-                              Navigator.of(context)
-                                  .pushReplacementNamed("HomeEnseignant");
-                            } on FirebaseAuthException catch (e) {
-                              String errorMessage = 'An error occurred';
-                              if (e.code == 'user-not-found') {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  title: 'Error',
-                                  desc: 'No user found for that email.',
-                                  btnCancelOnPress: () {},
-                                  btnOkOnPress: () {},
-                                ).show();
-                              } else if (e.code == 'wrong-password') {
-                                errorMessage ='Wrong password provided for that user.';
-                              }
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.rightSlide,
-                                title: 'Error',
-                                desc: 'No user found for that email.',
-                                btnCancelOnPress: () {},
-                                btnOkOnPress: () {},
-                              ).show();
-                            }
+                            await _signIn(context);
                           },
                           child: Text('Sign In'),
                         ),
-
-                        
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      SizedBox(height: 25.0),
                     ],
                   ),
                 ),

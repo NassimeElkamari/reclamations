@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +36,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {},
+      routes: {
+        'Welcome': (context) => WelcomeScreen(),
+        // 'HomeEnseignant': (context) => HomeEnseignant(),
+        //'LoginEnseignant': (context) => SignInEnseignant(),
+        //'HomeEtudiant': (context) => NavigatorBarEtudiant(),
+      },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-      home: HomeEtudiant(),
+      home: WelcomeScreen(),
     );
   }
 }

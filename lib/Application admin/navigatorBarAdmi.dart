@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_enseignants.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_etudiants.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/liste_reclamations.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/home/profileAdmin.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +16,11 @@ class NavigatorBarAdmin extends StatefulWidget {
 
 class _NavigatorBarEtudiantState extends State<NavigatorBarAdmin> {
   List Screens = [
-    Liste_des_reclamations(),
-    Liste_des_etudiants(),
+    ListeDesReclamations(),
+    ListeDesEtudiants(),
     ListeDesEnseignants(),
+     AdminProfilePage(),
+
   ];
   int _selecedIndex = 0;
   @override
@@ -35,14 +40,24 @@ class _NavigatorBarEtudiantState extends State<NavigatorBarAdmin> {
           });
           print(index);
         },
+       
         items: [
-          Icon(Icons.article, size: 30,color: Colors.white,),
-          Icon(Icons.school, size: 30,color: Colors.white,),
+          Icon(
+            Icons.article,
+            size: 30,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.school,
+            size: 30,
+            color: Colors.white,
+          ),
           Icon(
             Icons.group,
             size: 30,
             color: Colors.white,
           ),
+          Icon(Icons.account_circle_rounded, size: 30,color: Colors.white,),
         ],
       ),
       body: Screens[_selecedIndex],
