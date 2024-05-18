@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/traiter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,23 +11,39 @@ class HomeEnseignant extends StatefulWidget {
   State<HomeEnseignant> createState() => _HomeEnseignantState();
 }
 
+class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<DocumentSnapshot> getEnseignantInfo(String uid) async {
+    return await _firestore.collection('enseignants').doc(uid).get();
+  }
+}
+
 class _HomeEnseignantState extends State<HomeEnseignant> {
   final TextEditingController searchController = TextEditingController();
   bool isSearchClicked = false;
   final _auth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService();
   late User signedInUser;
+  String? profileImageUrl;
+
   @override
   void initState() {
     super.initState();
     getCurrentUser();
   }
 
-  void getCurrentUser() {
+  void getCurrentUser() async {
     try {
       final user = _auth.currentUser;
       if (user != null) {
         signedInUser = user;
-        print(signedInUser.email);
+        final snapshot = await _firestoreService.getEnseignantInfo(user.uid);
+        if (snapshot.exists) {
+          setState(() {
+            profileImageUrl = snapshot['profile'];
+          });
+        }
       }
     } catch (e) {
       print(e);
@@ -171,11 +186,13 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/profile_pic.jpg'),
+                    backgroundImage: profileImageUrl != null
+                        ? NetworkImage(profileImageUrl!)
+                        : AssetImage('assets/profile_pic.jpg') as ImageProvider,
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Nom de l\'enseignant',
+                    signedInUser.email ?? 'Nom de l\'enseignant',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

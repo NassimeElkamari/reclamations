@@ -30,6 +30,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String _nom = '';
   late String _address = '';
   late String _email = '';
+  late String _phone = '';
+  late String _department = '';
+  late String _profileImageUrl =
+      ''; // Nouvelle variable pour l'URL de la photo de profil
 
   @override
   void initState() {
@@ -44,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (user != null) {
       // Récupérer l'e-mail de l'utilisateur connecté
       String email = user.email!;
+      print("Email utilisateur: $email"); // Débogage
 
       // Récupérer les informations de l'utilisateur à partir de Firestore
       DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
@@ -59,8 +64,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _nom = snapshot.data()?['nom'] ?? '';
           _address = snapshot.data()?['adresse'] ?? '';
           _email = snapshot.data()?['email'] ?? '';
+          _phone = snapshot.data()?['phone'] ?? '';
+          _department = snapshot.data()?['department'] ?? '';
+          _profileImageUrl = snapshot.data()?['profile'] ??
+              ''; // Récupérer l'URL de la photo de profil
+          print(
+              "Données récupérées: $_nom, $_address, $_email, $_phone, $_department, $_profileImageUrl"); // Débogage
         });
+      } else {
+        print("Le document n'existe pas."); // Débogage
       }
+    } else {
+      print("Aucun utilisateur connecté."); // Débogage
     }
   }
 
@@ -81,7 +96,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 40),
               CircleAvatar(
                 radius: 70,
-                backgroundImage: AssetImage('assets/images/user.JPG'),
+                backgroundImage: _profileImageUrl.isNotEmpty
+                    ? NetworkImage(
+                        _profileImageUrl) // Utiliser l'URL de la photo de profil
+                    : AssetImage('assets/images/user.JPG')
+                        as ImageProvider, // Image par défaut
               ),
               const SizedBox(height: 20),
               itemProfile('Nom', _nom, CupertinoIcons.person),
@@ -89,6 +108,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               itemProfile('Adresse', _address, CupertinoIcons.location),
               const SizedBox(height: 10),
               itemProfile('Email', _email, CupertinoIcons.mail),
+              const SizedBox(height: 10),
+              itemProfile('Téléphone', _phone, CupertinoIcons.phone),
+              const SizedBox(height: 10),
+              itemProfile('Département', _department, CupertinoIcons.briefcase),
               const SizedBox(
                 height: 20,
               ),
@@ -98,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                        "LoginEnseignant", (route) => false);
+                        "SignInEnseignant", (route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(15),
