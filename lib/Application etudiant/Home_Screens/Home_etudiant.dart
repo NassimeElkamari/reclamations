@@ -36,14 +36,14 @@ class _HomeEtudiantState extends State<HomeEtudiant> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: homeAppBar(),
+     // appBar: homeAppBar(),
       body: HomeBodyEtudiant(),
     );
   }
 
   AppBar homeAppBar() {
     return AppBar(
-      backgroundColor: Color.fromARGB(255, 168, 198, 255),
+      backgroundColor:Color.fromARGB(255, 28, 51, 128),
       title: Center(
           child: Text(
         'Acceuil',

@@ -2,6 +2,7 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-      home: NavigatorBarAdmin(),
+      home: WelcomeScreen(),
     );
   }
 }
