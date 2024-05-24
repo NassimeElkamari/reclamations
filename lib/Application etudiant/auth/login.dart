@@ -9,8 +9,11 @@ import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserInfo {
+  static String? emailconnecte;
+}
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -26,64 +29,65 @@ class _LoginState extends State<Login> {
   late bool isLoggedIn;
 
   @override
-void initState() {
-  super.initState();
-  isLoggedIn = FirebaseAuth.instance.currentUser != null;
+  void initState() {
+    super.initState();
+    isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    setState(() {
-      isLoggedIn = user != null;
-      print(isLoggedIn ? 'User is currently signed in!' : 'User is currently signed out!');
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setState(() {
+        isLoggedIn = user != null;
+        print(isLoggedIn ? 'User is currently signed in!' : 'User is currently signed out!');
+      });
     });
-  });
-}
+  }
 
-Future<void> _signIn(BuildContext context) async {
-  try {
-    final etudiantQuery = await FirebaseFirestore.instance
-        .collection('etudiantsActives')
-        .where('email', isEqualTo: email.text)
-        .where('password', isEqualTo: password.text)
-        .get();
-      
-    if (etudiantQuery.docs.isNotEmpty) {
-      final etudiant = etudiantQuery.docs.first;
-      final nom = etudiant['nom'];
-      final prenom = etudiant['prenom'];
+  Future<void> _signIn(BuildContext context) async {
+    try {
+      final etudiantQuery = await FirebaseFirestore.instance
+          .collection('etudiantsActives')
+          .where('email', isEqualTo: email.text)
+          .where('password', isEqualTo: password.text)
+          .get();
+        
+      if (etudiantQuery.docs.isNotEmpty) {
+        final etudiant = etudiantQuery.docs.first;
+        final nom = etudiant['nom'];
+        final prenom = etudiant['prenom'];
+        
+        UserInfo.emailconnecte = email.text; // Mise à jour de la variable emailconnecte
 
-      print('****************************************************************************************************************************User $prenom $nom is currently signed in!');
-      
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
-      );
-    } else {
-      // Aucun utilisateur trouvé dans la collection
+        print('****************************************************************************************************************************User $prenom $nom is currently signed in!');
+        
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
+        );
+      } else {
+        // Aucun utilisateur trouvé dans la collection
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          animType: AnimType.rightSlide,
+          title: 'Erreur',
+          desc:
+              'Aucun utilisateur trouvé pour cet email ou mot de passe incorrect.',
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {},
+        ).show();
+      }
+    } catch (e) {
+      print('Error: $e');
       AwesomeDialog(
         context: context,
         dialogType: DialogType.error,
         animType: AnimType.rightSlide,
         title: 'Erreur',
-        desc:
-            'Aucun utilisateur trouvé pour cet email ou mot de passe incorrect.',
+        desc: 'Une erreur est survenue. Veuillez réessayer.',
         btnCancelOnPress: () {},
         btnOkOnPress: () {},
       ).show();
     }
-  } catch (e) {
-    print('Error: $e');
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.error,
-      animType: AnimType.rightSlide,
-      title: 'Erreur',
-      desc: 'Une erreur est survenue. Veuillez réessayer.',
-      btnCancelOnPress: () {},
-      btnOkOnPress: () {},
-    ).show();
   }
-}
-
 
   @override
   Widget build(BuildContext context) {

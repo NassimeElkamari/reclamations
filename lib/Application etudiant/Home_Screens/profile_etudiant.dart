@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_print, prefer_const_literals_to_create_immutables
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class ProfileEtudiant extends StatefulWidget {
   @override
   State<ProfileEtudiant> createState() => _ProfileEtudiantState();
 }
-
+ 
 class _ProfileEtudiantState extends State<ProfileEtudiant> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<String> _filieres = [
@@ -29,7 +30,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
   String apoge = '';
   String filiere = '';
   String sexe = '';
-  String email = 'mariemamir@gmail.com';
+  String? email = UserInfo.emailconnecte;
 
   final TextEditingController _nomController = TextEditingController();
   final TextEditingController _prenomController = TextEditingController();
