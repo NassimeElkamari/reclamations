@@ -1,8 +1,11 @@
+// Importations de packages nécessaires
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/profile_etudiant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/custombuttonauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/textformfield.dart';
@@ -10,6 +13,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// Classe UserInfo pour stocker les informations de l'utilisateur connecté
+class UserInfo {
+  static String? emailconnecte;
+  static String? apogeconnecte; // Ajout de l'apogée de l'utilisateur connecté
+}
+
+ 
+
+// Classe SignUp pour l'écran d'inscription
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
@@ -17,14 +29,18 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
+// État de la classe SignUp
 class _SignUpState extends State<SignUp> {
+  // Contrôleurs pour les champs de saisie
   TextEditingController nom = TextEditingController();
   TextEditingController prenom = TextEditingController();
   TextEditingController appoge = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  // Méthode pour l'inscription de l'utilisateur
   Future<void> signUp() async {
+    // Vérifier si les champs obligatoires sont remplis
     if (appoge.text.isNotEmpty &&
         email.text.isNotEmpty &&
         password.text.isNotEmpty) {
@@ -35,8 +51,8 @@ class _SignUpState extends State<SignUp> {
             .where('appoge', isEqualTo: appoge.text)
             .get();
 
+        // Si l'apogée existe, créer le compte de l'utilisateur
         if (querySnapshot.docs.isNotEmpty) {
-          // Créer le compte de l'utilisateur avec email et mot de passe
           final credential =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email.text,
@@ -44,25 +60,31 @@ class _SignUpState extends State<SignUp> {
           );
 
           // Enregistrer les informations de l'utilisateur dans Firestore
-          await FirebaseFirestore.instance.collection('users').add({
+          await FirebaseFirestore.instance.collection('etudiantsActives').add({
             'nom': nom.text,
             'prenom': prenom.text,
-            'appoge': appoge.text,
+            'apoge': appoge.text,
             'email': email.text,
+            'sexe': " ",
+            'filiere': " "
           });
+
+          // Mise à jour de la variable emailconnecte et apogeconnecte
+          UserInfo.emailconnecte = email.text;
+          UserInfo.apogeconnecte = appoge.text;
 
           // Rediriger vers l'interface HomeEtudiant
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeEtudiant()),
+            MaterialPageRoute(builder: (context) => ProfileEtudiant()),
           );
 
-          // Afficher un message de confirmation d'activation du compte
+          // Afficher un message de confirmation
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Compte activé avec succès!'),
           ));
         } else {
-          // Afficher une interface d'erreur si l'apogée n'est pas trouvé
+          // Rediriger vers une interface d'erreur si l'apogée n'est pas trouvé
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ErrorPage()),
@@ -78,14 +100,17 @@ class _SignUpState extends State<SignUp> {
         print(e);
       }
     } else {
+      // Afficher un message si les champs obligatoires ne sont pas remplis
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Veuillez remplir les champs obligatoires'),
       ));
     }
   }
-
+   
+   String? apogeConnecte ;
   @override
   Widget build(BuildContext context) {
+    // Interface utilisateur de l'écran d'inscription
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -94,6 +119,7 @@ class _SignUpState extends State<SignUp> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Bouton de retour
                 Row(
                   children: [
                     SizedBox(
@@ -116,17 +142,20 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: 10,
                 ),
+                // Titre de la page
                 Center(
                   child: const Text("SignUp",
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
                 Container(height: 10),
+                // Description de la page
                 Center(
                   child: const Text("SignUp To Continue Using The App",
                       style: TextStyle(color: Colors.grey)),
                 ),
                 Container(height: 20),
+                // Champ pour le nom
                 const Text(
                   "Nom ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -137,6 +166,7 @@ class _SignUpState extends State<SignUp> {
                     mycontroller: nom,
                     obscureText: false),
                 Container(height: 20),
+                // Champ pour le prénom
                 const Text(
                   "Prenom ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -147,6 +177,7 @@ class _SignUpState extends State<SignUp> {
                     mycontroller: prenom,
                     obscureText: false),
                 Container(height: 20),
+                // Champ pour l'apogée
                 const Text(
                   "Appoge ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -157,6 +188,7 @@ class _SignUpState extends State<SignUp> {
                     mycontroller: appoge,
                     obscureText: false),
                 Container(height: 20),
+                // Champ pour l'email
                 const Text(
                   "Email",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -167,6 +199,7 @@ class _SignUpState extends State<SignUp> {
                     mycontroller: email,
                     obscureText: false),
                 Container(height: 8),
+                // Champ pour le mot de passe
                 const Text(
                   "Password",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -196,10 +229,12 @@ class _SignUpState extends State<SignUp> {
                 ),
               ],
             ),
+            // Bouton d'inscription
             CustomButtonAuth(
               title: "SignUp",
               onPressed: signUp,
             ),
+            // Texte pour se connecter
             InkWell(
               onTap: () {
                 Navigator.push(

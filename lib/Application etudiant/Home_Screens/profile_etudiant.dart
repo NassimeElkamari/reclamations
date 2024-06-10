@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileEtudiant extends StatefulWidget {
   const ProfileEtudiant({super.key});
@@ -10,7 +11,7 @@ class ProfileEtudiant extends StatefulWidget {
   @override
   State<ProfileEtudiant> createState() => _ProfileEtudiantState();
 }
- 
+
 class _ProfileEtudiantState extends State<ProfileEtudiant> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<String> _filieres = [
@@ -30,7 +31,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
   String apoge = '';
   String filiere = '';
   String sexe = '';
-  String? email = UserInfo.emailconnecte;
+  String? email = '';
 
   final TextEditingController _nomController = TextEditingController();
   final TextEditingController _prenomController = TextEditingController();
@@ -39,10 +40,21 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
   @override
   void initState() {
     super.initState();
+    _loadApoge(); // Chargement de l'apogée au démarrage de la page
+    _nomController.text = nom; // Initialisation du contrôleur du nom
+    _prenomController.text = prenom; // Initialisation du contrôleur du prénom
+    _apogeController.text = apoge; // Initialisation du contrôleur de l'apogée
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Future<void> _loadApoge() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    apoge = prefs.getString('apogeConnecte') !; // Chargement de l'apogée depuis SharedPreferences
+        print("****************************************************"+apoge);
+  }
+  
+
+  @override  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 28, 51, 128),
@@ -64,14 +76,14 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: _firestore
             .collection('etudiantsActives')
-            .where('email', isEqualTo: email)
+            .where('apoge', isEqualTo: apoge)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("No data found for the given email."));
+            return Center(child: Text("No data found for the given apoge."));
           }
 
           var data = snapshot.data!.docs.first.data();
@@ -81,7 +93,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
           filiere = data['filiere'] ?? '';
           sexe = data['sexe'] ?? '';
 
-          // Update controllers
+          // Mise à jour des contrôleurs avec les nouvelles données
           _nomController.text = nom;
           _prenomController.text = prenom;
           _apogeController.text = apoge;
@@ -92,7 +104,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
             children: [
               SizedBox(height: 30),
               Center(
-                //**********photo de profile ***********/
+                // Photo de profil
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.transparent,
@@ -109,11 +121,11 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                 ),
               ),
               SizedBox(height: 15),
-              //*********modfifier photo de profile ********/
+              // Bouton pour éditer la photo de profil
               Center(
                 child: InkWell(
                   onTap: () async {
-                    // Code to pick an image from gallery (commented out for now)
+                    // Code pour choisir une image depuis la galerie (commenté pour le moment)
                     /*
                     final picker = ImagePicker();
                     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -126,7 +138,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                     */
                   },
                   child: Text(
-                    "Editer photo de profile",
+                    "Editer photo de profil",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.blue,
@@ -253,63 +265,55 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                   TextField(
                     controller: _apogeController,
                     decoration: InputDecoration(
-                      labelText: 'Apoge',
+                      labelText: 'Apogée',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
                   DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      labelText: 'Filiere',
-                      border: OutlineInputBorder(),
-                    ),
                     value: localSelectedFiliere,
-                    onChanged: (newValue) {
-                      setState(() {
-                        localSelectedFiliere = newValue;
-                      });
-                    },
-                    items: _filieres.map((filiere) {
-                      return DropdownMenuItem<String>(
-                        value: filiere,
-                        child: Text(
-                          filiere,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 20),
-                  DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      labelText: 'Sexe',
-                      border: OutlineInputBorder(),
-                    ),
-                    value: localSexe.isEmpty ? null : localSexe,
-                    onChanged: (newValue) {
-                      setState(() {
-                        localSexe = newValue!;
-                      });
-                    },
-                    items: <String>['male', 'femelle']
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: _filieres.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        localSelectedFiliere = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Filière',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    value: localSexe,
+                    items: ['Masculin', 'Féminin'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        localSexe = newValue ?? localSexe;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Sexe',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        filiere = localSelectedFiliere ?? filiere;
-                        sexe = localSexe;
-                      });
-                      _updateEtudiantData();
-                      Navigator.pop(context);
+                      _updateStudentInfo();
+                      Navigator.of(context).pop();
                     },
-                    child: Text('Sauvegarder'),
+                    child: Text('Enregistrer'),
                   ),
                 ],
               ),
@@ -320,30 +324,26 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
     );
   }
 
-  Future<void> _updateEtudiantData() async {
+  Future<void> _updateStudentInfo() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
-          .collection('etudiantsActives')
-          .where('email', isEqualTo: email)
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        String docId = snapshot.docs.first.id;
-
-        await _firestore.collection('etudiantsActives').doc(docId).update({
-          'nom': _nomController.text,
-          'prenom': _prenomController.text,
-          'apoge': int.parse(_apogeController.text),
-          'filiere': filiere,
-          'sexe': sexe,
-        });
-        print("Data updated successfully.");
-      } else {
-        print("No document found for the given email.");
-      }
-    } catch (e) {
-      print("Error updating data: $e");
+      await _firestore.collection('etudiantsActives').doc(email).update({
+        'nom': _nomController.text,
+        'prenom': _prenomController.text,
+        'apoge': _apogeController.text,
+        'filiere': _selectedFiliere,
+        'sexe': sexe,
+      });
+      setState(() {
+        nom = _nomController.text;
+        prenom = _prenomController.text;
+        apoge = _apogeController.text;
+        filiere = _selectedFiliere!;
+        sexe = sexe;
+      });
+      // Show a success message or perform any other action needed
+    } catch (error) {
+      // Handle the error if needed
+      print("Failed to update student info: $error");
     }
   }
 }
-
