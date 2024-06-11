@@ -1,8 +1,12 @@
+// ignore_for_file: unused_element, use_super_parameters, prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/traiter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeEnseignant extends StatefulWidget {
   const HomeEnseignant({Key? key}) : super(key: key);
@@ -11,54 +15,34 @@ class HomeEnseignant extends StatefulWidget {
   State<HomeEnseignant> createState() => _HomeEnseignantState();
 }
 
-class FirestoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<DocumentSnapshot> getEnseignantInfo(String uid) async {
-    return await _firestore.collection('enseignants').doc(uid).get();
-  }
-}
-
 class _HomeEnseignantState extends State<HomeEnseignant> {
   final TextEditingController searchController = TextEditingController();
   bool isSearchClicked = false;
   final _auth = FirebaseAuth.instance;
-  final FirestoreService _firestoreService = FirestoreService();
-  late User signedInUser;
-  String? profileImageUrl;
+  String? _email;
 
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    _loadEmail();
   }
 
-  void getCurrentUser() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        signedInUser = user;
-        final snapshot = await _firestoreService.getEnseignantInfo(user.uid);
-        if (snapshot.exists) {
-          setState(() {
-            profileImageUrl = snapshot['profile'];
-          });
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
+  _loadEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _email = prefs.getString('email');
+    });
+  }
+
+  _saveEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', email);
   }
 
   void _toggleSearch() {
     setState(() {
-      isSearchClicked = !isSearchClicked;
+      isSearchClicked =!isSearchClicked;
     });
-  }
-
-  void pastraite() {
-    // Action à effectuer lors du clic sur Réclamation pas traitée
-    print('Traitement des réclamations pas traitées...');
   }
 
   @override
@@ -69,7 +53,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
         elevation: 0,
         centerTitle: true,
         title: isSearchClicked
-            ? Container(
+           ? Container(
                 height: 40,
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 227, 224, 231),
@@ -106,7 +90,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   shadows: [
                     Shadow(
                       color: const Color.fromARGB(255, 188, 78, 78)
-                          .withOpacity(0.5), // Couleur de l'ombre
+                         .withOpacity(0.5), // Couleur de l'ombre
                       blurRadius: 6, // Rayon du flou
                       offset: Offset(2, 2), // Décalage de l'ombre
                     ),
@@ -169,7 +153,9 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
+            // ignore: prefer_const_constructors
             DrawerHeader(
+              // ignore: prefer_const_constructors
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -186,13 +172,11 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: profileImageUrl != null
-                        ? NetworkImage(profileImageUrl!)
-                        : AssetImage('assets/profile_pic.jpg') as ImageProvider,
+                    backgroundImage: NetworkImage('profile'),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    signedInUser.email ?? 'Nom de l\'enseignant',
+                    _email?? 'No email',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -218,15 +202,6 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Traiter()));
                 // Action à effectuer lors du clic sur Réclamation traitée
-              },
-            ),
-            ListTile(
-              title: Text('Déconnexion', style: TextStyle(color: Colors.black)),
-              trailing: Icon(Icons.login, color: Colors.black),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    "LoginEnseignant", (route) => false);
               },
             ),
             ListTile(
