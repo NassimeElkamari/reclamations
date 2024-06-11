@@ -45,13 +45,18 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
     _prenomController.text = prenom; // Initialisation du contrôleur du prénom
     _apogeController.text = apoge; // Initialisation du contrôleur de l'apogée
   }
-
-  Future<void> _loadApoge() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    apoge = prefs.getString('apogeConnecte') !; // Chargement de l'apogée depuis SharedPreferences
-        print("****************************************************"+apoge);
+Future<void> _loadApoge() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? apoge = prefs.getString('apogeConnecte');
+  if (apoge != null) {
+    setState(() {
+      this.apoge = apoge;
+    });
+  } else {
+    print('No apoge found in SharedPreferences');
   }
+}
+
   
 
   @override  Widget build(BuildContext context) {
@@ -89,7 +94,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
           var data = snapshot.data!.docs.first.data();
           nom = data['nom'] ?? '';
           prenom = data['prenom'] ?? '';
-          apoge = (data['apoge'] ?? '').toString();
+          apoge =   (data['apoge'] ?? '').toString();
           filiere = data['filiere'] ?? '';
           sexe = data['sexe'] ?? '';
 

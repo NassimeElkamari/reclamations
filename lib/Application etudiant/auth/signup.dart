@@ -12,16 +12,12 @@ import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// Classe UserInfo pour stocker les informations de l'utilisateur connecté
-class UserInfo {
-  static String? emailconnecte;
-  static String? apogeconnecte; // Ajout de l'apogée de l'utilisateur connecté
-}
+
 
  
 
-// Classe SignUp pour l'écran d'inscription
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
@@ -29,7 +25,6 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
-// État de la classe SignUp
 class _SignUpState extends State<SignUp> {
   // Contrôleurs pour les champs de saisie
   TextEditingController nom = TextEditingController();
@@ -37,6 +32,12 @@ class _SignUpState extends State<SignUp> {
   TextEditingController appoge = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  // Méthode pour enregistrer l'apogée dans SharedPreferences
+  Future<void> _saveApoge(String apoge) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('apogeConnecte', apoge);
+  }
 
   // Méthode pour l'inscription de l'utilisateur
   Future<void> signUp() async {
@@ -69,11 +70,10 @@ class _SignUpState extends State<SignUp> {
             'filiere': " "
           });
 
-          // Mise à jour de la variable emailconnecte et apogeconnecte
-          UserInfo.emailconnecte = email.text;
-          UserInfo.apogeconnecte = appoge.text;
+          // Enregistrer l'apogée dans SharedPreferences
+          await _saveApoge(appoge.text);
 
-          // Rediriger vers l'interface HomeEtudiant
+          // Rediriger vers l'interface ProfileEtudiant
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ProfileEtudiant()),
@@ -84,11 +84,10 @@ class _SignUpState extends State<SignUp> {
             content: Text('Compte activé avec succès!'),
           ));
         } else {
-          // Rediriger vers une interface d'erreur si l'apogée n'est pas trouvé
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ErrorPage()),
-          );
+          // Afficher un message d'erreur si l'apogée n'est pas trouvée
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Apogée non trouvé. Veuillez vérifier vos informations.'),
+          ));
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
@@ -106,7 +105,6 @@ class _SignUpState extends State<SignUp> {
       ));
     }
   }
-   
    String? apogeConnecte ;
   @override
   Widget build(BuildContext context) {
