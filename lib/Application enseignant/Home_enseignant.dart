@@ -1,4 +1,5 @@
-// ignore_for_file: unused_element, use_super_parameters, prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: use_super_parameters, prefer_const_literals_to_create_immutables, unnecessary_cast, prefer_const_constructors, unused_field, unused_import
+
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/traiter.dart';
@@ -45,6 +46,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +55,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
         elevation: 0,
         centerTitle: true,
         title: isSearchClicked
-           ? Container(
+            ? Container(
                 height: 40,
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 227, 224, 231),
@@ -90,7 +92,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   shadows: [
                     Shadow(
                       color: const Color.fromARGB(255, 188, 78, 78)
-                         .withOpacity(0.5), // Couleur de l'ombre
+                          .withOpacity(0.5), // Couleur de l'ombre
                       blurRadius: 6, // Rayon du flou
                       offset: Offset(2, 2), // Décalage de l'ombre
                     ),
@@ -155,7 +157,6 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
           children: <Widget>[
             // ignore: prefer_const_constructors
             DrawerHeader(
-              // ignore: prefer_const_constructors
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -176,7 +177,7 @@ class _HomeEnseignantState extends State<HomeEnseignant> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    _email?? 'No email',
+                   _email?? '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
