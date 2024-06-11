@@ -2,6 +2,7 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,8 @@ class ProfileEtudiant extends StatefulWidget {
 
 class _ProfileEtudiantState extends State<ProfileEtudiant> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //liste des fillieres
   List<String> _filieres = [
     'Sciences Mathématiques Appliquées (SMA)',
     'Sciences Mathématiques Informatiques (SMI)',
@@ -23,8 +26,10 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
     "Sciences de la Terre et de l'Univers (STU)",
   ];
 
+  //declaration des variables
   String? _selectedFiliere;
   String? _imageURL;
+  String? _selectedSexe;
 
   String nom = '';
   String prenom = '';
@@ -33,10 +38,12 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
   String sexe = '';
   String? email = '';
 
+//declaration des controllers
   final TextEditingController _nomController = TextEditingController();
   final TextEditingController _prenomController = TextEditingController();
   final TextEditingController _apogeController = TextEditingController();
 
+//lafonction initialisation
   @override
   void initState() {
     super.initState();
@@ -45,21 +52,41 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
     _prenomController.text = prenom; // Initialisation du contrôleur du prénom
     _apogeController.text = apoge; // Initialisation du contrôleur de l'apogée
   }
-Future<void> _loadApoge() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? apoge = prefs.getString('apogeConnecte');
-  if (apoge != null) {
-    setState(() {
-      this.apoge = apoge;
-    });
-  } else {
-    print('No apoge found in SharedPreferences');
+
+  //lafonction de get apoge d etuidant connecte
+  Future<void> _loadApoge() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? apoge = prefs.getString('apogeConnecte');
+    if (apoge != null) {
+      setState(() {
+        this.apoge = apoge;
+      });
+    } else {
+      print('No apoge found in SharedPreferences');
+    }
   }
-}
 
-  
+//la fonction de deconnexion
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut(); // Déconnexion de Firebase Auth
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove(
+          'apogeConnecte'); // Suppression de l'apogée dans SharedPreferences
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Login()), // Assurez-vous que LoginPage() est correctement importé
+      );
+      print("connexion reussite !!!!:)  pour " + nom + "  " + prenom);
+    } catch (e) {
+      print('Erreur lors de la déconnexion : $e');
+    }
+  }
 
-  @override  Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 28, 51, 128),
@@ -67,15 +94,21 @@ Future<void> _loadApoge() async {
           Icons.arrow_back,
           color: Colors.white,
         ),
-        title: Row(
-          children: [
-            SizedBox(width: 70),
-            Text(
-              "Mon profil",
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-          ],
-        ),
+        title: Row(children: [
+          SizedBox(width: 70),
+          Text(
+            "Mon profil",
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+        ]),
+        actions: [
+          ElevatedButton(
+            onPressed: _logout,
+            child: Icon(Icons.logout),
+            style: ButtonStyle(iconSize: MaterialStatePropertyAll(15)),
+          ),
+          SizedBox(width: 10),
+        ],
       ),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -94,7 +127,7 @@ Future<void> _loadApoge() async {
           var data = snapshot.data!.docs.first.data();
           nom = data['nom'] ?? '';
           prenom = data['prenom'] ?? '';
-          apoge =   (data['apoge'] ?? '').toString();
+          apoge = (data['apoge'] ?? '').toString();
           filiere = data['filiere'] ?? '';
           sexe = data['sexe'] ?? '';
 
@@ -276,16 +309,21 @@ Future<void> _loadApoge() async {
                   ),
                   SizedBox(height: 20),
                   DropdownButtonFormField<String>(
-                    value: localSelectedFiliere,
+                    value: _selectedFiliere,
                     items: _filieres.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              fontSize:
+                                  14), // Définir la taille de la police ici
+                        ),
                       );
                     }).toList(),
                     onChanged: (newValue) {
                       setState(() {
-                        localSelectedFiliere = newValue;
+                        _selectedFiliere = newValue;
                       });
                     },
                     decoration: InputDecoration(
@@ -295,7 +333,7 @@ Future<void> _loadApoge() async {
                   ),
                   SizedBox(height: 20),
                   DropdownButtonFormField<String>(
-                    value: localSexe,
+                    value: _selectedSexe,
                     items: ['Masculin', 'Féminin'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -304,7 +342,7 @@ Future<void> _loadApoge() async {
                     }).toList(),
                     onChanged: (newValue) {
                       setState(() {
-                        localSexe = newValue ?? localSexe;
+                        _selectedSexe = newValue;
                       });
                     },
                     decoration: InputDecoration(
@@ -328,27 +366,49 @@ Future<void> _loadApoge() async {
       },
     );
   }
-
+  
+  
   Future<void> _updateStudentInfo() async {
-    try {
-      await _firestore.collection('etudiantsActives').doc(email).update({
-        'nom': _nomController.text,
-        'prenom': _prenomController.text,
-        'apoge': _apogeController.text,
-        'filiere': _selectedFiliere,
-        'sexe': sexe,
-      });
-      setState(() {
-        nom = _nomController.text;
-        prenom = _prenomController.text;
-        apoge = _apogeController.text;
-        filiere = _selectedFiliere!;
-        sexe = sexe;
-      });
-      // Show a success message or perform any other action needed
-    } catch (error) {
-      // Handle the error if needed
-      print("Failed to update student info: $error");
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? apogeConnecte = prefs.getString('apogeConnecte');
+    if (apogeConnecte == null) {
+      print('No apoge found in SharedPreferences');
+      return;
     }
+
+    // Récupérer l'ID du document correspondant à l'apogée 20035326
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
+        .collection('etudiantsActives')
+        .where('apoge', isEqualTo:apogeConnecte)
+        .get();
+
+    // Vérifier si un document correspondant à l'apogée 20035326 a été trouvé
+    if (snapshot.docs.isEmpty) {
+      print('No document found for apoge '+apogeConnecte);
+      return;
+    }
+
+    // Mettre à jour le document avec les nouvelles valeurs des champs d'entrée
+    await snapshot.docs.first.reference.update({
+      'nom': _nomController.text,
+      'prenom': _prenomController.text,
+      'apoge': _apogeController.text,
+      'filiere': _selectedFiliere,
+      'sexe': _selectedSexe,
+    });
+
+    setState(() {
+      nom = _nomController.text;
+      prenom = _prenomController.text;
+      apoge = _apogeController.text;
+      filiere = _selectedFiliere!;
+      sexe = _selectedSexe!;
+    });
+    // Afficher un message de réussite ou effectuer toute autre action nécessaire
+  } catch (error) {
+    // Gérer l'erreur si nécessaire
+    print("Failed to update student info: $error");
   }
+}
 }

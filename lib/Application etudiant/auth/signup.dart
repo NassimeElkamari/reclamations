@@ -27,11 +27,11 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   // Contrôleurs pour les champs de saisie
-  TextEditingController nom = TextEditingController();
-  TextEditingController prenom = TextEditingController();
-  TextEditingController appoge = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController nomEntre = TextEditingController();
+  TextEditingController prenomEntre = TextEditingController();
+  TextEditingController appogeEntre = TextEditingController();
+  TextEditingController emailEntre = TextEditingController();
+  TextEditingController passwordEntre = TextEditingController();
 
   // Méthode pour enregistrer l'apogée dans SharedPreferences
   Future<void> _saveApoge(String apoge) async {
@@ -42,41 +42,42 @@ class _SignUpState extends State<SignUp> {
   // Méthode pour l'inscription de l'utilisateur
   Future<void> signUp() async {
     // Vérifier si les champs obligatoires sont remplis
-    if (appoge.text.isNotEmpty &&
-        email.text.isNotEmpty &&
-        password.text.isNotEmpty) {
+    if (appogeEntre.text.isNotEmpty &&
+        emailEntre.text.isNotEmpty &&
+        passwordEntre.text.isNotEmpty) {
       try {
         // Vérifier si l'apogée de l'étudiant existe dans la base de données
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('etudiants')
-            .where('appoge', isEqualTo: appoge.text)
+            .where('appoge', isEqualTo: appogeEntre.text)
             .get();
 
         // Si l'apogée existe, créer le compte de l'utilisateur
         if (querySnapshot.docs.isNotEmpty) {
           final credential =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email.text,
-            password: password.text,
+            email: emailEntre.text,
+            password: passwordEntre.text,
           );
 
           // Enregistrer les informations de l'utilisateur dans Firestore
           await FirebaseFirestore.instance.collection('etudiantsActives').add({
-            'nom': nom.text,
-            'prenom': prenom.text,
-            'apoge': appoge.text,
-            'email': email.text,
+            'nom': nomEntre.text,
+            'prenom': prenomEntre.text,
+            'apoge': appogeEntre.text,
+            'email': emailEntre.text,
             'sexe': " ",
-            'filiere': " "
+            'filiere': " ",
+            'password' : passwordEntre.text
           });
 
           // Enregistrer l'apogée dans SharedPreferences
-          await _saveApoge(appoge.text);
+          await _saveApoge(appogeEntre.text);
 
           // Rediriger vers l'interface ProfileEtudiant
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => ProfileEtudiant()),
+            MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
           );
 
           // Afficher un message de confirmation
@@ -161,7 +162,7 @@ class _SignUpState extends State<SignUp> {
                 Container(height: 8),
                 CustomTextForm(
                     hinttext: "Enter votre nom",
-                    mycontroller: nom,
+                    mycontroller: nomEntre,
                     obscureText: false),
                 Container(height: 20),
                 // Champ pour le prénom
@@ -172,7 +173,7 @@ class _SignUpState extends State<SignUp> {
                 Container(height: 8),
                 CustomTextForm(
                     hinttext: "Enter votre prenom",
-                    mycontroller: prenom,
+                    mycontroller: prenomEntre,
                     obscureText: false),
                 Container(height: 20),
                 // Champ pour l'apogée
@@ -183,7 +184,7 @@ class _SignUpState extends State<SignUp> {
                 Container(height: 8),
                 CustomTextForm(
                     hinttext: "Enter votre Appoge",
-                    mycontroller: appoge,
+                    mycontroller: appogeEntre,
                     obscureText: false),
                 Container(height: 20),
                 // Champ pour l'email
@@ -194,7 +195,7 @@ class _SignUpState extends State<SignUp> {
                 Container(height: 8),
                 CustomTextForm(
                     hinttext: "Enter Your Email",
-                    mycontroller: email,
+                    mycontroller: emailEntre,
                     obscureText: false),
                 Container(height: 8),
                 // Champ pour le mot de passe
@@ -205,8 +206,8 @@ class _SignUpState extends State<SignUp> {
                 Container(height: 8),
                 CustomTextForm(
                     hinttext: "Enter Your Password",
-                    mycontroller: password,
-                    obscureText: false),
+                    mycontroller: passwordEntre,
+                    obscureText: true),
                 Container(
                   margin: const EdgeInsets.only(top: 10, bottom: 20),
                   alignment: Alignment.topRight,
