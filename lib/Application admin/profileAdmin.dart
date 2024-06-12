@@ -87,7 +87,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
             SizedBox(height: 10),
             Center(
               child: CircleAvatar(
-                radius: 100,
+                radius: 80,
                 backgroundColor: Colors.transparent,
                 child: ClipOval(
                   child: SizedBox(

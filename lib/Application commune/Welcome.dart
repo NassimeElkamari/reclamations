@@ -1,5 +1,6 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -74,7 +75,7 @@ class WelcomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Login()),
+                  MaterialPageRoute(builder: (context) => const SignUp()),
                 );
               },
               child: Container(

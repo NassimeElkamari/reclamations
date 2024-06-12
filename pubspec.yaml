@@ -48,6 +48,8 @@ dependencies:
   flutter_cache_manager: ^3.3.1
 
   intl: ^0.19.0
+  table_calendar: ^3.1.1
+  image_picker: ^1.0.8
   shared_preferences: ^2.2.3
 dev_dependencies:
   flutter_test:
@@ -73,6 +75,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/
+    - images/home_etudiant.png
     - images/student_girl.png
     - assets/Guide des étapes de la méthode de connexion à Rosetta Stone à travers SSO.pdf
   #   - images/a_dot_ham.jpeg
