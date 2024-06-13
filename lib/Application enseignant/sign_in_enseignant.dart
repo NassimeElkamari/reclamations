@@ -4,13 +4,20 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';// Importez la page de récupération du mot de passe
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/HomeEnseignant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
+import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInEnseignant extends StatefulWidget {
   const SignInEnseignant({Key? key}) : super(key: key);
@@ -20,58 +27,62 @@ class SignInEnseignant extends StatefulWidget {
 }
 
 class _SignInEnseignantState extends State<SignInEnseignant> {
- TextEditingController emailAddress = TextEditingController();
+  TextEditingController emailAddress = TextEditingController();
   TextEditingController password = TextEditingController();
 
   final _formSignInKey = GlobalKey<FormState>();
-  
 
- 
-
- Future<void> _signIn(BuildContext context) async {
-  try {
-    // Recherche dans la collection 'admin'
-    final adminQuery = await FirebaseFirestore.instance
-        .collection('admin')
-        .where('email', isEqualTo: emailAddress.text)
-        .where('password', isEqualTo: password.text)
-        .get();
-
-    // Recherche dans la collection 'enseignants'
-    final enseignantQuery = await FirebaseFirestore.instance
-        .collection('enseignants')
-        .where('email', isEqualTo: emailAddress.text)
-        .where('password', isEqualTo: password.text)
-        .get();
-
-    // Redirection selon le type d'utilisateur
-    if (adminQuery.docs.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => NavigatorBarAdmin()),
-      );
-    } else if (enseignantQuery.docs.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeEnseignant()),
-      );
-    } else {
-      // Aucun utilisateur trouvé dans les deux collections
-      AwesomeDialog(
-        context: context,
-        dialogType: DialogType.error,
-        animType: AnimType.rightSlide,
-        title: 'Erreur',
-        desc: 'Aucun utilisateur trouvé pour cet email ou mot de passe incorrect.',
-        btnCancelOnPress: () {},
-        btnOkOnPress: () {},
-      ).show();
-    }
-  } catch (e) {
-    print('Error: $e');
-    // Gérer les erreurs ici
+  // Enregistrer l'email du professeur connecté
+  Future<void> _saveEmailenseignant(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("emailProfConnecte", email);
   }
-}
+
+  Future<void> _signIn(BuildContext context) async {
+    try {
+      // Recherche dans la collection 'admin'
+      final adminQuery = await FirebaseFirestore.instance
+          .collection('admin')
+          .where('email', isEqualTo: emailAddress.text)
+          .where('password', isEqualTo: password.text)
+          .get();
+
+      // Recherche dans la collection 'enseignants'
+      final enseignantQuery = await FirebaseFirestore.instance
+          .collection('enseignants')
+          .where('email', isEqualTo: emailAddress.text)
+          .where('password', isEqualTo: password.text)
+          .get();
+
+      // Redirection selon le type d'utilisateur
+      if (adminQuery.docs.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => NavigatorBarAdmin()),
+        );
+      } else if (enseignantQuery.docs.isNotEmpty) {
+        await _saveEmailenseignant(emailAddress.text);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Home_Enseignant()),
+        );
+      } else {
+        // Aucun utilisateur trouvé dans les deux collections
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.error,
+          animType: AnimType.rightSlide,
+          title: 'Erreur',
+          desc: 'Aucun utilisateur trouvé pour cet email ou mot de passe incorrect.',
+          btnCancelOnPress: () {},
+          btnOkOnPress: () {},
+        ).show();
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Gérer les erreurs ici
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +149,6 @@ class _SignInEnseignantState extends State<SignInEnseignant> {
                       SizedBox(height: 30.0),
                       TextFormField(
                         controller: emailAddress,
-                        onChanged: (value) {},
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Veuillez entrer un Email';
@@ -165,7 +175,6 @@ class _SignInEnseignantState extends State<SignInEnseignant> {
                       SizedBox(height: 25.0),
                       TextFormField(
                         controller: password,
-                        onChanged: (value) {},
                         obscureText: true,
                         obscuringCharacter: '*',
                         validator: (value) {

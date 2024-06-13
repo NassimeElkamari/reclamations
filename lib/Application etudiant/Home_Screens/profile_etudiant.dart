@@ -261,6 +261,8 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
   }
 
   void _showEditModal(BuildContext context) {
+    String? _selectedFiliere = _filieres.first;
+
     String? localSelectedFiliere = _selectedFiliere;
     String localSexe = sexe;
 

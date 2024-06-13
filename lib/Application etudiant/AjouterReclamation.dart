@@ -28,50 +28,53 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
     _loadProfessors();
   }
 
-  Future<void> _loadProfessors() async {
-    try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('enseignants').get();
-      List<DropdownMenuItem<String>> items = querySnapshot.docs.map((doc) {
-        return DropdownMenuItem<String>(
-          value: doc.id,
-          child: Text(doc['nom']),
-        );
-      }).toList();
-      setState(() {
-        _professorItems = items;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors du chargement des professeurs')),
+ Future<void> _loadProfessors() async {
+  try {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('enseignants').get();
+    List<DropdownMenuItem<String>> items = querySnapshot.docs.map((doc) {
+      String nom = doc['nom'];
+      String prenom = doc['prenom'];
+      String fullName = '$nom $prenom'; // Concaténer le nom et le prénom
+      return DropdownMenuItem<String>(
+        value: '$fullName', // Utilisez le nom complet comme valeur
+        child: Text(fullName),
       );
-    }
+    }).toList();
+    setState(() {
+      _professorItems = items;
+    });
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erreur lors du chargement des professeurs')),
+    );
   }
+}
 
-  Future<void> _ajouterReclamation() async {
-    try {
-      await FirebaseFirestore.instance.collection('reclamations').add({
-        'nom': _nomController.text,
-        'prenom': _prenomController.text,
-        'apoge': _apogeController.text,
-        'sujet': _selectedChoice,
-        'description': _descriptionController.text,
-        'professeurId': _selectedProfessor,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Réclamation ajoutée avec succès')),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
-      );
-    }
+Future<void> _ajouterReclamation() async {
+  try {
+    await FirebaseFirestore.instance.collection('reclamations').add({
+      'nomEtudiant': '${_nomController.text} ${_prenomController.text}',
+      'apogeEtudiant': _apogeController.text,
+      'sujet': _selectedChoice,
+      'description': _descriptionController.text,
+      'nomEnseignant': _selectedProfessor,
+      'date': FieldValue.serverTimestamp(),
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Réclamation ajoutée avec succès')),
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -108,29 +111,6 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Button ajouter
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
-                //color: Color.fromARGB(255, 28, 51, 128),
-                width: 120,
-                height: 60,
-                margin: EdgeInsets.only(top: 20,left: 220),
-                child: ElevatedButton(
-                  onPressed: _ajouterReclamation,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:  Color.fromARGB(255, 28, 51, 128), // Background color
-                  ),
-                  child: Text(
-                    "Ajouter",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20
-                    ),
-                  ),
-                ),
-              ),
-            ),
 
             SizedBox(height: 30),
 
@@ -189,6 +169,27 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
                 decoration: inputDecoration(
                   'Description',
                   'Entrer la description de la réclamation',
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                //color: Color.fromARGB(255, 28, 51, 128),
+                width: 120,
+                height: 60,
+                margin: EdgeInsets.only(top: 20, left: 220),
+                child: ElevatedButton(
+                  onPressed: _ajouterReclamation,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Color.fromARGB(255, 28, 51, 128), // Background color
+                  ),
+                  child: Text(
+                    "Ajouter",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                 ),
               ),
             ),

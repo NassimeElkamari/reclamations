@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/AjouterReclamation.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/mesReclamations.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/liste_sites_facult%C3%A9.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -143,7 +144,7 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
               children: [
                 SizedBox(width: 16),
                 // liste des réclamations
-                Cas_Utilisation(context, "images/liste.png", "Liste de mes réclamations ", () => AjouterReclamation()),
+                Cas_Utilisation(context, "images/liste.png", "Liste de mes réclamations ", () => MesReclamations()),
                 SizedBox(width: 16),
                 // liste des cours
                 Cas_Utilisation(context, "images/liste_cours.png", "Liste des cours", () => AjouterReclamation()),

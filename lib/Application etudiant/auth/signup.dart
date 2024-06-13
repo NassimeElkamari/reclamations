@@ -14,10 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
- 
-
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
@@ -26,6 +22,16 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  String? _selectedFiliere;
+  //liste des fillieres
+  List<String> _filieres = [
+    'Sciences Mathématiques Appliquées (SMA)',
+    'Sciences Mathématiques Informatiques (SMI)',
+    'Sciences de la Matière Physique (SMP)',
+    'Sciences de la Matière Chimie (SMC)',
+    'Sciences de la Vie (SVI)',
+    "Sciences de la Terre et de l'Univers (STU)",
+  ];
   // Contrôleurs pour les champs de saisie
   TextEditingController nomEntre = TextEditingController();
   TextEditingController prenomEntre = TextEditingController();
@@ -46,7 +52,7 @@ class _SignUpState extends State<SignUp> {
         emailEntre.text.isNotEmpty &&
         passwordEntre.text.isNotEmpty) {
       try {
-        // Vérifier si l'apogée de l'étudiant existe dans la base de données
+        // Vérifier si l'apogée de l'étudiant existe dans la bAAase de données
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('etudiants')
             .where('appoge', isEqualTo: appogeEntre.text)
@@ -66,9 +72,9 @@ class _SignUpState extends State<SignUp> {
             'prenom': prenomEntre.text,
             'apoge': appogeEntre.text,
             'email': emailEntre.text,
-            'sexe': " ",
-            'filiere': " ",
-            'password' : passwordEntre.text
+            'sexe': "  ",
+            'filiere': _selectedFiliere,
+            'password': passwordEntre.text
           });
 
           // Enregistrer l'apogée dans SharedPreferences
@@ -87,7 +93,8 @@ class _SignUpState extends State<SignUp> {
         } else {
           // Afficher un message d'erreur si l'apogée n'est pas trouvée
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Apogée non trouvé. Veuillez vérifier vos informations.'),
+            content:
+                Text('Apogée non trouvé. Veuillez vérifier vos informations.'),
           ));
         }
       } on FirebaseAuthException catch (e) {
@@ -106,7 +113,8 @@ class _SignUpState extends State<SignUp> {
       ));
     }
   }
-   String? apogeConnecte ;
+
+  String? apogeConnecte;
   @override
   Widget build(BuildContext context) {
     // Interface utilisateur de l'écran d'inscription
@@ -198,11 +206,52 @@ class _SignUpState extends State<SignUp> {
                     mycontroller: emailEntre,
                     obscureText: false),
                 Container(height: 8),
-                // Champ pour le mot de passe
-                const Text(
-                  "Password",
+                Text(
+                  "Filière ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
+                Container(height: 8),
+                Container(
+                  height: 50, // Hauteur du champ de sélection
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50), // Bord arrondi
+                    border: Border.all(), // Bordure avec style par défaut
+                     color: Color.fromARGB(255, 235, 234, 255), // Couleur de fond grise
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedFiliere,
+                    items: _filieres.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                            fontSize: 12, // Taille de la police réduite
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedFiliere = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ), // Padding pour le contenu
+                      border: InputBorder
+                          .none, // Supprimer la bordure de DropdownButtonFormField
+                    ),
+                  ),
+                ),
+
+                Container(height: 8),
+                const Text(
+                  "Email",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+
                 Container(height: 8),
                 CustomTextForm(
                     hinttext: "Enter Your Password",
