@@ -38,7 +38,11 @@ class _Home_EnseignantState extends State<Home_Enseignant> {
       appBar: AppBar(
         title: Text("Accueil Enseignant"),
       ),
-      body:,
+      body: Center(
+        child: email != null 
+            ? Text("Email du professeur connecté: $email")
+            : CircularProgressIndicator(), // Afficher un indicateur de progression pendant le chargement de l'email
+      ),
     );
   }
 }

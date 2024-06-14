@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,8 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String _email = '';
   late String _phone = '';
   late String _department = '';
-  late String _profileImageUrl =
-      ''; // Nouvelle variable pour l'URL de la photo de profil
+  late String _profileImageUrl = ''; // Nouvelle variable pour l'URL de la photo de profil
 
   @override
   void initState() {
@@ -66,10 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _email = snapshot.data()?['email'] ?? '';
           _phone = snapshot.data()?['phone'] ?? '';
           _department = snapshot.data()?['department'] ?? '';
-          _profileImageUrl = snapshot.data()?['profile'] ??
-              ''; // Récupérer l'URL de la photo de profil
-          print(
-              "Données récupérées: $_nom, $_address, $_email, $_phone, $_department, $_profileImageUrl"); // Débogage
+          _profileImageUrl = snapshot.data()?['profile'] ?? ''; // Récupérer l'URL de la photo de profil
+          print("Données récupérées: $_nom, $_address, $_email, $_phone, $_department, $_profileImageUrl"); // Débogage
         });
       } else {
         print("Le document n'existe pas."); // Débogage
@@ -77,6 +77,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       print("Aucun utilisateur connecté."); // Débogage
     }
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => SignInEnseignant(), // Replace with your login screen
+      ));
+    } catch (e) {
+      print("Error during sign out: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur lors de la déconnexion. Veuillez réessayer.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Êtes-vous sûr de vouloir vous déconnecter?'),
+          actions: [
+            TextButton(
+              child: Text('Annuler'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Déconnexion'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -97,10 +141,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               CircleAvatar(
                 radius: 70,
                 backgroundImage: _profileImageUrl.isNotEmpty
-                    ? NetworkImage(
-                        _profileImageUrl) // Utiliser l'URL de la photo de profil
-                    : AssetImage('assets/images/user.JPG')
-                        as ImageProvider, // Image par défaut
+                    ? NetworkImage(_profileImageUrl) // Utiliser l'URL de la photo de profil
+                    : AssetImage('assets/images/user.JPG') as ImageProvider, // Image par défaut
               ),
               const SizedBox(height: 20),
               itemProfile('Nom', _nom, CupertinoIcons.person),
@@ -112,16 +154,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               itemProfile('Téléphone', _phone, CupertinoIcons.phone),
               const SizedBox(height: 10),
               itemProfile('Département', _department, CupertinoIcons.briefcase),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        "SignInEnseignant", (route) => false);
+                  onPressed: () {
+                    _confirmLogout(context);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(15),

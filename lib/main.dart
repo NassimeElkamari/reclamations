@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Correct import
@@ -32,17 +33,16 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        'Welcome':(context) => WelcomeScreen(),
-        '/loginetudiant':(context) =>Login(),
+        'Welcome': (context) => WelcomeScreen(),
+        'Welcome': (context) => WelcomeScreen(),
+        '/loginetudiant': (context) => Login(),
         // 'HomeEnseignant': (context) => HomeEnseignant(),
-    //'LoginEnseignant': (context) => SignInEnseignant(),
-    //'HomeEtudiant': (context) => NavigatorBarEtudiant(),
+        //'LoginEnseignant': (context) => SignInEnseignant(),
+        //'HomeEtudiant': (context) => NavigatorBarEtudiant(),
       },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-
-      home:  WelcomeScreen(),
-
+      home: WelcomeScreen(),
     );
   }
 }
