@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,22 @@ class _MesReclamationsState extends State<MesReclamations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
+        backgroundColor: Color.fromARGB(255, 55, 105, 172),
+        leading: IconButton(
+          //button pour retour a la page principale
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavigatorBarEtudiant(),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         title: Text(
           "Mes réclamations",
           style: TextStyle(
@@ -69,7 +85,9 @@ class _MesReclamationsState extends State<MesReclamations> {
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 17, horizontal: 16),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Color.fromARGB(255, 28, 51, 128)),
+                  border: Border.all(
+                    color: Color.fromARGB(255, 238, 116, 17),
+                  ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListTile(
@@ -78,7 +96,7 @@ class _MesReclamationsState extends State<MesReclamations> {
                     data['sujet'],
                     style: TextStyle(
                       fontSize: 21,
-                      color: Color.fromARGB(255, 28, 51, 128),
+                      color: Color.fromARGB(255, 55, 105, 172),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -93,14 +111,14 @@ class _MesReclamationsState extends State<MesReclamations> {
                           Icon(
                             Icons.arrow_forward,
                             size: 10,
-                            color: Colors.grey[600],
+                            color: Color.fromARGB(255, 238, 116, 17),
                           ),
                           Text(
                             ' Professeur:',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: Color.fromARGB(255, 28, 51, 128),
+                              color: Color.fromARGB(255, 238, 116, 17),
                             ),
                           ),
                           SizedBox(
@@ -139,7 +157,9 @@ class _MesReclamationsState extends State<MesReclamations> {
       ),
     );
   }
-}class DetailsPage extends StatelessWidget {
+}
+
+class DetailsPage extends StatelessWidget {
   final Map<String, dynamic> reclamationData;
 
   DetailsPage({required this.reclamationData});
@@ -148,30 +168,122 @@ class _MesReclamationsState extends State<MesReclamations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
-        title: Text('Détails de la réclamation'),
+        backgroundColor: Color.fromARGB(255, 55, 105, 172),
+        title: Text(
+          'Détails de la réclamation',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          //button pour retour a la page principale
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MesReclamations(),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: ListView(
         children: [
-          Container(child: Text("Sujet :",),padding: EdgeInsets.only(top: 2 , bottom: 0),margin: EdgeInsets.only(top: 2 , bottom: 0),),
-          AfficherDetailsReclamation(reclamationData['nomEnseignant'], 17, 40),
-          Text("Nom de l'enseignant:"),
-          AfficherDetailsReclamation(reclamationData['nomEnseignant'], 17, 40),
-          Text("Description:"),
-          AfficherDetailsReclamation(reclamationData['description'], 15, 160),
-          Text("Date :"),
-          AfficherDetailsReclamation((reclamationData['date'] as Timestamp).toDate().toString(), 15, 30),
-        
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Sujet :",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 10, 72, 153),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              AfficherDetailsReclamation(reclamationData['sujet'], 17, 40),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text("Nom etudiant :",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 10, 72, 153),
+                        fontWeight: FontWeight.bold)),
+              ),
+              AfficherDetailsReclamation(
+                  reclamationData['nomEtudiant'], 17, 40),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Nom de l'enseignant:",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 10, 72, 153),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              AfficherDetailsReclamation(
+                  reclamationData['nomEnseignant'], 17, 40),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Description:",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 10, 72, 153),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              AfficherDetailsReclamation(
+                  reclamationData['description'], 15, 160),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                 padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Date :",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 10, 72, 153),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              AfficherDetailsReclamation(
+                  (reclamationData['date'] as Timestamp).toDate().toString(),
+                  15,
+                  30),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-Widget AfficherDetailsReclamation(
-String valeur, double taille, double toul) {
+Widget AfficherDetailsReclamation(String valeur, double taille, double toul) {
   return Padding(
-    padding: const EdgeInsets.only(top: 12, left: 10),
+    padding: const EdgeInsets.only(left: 14, bottom: 16),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -183,7 +295,7 @@ String valeur, double taille, double toul) {
             height: toul,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Color.fromARGB(255, 4, 19, 105),
+                color: Color.fromARGB(255, 238, 116, 17),
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(10),
@@ -193,7 +305,7 @@ String valeur, double taille, double toul) {
                 ' $valeur ',
                 style: TextStyle(
                   fontSize: taille,
-                  color: Color.fromARGB(255, 4, 19, 105),
+                  color: Color.fromARGB(255, 55, 105, 172),
                 ),
               ),
             ),

@@ -3,7 +3,9 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/AjouterReclamation.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/mesReclamations.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/liste_sites_facult%C3%A9.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,9 +17,48 @@ class HomeBodyEtudiant extends StatefulWidget {
 }
 
 class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  String? studentName;
+  String? apogeConnecte;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadApoge();
+  }
+
+  Future<void> _loadApoge() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? apoge = prefs.getString('apogeConnecte');
+    if (apoge != null) {
+      print(
+          'Apoge trouvé dans SharedPreferences: $apoge'); // Debug: Afficher l'apoge trouvé
+      _searchStudentByApoge(apoge);
+    } else {
+      print('Aucun apoge trouvé dans SharedPreferences');
+    }
+  }
+
+   Future<void> _searchStudentByApoge(String apoge) async {
+    try {
+      print('Recherche de l\'étudiant avec l\'apoge: $apoge'); // Debug: Afficher l'apoge utilisé pour la recherche
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('etudiantsActives')
+          .where('apoge', isEqualTo: apoge)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var studentDoc = querySnapshot.docs.first;
+        setState(() {
+          studentName = studentDoc['prenom'] + ' ' + studentDoc['nom'];
+        });
+        print('Étudiant trouvé: $studentName'); // Debug: Afficher le nom de l'étudiant trouvé
+      } else {
+        print('Aucun étudiant trouvé avec l\'apoge: $apoge');
+      }
+    } catch (e) {
+      print('Erreur lors de la recherche de l\'étudiant avec l\'apoge: $e');
+    }
+  }
 
   // Fonction pour ouvrir le site web
   Future<void> openAppBrowserView(String url) async {
@@ -29,125 +70,160 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            SizedBox(
+              width: 110,
+            ),
+            Text(
+              " Acceuil",
+              style: TextStyle(
+                  fontSize: 36,
+                  color: Color.fromARGB(255, 228, 240, 255),
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        backgroundColor: Color.fromARGB(255, 84, 132, 196),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Color.fromARGB(255, 228, 240, 255),
+            ),
+            onPressed: () {
+              showMenu(
+                color: Color.fromARGB(255, 228, 240, 255),
+                context: context,
+                position: RelativeRect.fromLTRB(
+                    100, 100, 0, 0), // Positionner le menu
+                items: [
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: Text("Option 1"),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: Text("Déconnection "),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: Text("about application "),
+                  ),
+                ],
+                elevation: 8.0,
+              ).then((value) {
+                if (value == 0) {
+                  // Action pour l'option 1
+                  print('Option 1 sélectionnée');
+                } else if (value == 1) {
+                  // Action pour l'option 2
+                  print('Option 2 sélectionnée');
+                }
+              });
+            },
+          )
+        ],
+      ),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Column(
         children: [
+          SizedBox(height: 15),
+
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 40,),
-                Text(
-                  " Welcome back !",
-                  style: TextStyle(
-                      fontSize:36,
-                       color: Color.fromARGB(255, 255, 255, 255),
-                       fontWeight: FontWeight.bold
-                       ),
-      ),
-      SizedBox(height: 5),
-      Text(
-                  "    Explorez notre application !."
-                 ,
-                  style: TextStyle(
-                      fontSize: 15,
-                       color: Color.fromARGB(255, 255, 255, 255),
-                 
-                       ),
-      ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: Text(
+                    studentName != null
+                        ? 'Bonjour $studentName !'
+                        : 'Chargement...',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Color.fromARGB(255, 84, 132, 196),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
-            height: 125,
+            height: 80,
             width: double.infinity,
-            color: Color.fromARGB(255, 28, 51, 128),
           ),
-          SizedBox(height: 20),
-
-    Image.asset("images/home_student.png",height: 200,),
-       /*   // Afficher calendrier
-   Container(
-  width: 250, // Ajustez la largeur du conteneur
-  height: 230, // Ajustez la hauteur du conteneur
-  margin: EdgeInsets.symmetric(horizontal: 20),
-  decoration: BoxDecoration(
-    color: Color.fromARGB(255, 211, 221, 252),
-    borderRadius: BorderRadius.circular(20),
-  ),
-  child: TableCalendar(
-    firstDay: DateTime.utc(2010, 10, 16),
-    lastDay: DateTime.utc(2030, 3, 14),
-    focusedDay: _focusedDay,
-    calendarFormat: _calendarFormat,
-    selectedDayPredicate: (day) {
-      return isSameDay(_selectedDay, day);
-    },
-    onDaySelected: (selectedDay, focusedDay) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-      });
-    },
-    onFormatChanged: (format) {
-      if (_calendarFormat != format) {
-        setState(() {
-          _calendarFormat = format;
-        });
-      }
-    },
-    onPageChanged: (focusedDay) {
-      _focusedDay = focusedDay;
-    },
-    calendarStyle: CalendarStyle(
-      todayTextStyle: TextStyle(fontSize: 10.0),
-      defaultTextStyle: TextStyle(fontSize: 10.0),
-      weekendTextStyle: TextStyle(fontSize: 10.0),
-      selectedTextStyle: TextStyle(fontSize: 10.0),
-      cellMargin: EdgeInsets.all(1), // Réduire les marges des cellules
-      cellPadding: EdgeInsets.zero, // Réduire l'espacement à zéro
-    // Ajustez la hauteur des lignes
-    ),
-    daysOfWeekStyle: DaysOfWeekStyle(
-      weekdayStyle: TextStyle(fontSize: 10.0),
-      weekendStyle: TextStyle(fontSize: 10.0),
-    ),
-  ),
-)*/
-
-
           SizedBox(height: 10),
-          // chercher
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 18),
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 211, 221, 252),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            height: 50,
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Rechercher...',
-                hintStyle: TextStyle(color: Color.fromARGB(255, 252, 253, 255)),
-                icon: Icon(Icons.search, color: Color.fromARGB(255, 99, 161, 255)),
-                border: InputBorder.none,
-              ),
-              style: TextStyle(color: Colors.white),
-              onChanged: (value) {
-                // Ajoutez ici la logique de recherche en fonction de la valeur saisie
-              },
-            ),
+
+          Image.asset(
+            "images/acceuil_etudiant.png",
+            height: 200,
           ),
-          SizedBox(height: 40),
+
+          SizedBox(height: 30),
+
           Expanded(
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 SizedBox(width: 16),
                 // liste des réclamations
-                Cas_Utilisation(context, "images/liste.png", "Liste de mes réclamations ", () => MesReclamations()),
+                Cas_Utilisation(context, "images/mes reclamations.png",
+                    " mes réclamations ", () => MesReclamations(), 112),
                 SizedBox(width: 16),
                 // liste des cours
-                Cas_Utilisation(context, "images/liste_cours.png", "Liste des cours", () => AjouterReclamation()),
+
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AjouterReclamation(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    height: 100,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 153, 182, 255)
+                              .withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color.fromARGB(255, 84, 132, 196),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 6),
+                        Image.asset("images/mescours.png", height: 110),
+                        SizedBox(height: 5),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Liste des cours",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 242, 245, 255),
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(width: 16),
                 // liste des offres travail pour les étudiants
                 GestureDetector(
@@ -161,20 +237,21 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color:Color.fromARGB(255, 50, 60, 202).withOpacity(0.5),
+                          color: Color.fromARGB(255, 153, 182, 255)
+                              .withOpacity(0.5),
                           spreadRadius: 5,
                           blurRadius: 7,
                           offset: Offset(0, 3),
                         ),
                       ],
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 84, 132, 196),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(height: 6),
-                        Image.asset("images/liste offre travail.png", height: 80),
+                        Image.asset("images/offres_enmplois.png", height: 100),
                         SizedBox(height: 6),
                         Container(
                           alignment: Alignment.center,
@@ -182,8 +259,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                             "Voir des offres d'emploi",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Color.fromARGB(255, 54, 78, 158),
-                              fontSize: 25,
+                              color: Color.fromARGB(255, 242, 245, 255),
+                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -204,20 +281,22 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Color.fromARGB(255, 50, 60, 202).withOpacity(0.5),
+                          color: Color.fromARGB(255, 153, 182, 255)
+                              .withOpacity(0.5),
                           spreadRadius: 5,
                           blurRadius: 7,
                           offset: Offset(0, 3),
                         ),
                       ],
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 84, 132, 196),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(height: 6),
-                        Image.asset("images/actualits facultes.png", height: 80),
+                        Image.asset("images/actualités_faculte.png",
+                            height: 100),
                         SizedBox(height: 6),
                         Container(
                           alignment: Alignment.center,
@@ -225,8 +304,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                             "Les actualités de la faculté",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Color.fromARGB(255, 54, 78, 158),
-                              fontSize: 25,
+                              color: Color.fromARGB(255, 242, 245, 255),
+                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -236,7 +315,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                 ),
                 SizedBox(width: 16),
                 // liste des applications liee a la facultes
-                Cas_Utilisation(context, "images/liste_cours.png", "Accès aux sites de la faculté", () => SitesFaculte()),
+                Cas_Utilisation(context, "images/acces_aux_sites.png",
+                    "Accès aux sites de la faculté", () => SitesFaculte(), 100),
                 SizedBox(width: 16),
               ],
             ),
@@ -248,7 +328,7 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
-                backgroundColor: Color.fromARGB(255, 143, 163, 252),
+                backgroundColor: Color.fromARGB(255, 84, 132, 196),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -267,7 +347,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
     );
   }
 
-  GestureDetector Cas_Utilisation(BuildContext context, String imagePath, String title, Widget Function() chemin) {
+  GestureDetector Cas_Utilisation(BuildContext context, String imagePath,
+      String title, Widget Function() chemin, double size) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -279,25 +360,25 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
       },
       child: Container(
         margin: EdgeInsets.all(10),
-        height: 150,
+        height: 100,
         width: 200,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Color.fromARGB(255, 50, 60, 202).withOpacity(0.5),
+              color: Color.fromARGB(255, 153, 182, 255).withOpacity(0.5),
               spreadRadius: 5,
               blurRadius: 7,
               offset: Offset(0, 3),
             ),
           ],
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Color.fromARGB(255, 84, 132, 196),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 6),
-            Image.asset(imagePath, height: 80),
+            Image.asset(imagePath, height: size),
             SizedBox(height: 6),
             Container(
               alignment: Alignment.center,
@@ -305,8 +386,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color:Color.fromARGB(255, 54, 78, 158),
-                  fontSize: 25,
+                  color: Color.fromARGB(255, 242, 245, 255),
+                  fontSize: 20,
                 ),
               ),
             ),

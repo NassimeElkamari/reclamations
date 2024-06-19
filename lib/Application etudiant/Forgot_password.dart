@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_interpolation_to_compose_strings, avoid_print, use_build_context_synchronously
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/entrer_le_code.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mailer/mailer.dart';
@@ -23,7 +24,17 @@ class _ForgotPasswordEtudiantState extends State<ForgotPasswordEtudiant> {
       isValidEmail = RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value);
     });
   }
+void _redirectToAnotherPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  EntrerCode()),
+    );
+  }
 
+  void _onPressed() {
+    _sendPasswordResetEmail();
+    _redirectToAnotherPage();
+  }
   Future<void> _sendPasswordResetEmail() async {
     String email = emailController.text;
 
@@ -166,7 +177,8 @@ class _ForgotPasswordEtudiantState extends State<ForgotPasswordEtudiant> {
                 ),
               ),
               ElevatedButton(
-                onPressed: _sendPasswordResetEmail,
+                onPressed: _onPressed,
+                
                 child: Text(
                   "ENVOYER",
                   style: TextStyle(fontSize: 19, color: Colors.white),

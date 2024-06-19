@@ -89,26 +89,23 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 84, 132, 196),
         title: Row(children: [
-          SizedBox(width: 70),
+          SizedBox(width: 120),
           Text(
             "Mon profil",
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ]),
-        actions: [
+        /* actions: [
           ElevatedButton(
             onPressed: _logout,
             child: Icon(Icons.logout),
             style: ButtonStyle(iconSize: MaterialStatePropertyAll(15)),
           ),
           SizedBox(width: 10),
-        ],
+        ],*/
       ),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -148,10 +145,12 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                   backgroundColor: Colors.transparent,
                   child: ClipOval(
                     child: SizedBox(
-                      width: 200,
-                      height: 160,
+                      width: 220,
+                      height: 200,
                       child: Image.asset(
-                        'images/profile_student.png',
+                        sexe == 'Masculin'
+                            ? 'images/profile_masculin.png'
+                            : 'images/profile_feminin.png',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -159,38 +158,16 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                 ),
               ),
               SizedBox(height: 15),
-              // Bouton pour éditer la photo de profil
-              Center(
-                child: InkWell(
-                  onTap: () async {
-                    // Code pour choisir une image depuis la galerie (commenté pour le moment)
-                    /*
-                    final picker = ImagePicker();
-                    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-                    if (pickedFile != null) {
-                      setState(() {
-                        _imageURL = pickedFile.path;
-                      });
-                    }
-                    */
-                  },
-                  child: Text(
-                    "Editer photo de profil",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ),
               SizedBox(height: 15),
-              AfficherInformationEtudiant('Nom', nom, 20, 40),
-              AfficherInformationEtudiant('Prenom', prenom, 20, 40),
-              AfficherInformationEtudiant('Apoge', apoge, 20, 40),
+              // Bouton pour éditer la photo de profil
+
+              SizedBox(height: 15),
+              AfficherInformationEtudiant('Nom', nom, 18, 40),
+              AfficherInformationEtudiant('Prenom', prenom, 18, 40),
+              AfficherInformationEtudiant('Apoge', apoge, 18, 40),
               AfficherInformationEtudiant('Filiere', filiere, 18, 65),
-              AfficherInformationEtudiant('Sexe', sexe, 20, 40),
+              AfficherInformationEtudiant('Sexe', sexe, 16, 40),
               SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.only(left: 250),
@@ -202,7 +179,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Color.fromARGB(255, 4, 19, 105),
+                      backgroundColor: Color.fromARGB(255, 84, 132, 196),
                     ),
                     child: Text("Modifier"),
                   ),
@@ -229,7 +206,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 4, 19, 105),
+              color: Color.fromARGB(255, 84, 132, 196),
             ),
           ),
           SizedBox(width: 10),
@@ -239,7 +216,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
               height: toul,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color.fromARGB(255, 4, 19, 105),
+                  color: Color.fromARGB(255, 238, 116, 17),
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -249,7 +226,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                   ' $valeur ',
                   style: TextStyle(
                     fontSize: taille,
-                    color: Color.fromARGB(255, 4, 19, 105),
+                    color: Color.fromARGB(255, 55, 105, 172),
                   ),
                 ),
               ),
@@ -281,6 +258,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                   Text(
                     'Modifier les informations',
                     style: TextStyle(
+                      color: Color.fromARGB(255, 55, 105, 172),
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -288,25 +266,70 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                   SizedBox(height: 20),
                   TextField(
                     controller: _nomController,
+                      style: TextStyle(
+                      color: Color.fromARGB(255, 55, 105, 172), // Couleur du texte dans le TextField
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Nom',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                        color: Color.fromARGB(
+                            255, 238, 116, 17), // Couleur du texte du label
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 238, 116,
+                              17), // Couleur de la bordure par défaut
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 238, 116,
+                              17), // Couleur de la bordure lorsqu'elle est sélectionnée
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
                   TextField(
                     controller: _prenomController,
+                      style: TextStyle(
+                      color: Color.fromARGB(255, 55, 105, 172), // Couleur du texte dans le TextField
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Prénom',
+                      labelStyle: TextStyle(
+                        color: Color.fromARGB(
+                            255, 238, 116, 17), // Couleur du texte du label
+                      ),
                       border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 238, 116,
+                              17), // Couleur de la bordure lorsqu'elle est sélectionnée
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
                   TextField(
                     controller: _apogeController,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 55, 105,
+                          172), // Couleur du texte dans le TextField
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Apogée',
+                      labelStyle: TextStyle(
+                        color: Color.fromARGB(
+                            255, 238, 116, 17), // Couleur du texte du label
+                      ),
                       border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 238, 116,
+                              17), // Couleur de la bordure lorsqu'elle est sélectionnée
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -318,8 +341,9 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                         child: Text(
                           value,
                           style: TextStyle(
-                              fontSize:
-                                  14), // Définir la taille de la police ici
+                              color: Color.fromARGB(255, 55, 105, 172), // Couleur du texte dans le TextField 
+                              fontSize:14
+                              ), // Définir la taille de la police ici
                         ),
                       );
                     }).toList(),
@@ -330,7 +354,17 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Filière',
+                      labelStyle: TextStyle(
+                        color: Color.fromARGB(
+                            255, 238, 116, 17), // Couleur du texte du label
+                      ),
                       border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 238, 116,
+                              17), // Couleur de la bordure lorsqu'elle est sélectionnée
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -339,7 +373,11 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                     items: ['Masculin', 'Féminin'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value,
+                         style: TextStyle(
+          color:  Color.fromARGB(255, 55, 105, 172), // Couleur du texte du contenu du champ
+        ),
+                        ),
                       );
                     }).toList(),
                     onChanged: (newValue) {
@@ -349,17 +387,37 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Sexe',
+                      labelStyle: TextStyle(
+                        color: Color.fromARGB(
+                            255, 238, 116, 17), // Couleur du texte du label
+                      ),
                       border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 238, 116,
+                              17), // Couleur de la bordure lorsqu'elle est sélectionnée
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      _updateStudentInfo();
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Enregistrer'),
-                  ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Color.fromARGB(255, 84, 132,
+                              196), // Couleur de fond de votre choix
+                        ),
+                      ),
+                      onPressed: () {
+                        _updateStudentInfo();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Enregistrer',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -368,49 +426,48 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
       },
     );
   }
-  
-  
+
   Future<void> _updateStudentInfo() async {
-  try {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? apogeConnecte = prefs.getString('apogeConnecte');
-    if (apogeConnecte == null) {
-      print('No apoge found in SharedPreferences');
-      return;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? apogeConnecte = prefs.getString('apogeConnecte');
+      if (apogeConnecte == null) {
+        print('No apoge found in SharedPreferences');
+        return;
+      }
+
+      // Récupérer l'ID du document correspondant à l'apogée 20035326
+      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
+          .collection('etudiantsActives')
+          .where('apoge', isEqualTo: apogeConnecte)
+          .get();
+
+      // Vérifier si un document correspondant à l'apogée 20035326 a été trouvé
+      if (snapshot.docs.isEmpty) {
+        print('No document found for apoge ' + apogeConnecte);
+        return;
+      }
+
+      // Mettre à jour le document avec les nouvelles valeurs des champs d'entrée
+      await snapshot.docs.first.reference.update({
+        'nom': _nomController.text,
+        'prenom': _prenomController.text,
+        'apoge': _apogeController.text,
+        'filiere': _selectedFiliere,
+        'sexe': _selectedSexe,
+      });
+
+      setState(() {
+        nom = _nomController.text;
+        prenom = _prenomController.text;
+        apoge = _apogeController.text;
+        filiere = _selectedFiliere!;
+        sexe = _selectedSexe!;
+      });
+      // Afficher un message de réussite ou effectuer toute autre action nécessaire
+    } catch (error) {
+      // Gérer l'erreur si nécessaire
+      print("Failed to update student info: $error");
     }
-
-    // Récupérer l'ID du document correspondant à l'apogée 20035326
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
-        .collection('etudiantsActives')
-        .where('apoge', isEqualTo:apogeConnecte)
-        .get();
-
-    // Vérifier si un document correspondant à l'apogée 20035326 a été trouvé
-    if (snapshot.docs.isEmpty) {
-      print('No document found for apoge '+apogeConnecte);
-      return;
-    }
-
-    // Mettre à jour le document avec les nouvelles valeurs des champs d'entrée
-    await snapshot.docs.first.reference.update({
-      'nom': _nomController.text,
-      'prenom': _prenomController.text,
-      'apoge': _apogeController.text,
-      'filiere': _selectedFiliere,
-      'sexe': _selectedSexe,
-    });
-
-    setState(() {
-      nom = _nomController.text;
-      prenom = _prenomController.text;
-      apoge = _apogeController.text;
-      filiere = _selectedFiliere!;
-      sexe = _selectedSexe!;
-    });
-    // Afficher un message de réussite ou effectuer toute autre action nécessaire
-  } catch (error) {
-    // Gérer l'erreur si nécessaire
-    print("Failed to update student info: $error");
   }
-}
 }

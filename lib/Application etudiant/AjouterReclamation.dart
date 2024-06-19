@@ -28,59 +28,58 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
     _loadProfessors();
   }
 
- Future<void> _loadProfessors() async {
-  try {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('enseignants').get();
-    List<DropdownMenuItem<String>> items = querySnapshot.docs.map((doc) {
-      String nom = doc['nom'];
-      String prenom = doc['prenom'];
-      String fullName = '$nom $prenom'; // Concaténer le nom et le prénom
-      return DropdownMenuItem<String>(
-        value: '$fullName', // Utilisez le nom complet comme valeur
-        child: Text(fullName),
+  Future<void> _loadProfessors() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('enseignants').get();
+      List<DropdownMenuItem<String>> items = querySnapshot.docs.map((doc) {
+        String nom = doc['nom'];
+        String prenom = doc['prenom'];
+        String fullName = '$nom $prenom'; // Concaténer le nom et le prénom
+        return DropdownMenuItem<String>(
+          value: '$fullName', // Utilisez le nom complet comme valeur
+          child: Text(fullName),
+        );
+      }).toList();
+      setState(() {
+        _professorItems = items;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors du chargement des professeurs')),
       );
-    }).toList();
-    setState(() {
-      _professorItems = items;
-    });
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Erreur lors du chargement des professeurs')),
-    );
+    }
   }
-}
 
-Future<void> _ajouterReclamation() async {
-  try {
-    await FirebaseFirestore.instance.collection('reclamations').add({
-      'nomEtudiant': '${_nomController.text} ${_prenomController.text}',
-      'apogeEtudiant': _apogeController.text,
-      'sujet': _selectedChoice,
-      'description': _descriptionController.text,
-      'nomEnseignant': _selectedProfessor,
-      'date': FieldValue.serverTimestamp(),
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Réclamation ajoutée avec succès')),
-    );
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
-    );
+  Future<void> _ajouterReclamation() async {
+    try {
+      await FirebaseFirestore.instance.collection('reclamations').add({
+        'nomEtudiant': '${_nomController.text} ${_prenomController.text}',
+        'apogeEtudiant': _apogeController.text,
+        'sujet': _selectedChoice,
+        'description': _descriptionController.text,
+        'nomEnseignant': _selectedProfessor,
+        'date': FieldValue.serverTimestamp(),
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Réclamation ajoutée avec succès')),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
+      );
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
+        backgroundColor: Color.fromARGB(255, 55, 105, 172),
         leading: IconButton(
           //button pour retour a la page principale
           onPressed: () {
@@ -100,7 +99,7 @@ Future<void> _ajouterReclamation() async {
           child: Text(
             "Ajouter votre réclamation",
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 23,
               color: Colors.white,
             ),
           ),
@@ -110,8 +109,6 @@ Future<void> _ajouterReclamation() async {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Button ajouter
-
             SizedBox(height: 30),
 
             //column pour les elements de la reclamation ajouter par etudiant
@@ -184,7 +181,7 @@ Future<void> _ajouterReclamation() async {
                   onPressed: _ajouterReclamation,
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        Color.fromARGB(255, 28, 51, 128), // Background color
+                        Color.fromARGB(255, 238, 116, 17),   // Background color
                   ),
                   child: Text(
                     "Ajouter",
@@ -202,7 +199,7 @@ Future<void> _ajouterReclamation() async {
   InputDecoration inputDecoration(String label, String hintText) {
     return InputDecoration(
       labelText: label,
-      labelStyle: TextStyle(color: Color.fromARGB(255, 9, 61, 156)),
+      labelStyle: TextStyle(color: Color.fromARGB(255, 55, 105, 172)),
       hintText: hintText,
       hintStyle: TextStyle(
         color: Color.fromARGB(66, 53, 34, 0),
@@ -210,14 +207,15 @@ Future<void> _ajouterReclamation() async {
       border: OutlineInputBorder(
         borderSide: BorderSide(
           width: 2,
-          color: Color.fromARGB(255, 4, 19, 105), // Couleur du bord par défaut
+          color:
+              Color.fromARGB(255, 238, 116, 17), // Couleur du bord par défaut
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      enabledBorder: OutlineInputBorder(
+      focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
           width: 2,
-          color: Color.fromARGB(255, 4, 19, 105), // Couleur du bord activé
+          color: Color.fromARGB(255, 238, 116, 17), // Couleur du bord activé
         ),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -257,7 +255,7 @@ Future<void> _ajouterReclamation() async {
             label,
             style: TextStyle(
               fontSize: 17,
-              color: Color.fromARGB(255, 9, 61, 156),
+              color: Color.fromARGB(255, 55, 105, 172),
             ),
           ),
           DropdownButtonFormField<String>(
@@ -271,15 +269,25 @@ Future<void> _ajouterReclamation() async {
                       child: Text(
                         value,
                         style: TextStyle(
-                          color: Color.fromARGB(
-                              255, 9, 61, 156), // Changer la couleur ici
+                          color: Color.fromARGB(255, 9, 61, 156), // Changer la couleur ici
                         ),
                       ),
                     );
                   }).toList(),
             decoration: InputDecoration(
               hintText: 'Sélectionnez une option',
+              hintStyle: TextStyle(
+                color: Color.fromARGB(255, 201, 202, 202),
+              ),
               border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Color.fromARGB(
+                      255, 238, 116, 17), // Couleur du bord activé
+                ),
                 borderRadius: BorderRadius.circular(10),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

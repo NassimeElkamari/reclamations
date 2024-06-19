@@ -3,6 +3,7 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Forgot_password.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/profile_etudiant.dart';
@@ -153,13 +154,13 @@ class _SignUpState extends State<SignUp> {
                 Center(
                   child: const Text("SignUp",
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color:  Color.fromARGB(255, 33, 55, 128),)),
                 ),
                 Container(height: 10),
                 // Description de la page
                 Center(
                   child: const Text("SignUp To Continue Using The App",
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color:  Color.fromARGB(255, 141, 149, 179),)),
                 ),
                 Container(height: 20),
                 // Champ pour le nom
@@ -216,7 +217,7 @@ class _SignUpState extends State<SignUp> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50), // Bord arrondi
                     border: Border.all(), // Bordure avec style par défaut
-                     color: Color.fromARGB(255, 235, 234, 255), // Couleur de fond grise
+                     color:  Color.fromARGB(255, 223, 230, 252), // Couleur de fond grise
                   ),
                   child: DropdownButtonFormField<String>(
                     value: _selectedFiliere,
@@ -265,7 +266,7 @@ class _SignUpState extends State<SignUp> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgotPasswordOld()));
+                              builder: (context) => ForgotPasswordEtudiant()));
                     },
                     child: const Text(
                       "Forgot Password ?",
@@ -275,6 +276,8 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
+                SizedBox(height: 20,),
+                
               ],
             ),
             // Bouton d'inscription
@@ -282,6 +285,7 @@ class _SignUpState extends State<SignUp> {
               title: "SignUp",
               onPressed: signUp,
             ),
+            SizedBox(height: 20,),
             // Texte pour se connecter
             InkWell(
               onTap: () {

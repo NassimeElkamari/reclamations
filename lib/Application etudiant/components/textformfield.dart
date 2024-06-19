@@ -29,11 +29,11 @@ class CustomTextForm extends StatelessWidget {
         hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
         filled: true,
-        fillColor: Color.fromARGB(255, 235, 234, 255),
+        fillColor:  Color.fromARGB(255, 223, 230, 252),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(
-            color: Color.fromARGB(255, 217, 188, 255),
+            color: Color.fromARGB(255, 184, 200, 255),
           ),
         ),
         enabledBorder: OutlineInputBorder(

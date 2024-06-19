@@ -110,7 +110,7 @@ Future<void> _saveApoge(String apoge) async {
                       },
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Color.fromARGB(179, 57, 33, 88),
+                        color:Color.fromARGB(255, 28, 51, 128),
                       ),
                     ),
                   ],
@@ -125,21 +125,22 @@ Future<void> _saveApoge(String apoge) async {
                       borderRadius: BorderRadius.circular(70),
                     ),
                     child: Image.asset(
-                      "images/login.png",
-                      height: 230,
-                      fit: BoxFit.fill,
+                      "images/signin.png",
+                      height: 300,
+                      width: 250,
+                      fit: BoxFit.cover
                     ),
                   ),
                 ),
                 Container(height: 20),
-                const Text("Login", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                Container(height: 10),
+                const Text("Login", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold,color: Color.fromARGB(255, 28, 51, 128),)),
+                Container(height: 5),
                 const Text(
                   "Login To Continue Using The App",
-                  style: TextStyle(color: Color.fromARGB(255, 44, 36, 68)),
+                  style: TextStyle(color:  Color.fromARGB(255, 28, 51, 128),)
                 ),
                 Container(height: 20),
-                Text("Email", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                Text("Email", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: Color.fromARGB(255, 28, 51, 128),)),
                 Container(height: 10),
                 CustomTextForm(
                   hinttext: "Enter Your Email",
@@ -147,7 +148,7 @@ Future<void> _saveApoge(String apoge) async {
                   obscureText: false,
                 ),
                 Container(height: 10),
-                const Text("Password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                const Text("Password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: Color.fromARGB(255, 28, 51, 128),)),
                 Container(height: 10),
                 CustomTextForm(
                   hinttext: "Enter Your Password",
@@ -167,7 +168,7 @@ Future<void> _saveApoge(String apoge) async {
                     },
                     child: const Text(
                       "Forgot Password ?",
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 253, 173, 107),),
                     ),
                   ),
                 ),
@@ -196,7 +197,7 @@ Future<void> _saveApoge(String apoge) async {
                       ),
                       TextSpan(
                         text: "Signup",
-                        style: TextStyle(color: Color.fromARGB(255, 166, 134, 243), fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Color.fromARGB(255, 253, 173, 107), fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
