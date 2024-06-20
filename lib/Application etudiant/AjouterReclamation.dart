@@ -3,6 +3,7 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AjouterReclamation extends StatefulWidget {
   const AjouterReclamation({super.key});
@@ -20,14 +21,15 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
   final TextEditingController _apogeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  String? emailProf;
   List<DropdownMenuItem<String>> _professorItems = [];
+  Map<String, String> professorEmails = {}; // Map to store professor emails
 
   @override
   void initState() {
     super.initState();
     _loadProfessors();
   }
-
   Future<void> _loadProfessors() async {
     try {
       QuerySnapshot querySnapshot =
@@ -35,9 +37,13 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
       List<DropdownMenuItem<String>> items = querySnapshot.docs.map((doc) {
         String nom = doc['nom'];
         String prenom = doc['prenom'];
+        String email = doc['email'];
+
         String fullName = '$nom $prenom'; // Concaténer le nom et le prénom
+        professorEmails[fullName] = email; // Store the email in the map
+
         return DropdownMenuItem<String>(
-          value: '$fullName', // Utilisez le nom complet comme valeur
+          value: fullName, // Utilisez le nom complet comme valeur
           child: Text(fullName),
         );
       }).toList();
@@ -52,6 +58,10 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
   }
 
   Future<void> _ajouterReclamation() async {
+    if (_selectedProfessor != null) {
+      emailProf = professorEmails[_selectedProfessor]; // Get the email of the selected professor
+    }
+
     try {
       await FirebaseFirestore.instance.collection('reclamations').add({
         'nomEtudiant': '${_nomController.text} ${_prenomController.text}',
@@ -60,6 +70,7 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
         'description': _descriptionController.text,
         'nomEnseignant': _selectedProfessor,
         'date': FieldValue.serverTimestamp(),
+        'email': emailProf,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Réclamation ajoutée avec succès')),
@@ -74,6 +85,7 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

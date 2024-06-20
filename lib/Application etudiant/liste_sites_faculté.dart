@@ -23,6 +23,7 @@ class _SitesFaculteState extends State<SitesFaculte> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        toolbarHeight: 80,
         backgroundColor: Color.fromARGB(255, 55, 105, 172),
         /* leading: IconButton(
           //button pour retour a la page principale
@@ -47,14 +48,14 @@ class _SitesFaculteState extends State<SitesFaculte> {
               Text(
                 "des sites programmées ",
                 style: TextStyle(
-                    fontSize: 23,
+                    fontSize: 21,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
               Text(
                 "par la faculté",
                 style: TextStyle(
-                    fontSize: 23,
+                    fontSize: 21,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),

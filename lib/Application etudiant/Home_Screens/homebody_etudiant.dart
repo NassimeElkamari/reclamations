@@ -1,9 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, avoid_print, sized_box_for_whitespace, use_build_context_synchronously
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/AjouterReclamation.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/apropos_application.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/liste_des_cours.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/mesReclamations.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/liste_sites_facult%C3%A9.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -26,6 +30,25 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
     _loadApoge();
   }
 
+//la fonction de deconnexion
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut(); // Déconnexion de Firebase Auth
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove(
+          'apogeConnecte'); // Suppression de l'apogée dans SharedPreferences
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Login()), // Assurez-vous que LoginPage() est correctement importé
+      );
+      //  print("connexion reussite !!!!:)  pour " + nom + "  " + prenom);
+    } catch (e) {
+      print('Erreur lors de la déconnexion : $e');
+    }
+  }
+
   Future<void> _loadApoge() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? apoge = prefs.getString('apogeConnecte');
@@ -38,9 +61,10 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
     }
   }
 
-   Future<void> _searchStudentByApoge(String apoge) async {
+  Future<void> _searchStudentByApoge(String apoge) async {
     try {
-      print('Recherche de l\'étudiant avec l\'apoge: $apoge'); // Debug: Afficher l'apoge utilisé pour la recherche
+      print(
+          'Recherche de l\'étudiant avec l\'apoge: $apoge'); // Debug: Afficher l'apoge utilisé pour la recherche
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('etudiantsActives')
           .where('apoge', isEqualTo: apoge)
@@ -51,7 +75,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
         setState(() {
           studentName = studentDoc['prenom'] + ' ' + studentDoc['nom'];
         });
-        print('Étudiant trouvé: $studentName'); // Debug: Afficher le nom de l'étudiant trouvé
+        print(
+            'Étudiant trouvé: $studentName'); // Debug: Afficher le nom de l'étudiant trouvé
       } else {
         print('Aucun étudiant trouvé avec l\'apoge: $apoge');
       }
@@ -74,15 +99,14 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            SizedBox(
-              width: 110,
-            ),
+            SizedBox(width: 110),
             Text(
-              " Acceuil",
+              " Accueil",
               style: TextStyle(
-                  fontSize: 36,
-                  color: Color.fromARGB(255, 228, 240, 255),
-                  fontWeight: FontWeight.bold),
+                fontSize: 36,
+                color: Color.fromARGB(255, 228, 240, 255),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -97,30 +121,78 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
               showMenu(
                 color: Color.fromARGB(255, 228, 240, 255),
                 context: context,
-                position: RelativeRect.fromLTRB(
-                    100, 100, 0, 0), // Positionner le menu
+                position: RelativeRect.fromLTRB(100, 100, 0, 0),
                 items: [
                   PopupMenuItem<int>(
                     value: 0,
-                    child: Text("Option 1"),
+                    child: Text(
+                      "Paramètres",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 55, 105, 172),
+                      ),
+                    ),
                   ),
                   PopupMenuItem<int>(
                     value: 1,
-                    child: Text("Déconnection "),
+                    child: Text(
+                      "Guide d'utilisation",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 55, 105, 172),
+                      ),
+                    ),
                   ),
                   PopupMenuItem<int>(
-                    value: 1,
-                    child: Text("about application "),
+                    value: 2,
+                    child: Text(
+                      "Corbeille",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 55, 105, 172),
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 3,
+                    child: Text(
+                      "À propos de l'application",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 55, 105, 172),
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 4,
+                    child: Text(
+                      "Déconnexion",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 55, 105, 172),
+                      ),
+                    ),
                   ),
                 ],
                 elevation: 8.0,
               ).then((value) {
                 if (value == 0) {
-                  // Action pour l'option 1
-                  print('Option 1 sélectionnée');
+                  // Action pour l'option "Paramètres"
+                  
+                  print('Option "Paramètres" sélectionnée');
                 } else if (value == 1) {
-                  // Action pour l'option 2
-                  print('Option 2 sélectionnée');
+                  // Action pour l'option "Guide d'utilisation"
+                  print('Option "Guide d\'utilisation" sélectionnée');
+                } else if (value == 2) {
+                  // Action pour l'option "Corbeille"
+                  print('Option "Corbeille" sélectionnée');
+                } else if (value == 3) {
+                  // Action pour l'option "À propos de l'application"
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AproposApplication(),
+                      ));
+
+                  print('Option "À propos de l\'application" sélectionnée');
+                } else if (value == 4) {
+                  _logout(); // Appel de la fonction de déconnexion
+                  print('Option "Déconnexion" sélectionnée');
                 }
               });
             },
@@ -182,7 +254,7 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AjouterReclamation(),
+                        builder: (context) => ListedesCours(),
                       ),
                     );
                   },

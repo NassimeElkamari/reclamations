@@ -2,6 +2,7 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/Home_etudiant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/liste_reclamations.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/notifications.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/profile_etudiant.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class NavigatorBarEtudiant extends StatefulWidget {
 class _NavigatorBarEtudiantState extends State<NavigatorBarEtudiant> {
   List Screens = [
     HomeEtudiant(),
-    ListeReclamations_etudiant(),
+    listedesNotifications(),
     ProfileEtudiant(),
   ];
   int _selecedIndex = 0;
