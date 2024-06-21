@@ -4,7 +4,6 @@
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';// Importez la page de récupération du mot de passe
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/HomeEnseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
