@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, use_super_parameters
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -21,38 +19,39 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
   void initState() {
     super.initState();
     // Initialize the description controller with the description from reclamation details
-    _descriptionController.text = widget.reclamationDetails['description'];
+    _descriptionController.text = widget.reclamationDetails['description'] ?? '';
   }
 
- Future<void> updatereponse() async {
-  final response = _reponseController.text.trim(); // trim whitespace
-  if (response.isNotEmpty) {
-    try {
-      // Update the response in Firestore
-      await FirebaseFirestore.instance
-          .collection('reclamations')
-          .doc(widget.reclamationDetails['id'])
-          .update({
-        'reponse': response,
-      });
+  Future<void> _updateReclamation() async {
+    // Get the document ID of the reclamation to update
+    String? reclamationId = widget.reclamationDetails['Document ID'];
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Réponse envoyée avec succès!')),
-      );
+    // Get the new response from the text field
+    String reponse = _reponseController.text;
 
-      // Clear the response text field
-      _reponseController.clear();
-    } on FirebaseException catch (e) {
+    // Check if reclamationId is not null
+    if (reclamationId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'envoi de la réponse: ${e.message}')),
+        SnackBar(content: Text('Erreur : ID de réclamation manquant.')),
       );
+      print('Erreur : ID de réclamation manquant.');
+      return;
     }
-  } else {
+
+    // Update the reclamation in Firestore
+    await FirebaseFirestore.instance
+        .collection('reclamations')
+        .doc('I2QpWUdjsDimJcdiHp0f')
+        .update({'reponse': reponse});
+
+    // Show a success message or navigate back
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Veuillez entrer une réponse')),
+      SnackBar(content: Text('Réponse envoyée avec succès')),
     );
+
+    // Optionally, navigate back after updating
+    Navigator.of(context).pop();
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +115,7 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
               ),
               SizedBox(height: 20.0),
               ElevatedButton(
-                onPressed: updatereponse,
+                onPressed: _updateReclamation,
                 child: Text('Envoyer'),
               ),
             ],
