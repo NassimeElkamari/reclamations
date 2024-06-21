@@ -2,8 +2,10 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/details_reclamtion.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/PasTraiter.dart';
-import 'package:flutter/material.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/traiter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeEnseignant2 extends StatefulWidget {
@@ -259,6 +261,9 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                   style: TextStyle(color: Colors.black)),
               trailing: Icon(Icons.check, color: Colors.black),
               onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Traiter()));
+               
                 // Handle tap on Réclamation traitée
               },
             ),
@@ -266,6 +271,9 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
               title: Text('Paramètres', style: TextStyle(color: Colors.black)),
               trailing: Icon(Icons.settings, color: Colors.black),
               onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Setting()));
+                
                 // Handle tap on Paramètres
               },
             ),
