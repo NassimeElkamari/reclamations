@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20commune/logo.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       },
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
+      home: LogoScreen(),
     );
   }
 }

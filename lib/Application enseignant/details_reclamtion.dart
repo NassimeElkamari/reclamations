@@ -21,7 +21,8 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
   void initState() {
     super.initState();
     // Initialize the description controller with the description from reclamation details
-    _descriptionController.text = widget.reclamationDetails['description'] ?? '';
+    _descriptionController.text =
+        widget.reclamationDetails['description'] ?? '';
   }
 
   Future<void> _updateReclamation() async {
