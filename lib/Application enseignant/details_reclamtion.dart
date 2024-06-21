@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class DetailsReclamationPage extends StatefulWidget {
   final Map<String, dynamic> reclamationDetails;
 
-  const DetailsReclamationPage({Key? key, required this.reclamationDetails})
+  const DetailsReclamationPage({Key? key, required this.reclamationDetails, String? reclamationId})
       : super(key: key);
 
   @override
@@ -39,18 +41,29 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
     }
 
     // Update the reclamation in Firestore
-    await FirebaseFirestore.instance
-        .collection('reclamations')
-        .doc('I2QpWUdjsDimJcdiHp0f')
-        .update({'reponse': reponse});
+    try {
+      await FirebaseFirestore.instance
+          .collection('reclamations')
+          .doc(reclamationId)
+          .update({'reponse': reponse,'status': true});
 
-    // Show a success message or navigate back
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Réponse envoyée avec succès')),
-    );
+      // Update the local response field
+      setState(() {
+        widget.reclamationDetails['reponse'] = reponse;
+      });
 
-    // Optionally, navigate back after updating
-    Navigator.of(context).pop();
+      // Show a success message or navigate back
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Réponse envoyée avec succès')),
+      );
+
+      // Optionally, navigate back after updating
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors de l\'envoi de la réponse : $e')),
+      );
+    }
   }
 
   @override

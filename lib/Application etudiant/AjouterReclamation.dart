@@ -71,6 +71,9 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
         'nomEnseignant': _selectedProfessor,
         'date': FieldValue.serverTimestamp(),
         'email': emailProf,
+        'status' :false ,
+        'reponse' :" " ,
+
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Réclamation ajoutée avec succès')),

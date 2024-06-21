@@ -67,20 +67,23 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
     }
   }
 
-  // Function to load reclamations from Firestore
-  Future<void> _loadReclamations() async {
-    if (_emailProfessorConnecte != null) {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('reclamations')
-          .where('email', isEqualTo: _emailProfessorConnecte)
-          .get();
-      setState(() {
-        _reclamations = querySnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList();
-      });
-    }
+// Fonction pour charger les réclamations depuis Firestore
+Future<void> _loadReclamations() async {
+  if (_emailProfessorConnecte != null) {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('reclamations')
+        .where('email', isEqualTo: _emailProfessorConnecte)
+        .get();
+    setState(() {
+      _reclamations = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['Document ID'] = doc.id; // Utiliser 'Document ID' comme clé pour l'ID du document
+        return data;
+      }).toList();
+    });
   }
+}
+
 
   void _toggleSearch() {
     setState(() {
@@ -178,7 +181,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                     Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailsReclamationPage(reclamationDetails: reclamation),
+            builder: (context) => DetailsReclamationPage(reclamationDetails: reclamation,reclamationId: reclamation['Document ID']),
           ),
         );
                     },
@@ -192,10 +195,12 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        subtitle: Text(reclamation['nomEtudiant']),
+                        subtitle: Text(reclamation['nomEtudiant'],),
+                        
                         trailing: Icon(Icons.arrow_forward,
                             color: Color.fromARGB(255, 14, 118, 168)),
                       ),
+                    
                     ),
                   );
                 },
