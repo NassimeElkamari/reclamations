@@ -24,35 +24,45 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
     _descriptionController.text = widget.reclamationDetails['description'];
   }
 
- Future<void> updatereponse() async {
-  final response = _reponseController.text.trim(); // trim whitespace
-  if (response.isNotEmpty) {
-    try {
-      // Update the response in Firestore
-      await FirebaseFirestore.instance
-          .collection('reclamations')
-          .doc(widget.reclamationDetails['id'])
-          .update({
-        'reponse': response,
-      });
+  Future<void> updatereponse() async {
+    final response = _reponseController.text.trim(); // trim whitespace
+    if (response.isNotEmpty) {
+      try {
+        DocumentReference docRef = FirebaseFirestore.instance
+            .collection('reclamations')
+            .doc('${widget.reclamationDetails['id']}');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Réponse envoyée avec succès!')),
-      );
+        DocumentSnapshot doc = await docRef.get();
+        if (doc.exists) {
+          await docRef.update({
+            'reponse': response,
+            'status': 'resolved', // Assuming 'resolved' is the new status
+          });
 
-      // Clear the response text field
-      _reponseController.clear();
-    } on FirebaseException catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Réponse envoyée avec succès!')),
+          );
+
+          // Clear the response text field
+          _reponseController.clear();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Document non trouvé')),
+          );
+        }
+      } on FirebaseException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Erreur lors de l\'envoi de la réponse: ${e.message}')),
+        );
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'envoi de la réponse: ${e.message}')),
+        SnackBar(content: Text('Veuillez entrer une réponse')),
       );
     }
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Veuillez entrer une réponse')),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {

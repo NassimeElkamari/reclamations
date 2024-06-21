@@ -15,6 +15,7 @@ class DetailsReclamation extends StatelessWidget {
     final bool status = document['status'];
     final Timestamp timestamp = document['date'];
     final DateTime date = timestamp.toDate();
+    
 
     return Scaffold(
       appBar: AppBar(
