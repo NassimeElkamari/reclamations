@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, use_super_parameters
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -21,47 +19,39 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
   void initState() {
     super.initState();
     // Initialize the description controller with the description from reclamation details
-    _descriptionController.text = widget.reclamationDetails['description'];
+    _descriptionController.text =
+        widget.reclamationDetails['description'] ?? '';
   }
 
-  Future<void> updatereponse() async {
-    final response = _reponseController.text.trim(); // trim whitespace
-    if (response.isNotEmpty) {
-      try {
-        DocumentReference docRef = FirebaseFirestore.instance
-            .collection('reclamations')
-            .doc('${widget.reclamationDetails['id']}');
+  Future<void> _updateReclamation() async {
+    // Get the document ID of the reclamation to update
+    String? reclamationId = widget.reclamationDetails['Document ID'];
 
-        DocumentSnapshot doc = await docRef.get();
-        if (doc.exists) {
-          await docRef.update({
-            'reponse': response,
-            'status': 'resolved', // Assuming 'resolved' is the new status
-          });
+    // Get the new response from the text field
+    String reponse = _reponseController.text;
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Réponse envoyée avec succès!')),
-          );
-
-          // Clear the response text field
-          _reponseController.clear();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Document non trouvé')),
-          );
-        }
-      } on FirebaseException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text('Erreur lors de l\'envoi de la réponse: ${e.message}')),
-        );
-      }
-    } else {
+    // Check if reclamationId is not null
+    if (reclamationId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Veuillez entrer une réponse')),
+        SnackBar(content: Text('Erreur : ID de réclamation manquant.')),
       );
+      print('Erreur : ID de réclamation manquant.');
+      return;
     }
+
+    // Update the reclamation in Firestore
+    await FirebaseFirestore.instance
+        .collection('reclamations')
+        .doc('I2QpWUdjsDimJcdiHp0f')
+        .update({'reponse': reponse});
+
+    // Show a success message or navigate back
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Réponse envoyée avec succès')),
+    );
+
+    // Optionally, navigate back after updating
+    Navigator.of(context).pop();
   }
 
   @override
@@ -126,7 +116,7 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
               ),
               SizedBox(height: 20.0),
               ElevatedButton(
-                onPressed: updatereponse,
+                onPressed: _updateReclamation,
                 child: Text('Envoyer'),
               ),
             ],
