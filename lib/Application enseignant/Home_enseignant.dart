@@ -4,8 +4,7 @@ import 'dart:async';
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/details_reclamtion.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/non_trait%C3%A9es.dart';
-
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/profile.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/trait%C3%A9es.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/recamation_trait%C3%A9e.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -247,7 +246,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                   end: Alignment.bottomCenter,
                   colors: [
                     Color.fromARGB(255, 255, 255, 255),
-                   Color.fromARGB(255, 55, 105, 172),
+                    Color.fromARGB(255, 55, 105, 172),
                   ],
                 ),
               ),
@@ -256,10 +255,8 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CircleAvatar(
-                    radius: 30, // Augmente la taille de l'image
-                    backgroundImage:NetworkImage(_profileImageUrl!)
-                      
-                  ),
+                      radius: 30, // Augmente la taille de l'image
+                      backgroundImage: NetworkImage(_profileImageUrl!)),
                   SizedBox(height: 10),
                   Text(
                     _nomProfessorConnecte != null
@@ -286,7 +283,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 Icons.notification_important,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
-              title: Text('Pas traiter'),
+              title: Text('Reclamation pas traiter'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -299,7 +296,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 Icons.check,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
-              title: Text('Traiter'),
+              title: Text('Reclamation Traiter'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -312,8 +309,11 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 Icons.settings,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
-              title: Text('Setting'),
-              onTap: () {},
+              title: Text('profile'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfileEns()));
+              },
             ),
           ],
         ),
