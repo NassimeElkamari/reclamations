@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Setting extends StatelessWidget {
-  const Setting({Key? key}) : super(key: key);
+class ProfileEns extends StatelessWidget {
+  const ProfileEns({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,55 +30,36 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String _nom = '';
-  late String _address = '';
-  late String _email = '';
-  late String _phone = '';
-  late String _department = '';
-  late String _profileImageUrl =
-      ''; // Nouvelle variable pour l'URL de la photo de profil
+  late String nom = '';
+  late String prenom = '';
+  late String email = '';
+  late String filiere = '';
+  late String profileImageUrl = '';
 
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    loadProfil();
   }
 
-  Future<void> _loadProfileData() async {
-    // Récupérer l'utilisateur actuellement connecté
-    User? user = FirebaseAuth.instance.currentUser;
+  List<QueryDocumentSnapshot> data = [];
 
-    if (user != null) {
-      // Récupérer l'e-mail de l'utilisateur connecté
-      String email = user.email!;
-      print("Email utilisateur: $email"); // Débogage
-
-      // Récupérer les informations de l'utilisateur à partir de Firestore
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-          .instance
-          .collection('enseignants')
-          .doc(email)
-          .get();
-
-      // Vérifier si le document existe
-      if (snapshot.exists) {
-        // Récupérer les données du document
+  loadProfil() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      final docRef =
+          FirebaseFirestore.instance.collection('enseignant').doc(userId);
+      final docSnap = await docRef.get();
+      if (docSnap.exists) {
+        final data = docSnap.data();
         setState(() {
-          _nom = snapshot.data()?['nom'] ?? '';
-          _address = snapshot.data()?['adresse'] ?? '';
-          _email = snapshot.data()?['email'] ?? '';
-          _phone = snapshot.data()?['phone'] ?? '';
-          _department = snapshot.data()?['department'] ?? '';
-          _profileImageUrl = snapshot.data()?['profile'] ??
-              ''; // Récupérer l'URL de la photo de profil
-          print(
-              "Données récupérées: $_nom, $_address, $_email, $_phone, $_department, $_profileImageUrl"); // Débogage
+          nom = data?['nom'] ?? '';
+          prenom = data?['prenom'] ?? '';
+          email = data?['email'] ?? '';
+          filiere = data?['filiere'] ?? '';
+          profileImageUrl = data?['profile'] ?? '';
         });
-      } else {
-        print("Le document n'existe pas."); // Débogage
       }
-    } else {
-      print("Aucun utilisateur connecté."); // Débogage
     }
   }
 
@@ -133,8 +114,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 114, 117, 122),
-            Color.fromARGB(255, 172, 164, 172),
+            Color.fromARGB(255, 255, 255, 255),
+            Color.fromARGB(255, 55, 105, 172),
           ]),
         ),
         child: Padding(
@@ -144,22 +125,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 40),
               CircleAvatar(
                 radius: 70,
-                backgroundImage: _profileImageUrl.isNotEmpty
-                    ? NetworkImage(
-                        _profileImageUrl) // Utiliser l'URL de la photo de profil
-                    : AssetImage('assets/images/user.JPG')
-                        as ImageProvider, // Image par défaut
+                backgroundImage: profileImageUrl.isNotEmpty
+                    ? NetworkImage(profileImageUrl)
+                    : AssetImage('assets/images/user.JPG') as ImageProvider,
               ),
               const SizedBox(height: 20),
-              itemProfile('Nom', _nom, CupertinoIcons.person),
+              itemProfile(nom, CupertinoIcons.person),
               const SizedBox(height: 10),
-              itemProfile('Adresse', _address, CupertinoIcons.location),
+              itemProfile(prenom, CupertinoIcons.person),
               const SizedBox(height: 10),
-              itemProfile('Email', _email, CupertinoIcons.mail),
+              itemProfile(email, CupertinoIcons.mail),
               const SizedBox(height: 10),
-              itemProfile('Téléphone', _phone, CupertinoIcons.phone),
-              const SizedBox(height: 10),
-              itemProfile('Département', _department, CupertinoIcons.briefcase),
+              itemProfile(filiere, CupertinoIcons.briefcase),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
@@ -180,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget itemProfile(String title, String subtitle, IconData iconData) {
+  Widget itemProfile(String data, IconData iconData) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -195,8 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       child: ListTile(
-        title: Text(title),
-        subtitle: Text(subtitle),
+        subtitle: Text(data),
         leading: Icon(iconData),
         trailing: const Icon(Icons.arrow_forward, color: Colors.grey),
         tileColor: Colors.white,
