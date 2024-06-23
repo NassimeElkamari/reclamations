@@ -312,7 +312,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
               ),
               title: Text('Deconnexion'),
               onTap: () {
-                _confirmLogout(context);
+                
               },
             ),
           ],
@@ -322,47 +322,3 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
   }
 }
 
-Future<void> _logout(BuildContext context) async {
-  try {
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) =>
-          SignInEnseignant(), // Replace with your login screen
-    ));
-  } catch (e) {
-    print("Error during sign out: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Erreur lors de la déconnexion. Veuillez réessayer.'),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-}
-
-void _confirmLogout(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Confirmation'),
-        content: Text('Êtes-vous sûr de vouloir vous déconnecter?'),
-        actions: [
-          TextButton(
-            child: Text('Annuler'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('Déconnexion'),
-            onPressed: () {
-              Navigator.of(context).pop();
-              _logout(context);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
