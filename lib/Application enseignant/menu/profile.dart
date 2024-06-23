@@ -1,182 +1,196 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileEns extends StatelessWidget {
-  const ProfileEns({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
-      home: const ProfileScreen(),
-    );
-  }
-}
-
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProfileEnseignant extends StatefulWidget {
+  const ProfileEnseignant({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileEnseignant> createState() => _ProfileEtudiantState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  late String nom = '';
-  late String prenom = '';
-  late String email = '';
-  late String filiere = '';
-  late String profileImageUrl = '';
+class _ProfileEtudiantState extends State<ProfileEnseignant> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  //liste des fillieres
+  List<String> _filieres = [
+    'Sciences Mathématiques Appliquées (SMA)',
+    'Sciences Mathématiques Informatiques (SMI)',
+    'Sciences de la Matière Physique (SMP)',
+    'Sciences de la Matière Chimie (SMC)',
+    'Sciences de la Vie (SVI)',
+    "Sciences de la Terre et de l'Univers (STU)",
+  ];
+
+  
+
+  String nom = '';
+  String prenom = '';
+  String email = '';
+  String filiere = '';
+  String profileUrl = '';
+  String? emailProfessorConnecte = '';
+
+
+//lafonction initialisation
   @override
   void initState() {
     super.initState();
-    loadProfil();
+    _loadEmail(); // Chargement de l'apogée au démarrage de la page
+   
   }
 
-  List<QueryDocumentSnapshot> data = [];
-
-  loadProfil() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      final docRef =
-          FirebaseFirestore.instance.collection('enseignant').doc(userId);
-      final docSnap = await docRef.get();
-      if (docSnap.exists) {
-        final data = docSnap.data();
-        setState(() {
-          nom = data?['nom'] ?? '';
-          prenom = data?['prenom'] ?? '';
-          email = data?['email'] ?? '';
-          filiere = data?['filiere'] ?? '';
-          profileImageUrl = data?['profile'] ?? '';
-        });
-      }
-    }
+  //lafonction de get apoge d etuidant connecte
+ 
+  Future<void> _loadEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      emailProfessorConnecte = prefs.getString('emailProfConnecte');
+    });
   }
 
-  Future<void> _logout(BuildContext context) async {
+//la fonction de deconnexion
+  Future<void> _logout() async {
     try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) =>
-            SignInEnseignant(), // Replace with your login screen
-      ));
-    } catch (e) {
-      print("Error during sign out: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Erreur lors de la déconnexion. Veuillez réessayer.'),
-          backgroundColor: Colors.red,
-        ),
+      await FirebaseAuth.instance.signOut(); // Déconnexion de Firebase Auth
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove(
+          'emailProfessorConnecte'); // Suppression de l'apogée dans SharedPreferences
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Login()), // Assurez-vous que LoginPage() est correctement importé
       );
+      print("connexion reussite !!!!:)  pour " + nom + "  " + prenom);
+    } catch (e) {
+      print('Erreur lors de la déconnexion : $e');
     }
-  }
-
-  void _confirmLogout(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text('Êtes-vous sûr de vouloir vous déconnecter?'),
-          actions: [
-            TextButton(
-              child: Text('Annuler'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Déconnexion'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _logout(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 55, 105, 172),
-          ]),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              CircleAvatar(
-                radius: 70,
-                backgroundImage: profileImageUrl.isNotEmpty
-                    ? NetworkImage(profileImageUrl)
-                    : AssetImage('assets/images/user.JPG') as ImageProvider,
-              ),
-              const SizedBox(height: 20),
-              itemProfile(nom, CupertinoIcons.person),
-              const SizedBox(height: 10),
-              itemProfile(prenom, CupertinoIcons.person),
-              const SizedBox(height: 10),
-              itemProfile(email, CupertinoIcons.mail),
-              const SizedBox(height: 10),
-              itemProfile(filiere, CupertinoIcons.briefcase),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _confirmLogout(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(15),
-                  ),
-                  child: const Text('Déconnexion'),
-                ),
-              )
-            ],
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 84, 132, 196),
+        title: Row(children: [
+          SizedBox(width: 120),
+          Text(
+            "Mon profil",
+            style: TextStyle(color: Colors.white, fontSize: 25),
           ),
-        ),
+        ]),
+        
+      ),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: _firestore
+            .collection('enseignants')
+            .where('email', isEqualTo: emailProfessorConnecte)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text("No data found for the given apoge."));
+          }
+
+          var data = snapshot.data!.docs.first.data();
+          nom = data['nom'] ?? '';
+          prenom = data['prenom'] ?? '';
+          email = (data['email'] ?? '').toString();
+          filiere = data['filiere'] ?? '';
+          profileUrl = data['profile'] ?? '';
+          
+
+         
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 30),
+              Center(
+                // Photo de profil
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: 220,
+                      height: 200,
+                      child: Image.network(profileUrl)
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
+
+              SizedBox(height: 15),
+              // Bouton pour éditer la photo de profil
+
+              SizedBox(height: 15),
+              AfficherInformationEtudiant('Nom', nom, 18, 40),
+              AfficherInformationEtudiant('Prenom', prenom, 18, 40),
+              AfficherInformationEtudiant('email', email, 18, 40),
+              AfficherInformationEtudiant('Filiere', filiere, 18, 65),
+              
+              SizedBox(height: 20),
+              
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget itemProfile(String data, IconData iconData) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 5),
-            color: Colors.deepOrange.withOpacity(.2),
-            spreadRadius: 2,
-            blurRadius: 10,
-          )
+  Padding AfficherInformationEtudiant(
+      String label, String valeur, double taille, double toul) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, left: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(width: 5),
+          Text(
+            "$label :",
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 84, 132, 196),
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(left: 8, right: 8, top: 12),
+              height: toul,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color.fromARGB(255, 238, 116, 17),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  ' $valeur ',
+                  style: TextStyle(
+                    fontSize: taille,
+                    color: Color.fromARGB(255, 55, 105, 172),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
-      ),
-      child: ListTile(
-        subtitle: Text(data),
-        leading: Icon(iconData),
-        trailing: const Icon(Icons.arrow_forward, color: Colors.grey),
-        tileColor: Colors.white,
       ),
     );
   }
+
 }

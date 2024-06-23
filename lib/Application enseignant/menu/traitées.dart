@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/details_reclamtion.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/profile.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/recamation_trait%C3%A9e.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

@@ -7,7 +7,9 @@ import 'package:application_gestion_des_reclamations_pfe/Application%20enseignan
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/profile.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/trait%C3%A9es.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/recamation_trait%C3%A9e.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,6 +58,51 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
     });
   }
 
+
+
+Future<void> _logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) =>
+            SignInEnseignant(), // Replace with your login screen
+      ));
+    } catch (e) {
+      print("Error during sign out: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur lors de la déconnexion. Veuillez réessayer.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Êtes-vous sûr de vouloir vous déconnecter?'),
+          actions: [
+            TextButton(
+              child: Text('Annuler'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Déconnexion'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   void dispose() {
     _reclamationsSubscription?.cancel();
@@ -80,8 +127,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
       var doc = querySnapshot.docs.first;
       String nom = doc.get('nom');
       String prenom = doc.get('prenom');
-      String profileImageUrl = doc
-          .get('profile'); // Assuming the URL field is named 'profileImageUrl'
+      String profileImageUrl = doc.get('profile'); // Assuming the URL field is named 'profileImageUrl'
 
       setState(() {
         _nomProfessorConnecte = '$nom $prenom';
@@ -278,12 +324,23 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 ],
               ),
             ),
-            ListTile(
+             ListTile(
               leading: Icon(
-                Icons.notification_important,
+                Icons.account_circle,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
-              title: Text('Reclamation pas traiter'),
+              title: Text('profile'),
+              onTap: () {
+               Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfileEnseignant()));
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.cancel_presentation_outlined,
+                color: Color.fromARGB(255, 28, 51, 128),
+              ),
+              title: Text('Réclamations non traitées'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -293,10 +350,10 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
             ),
             ListTile(
               leading: Icon(
-                Icons.check,
+                Icons.check_box_outlined,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
-              title: Text('Reclamation Traiter'),
+              title: Text('Réclamations traitées'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -306,15 +363,15 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
             ),
             ListTile(
               leading: Icon(
-                Icons.settings,
+                Icons.logout_outlined,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
-              title: Text('profile'),
+              title: Text('Déconnexion '),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfileEns()));
+                _confirmLogout(context);
               },
             ),
+           
           ],
         ),
       ),
