@@ -289,7 +289,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
               margin: EdgeInsets.all(30),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 28, 51, 128),
+                  backgroundColor: Color.fromARGB(255, 28, 51, 128),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
