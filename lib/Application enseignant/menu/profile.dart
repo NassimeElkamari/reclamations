@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
       final docRef =
-          FirebaseFirestore.instance.collection('enseignant').doc(userId);
+          FirebaseFirestore.instance.collection('enseignants').doc(userId);
       final docSnap = await docRef.get();
       if (docSnap.exists) {
         final data = docSnap.data();
@@ -107,6 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+  
 
   @override
   Widget build(BuildContext context) {

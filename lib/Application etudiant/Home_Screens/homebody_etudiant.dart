@@ -10,7 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeBodyEtudiant extends StatefulWidget {
@@ -31,22 +30,48 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
   }
 
 //la fonction de deconnexion
-  Future<void> _logout() async {
+  Future<void> _logout(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signOut(); // Déconnexion de Firebase Auth
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove(
-          'apogeConnecte'); // Suppression de l'apogée dans SharedPreferences
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                Login()), // Assurez-vous que LoginPage() est correctement importé
-      );
-      //  print("connexion reussite !!!!:)  pour " + nom + "  " + prenom);
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => Login(), // Replace with your login screen
+      ));
     } catch (e) {
-      print('Erreur lors de la déconnexion : $e');
+      print("Error during sign out: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur lors de la déconnexion. Veuillez réessayer.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
+  }
+
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Êtes-vous sûr de vouloir vous déconnecter?'),
+          actions: [
+            TextButton(
+              child: Text('Annuler'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Déconnexion'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _loadApoge() async {
@@ -173,7 +198,7 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
               ).then((value) {
                 if (value == 0) {
                   // Action pour l'option "Paramètres"
-                  
+
                   print('Option "Paramètres" sélectionnée');
                 } else if (value == 1) {
                   // Action pour l'option "Guide d'utilisation"
@@ -191,7 +216,8 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
 
                   print('Option "À propos de l\'application" sélectionnée');
                 } else if (value == 4) {
-                  _logout(); // Appel de la fonction de déconnexion
+                  _confirmLogout(
+                      context); // Appel de la fonction de déconnexion
                   print('Option "Déconnexion" sélectionnée');
                 }
               });
