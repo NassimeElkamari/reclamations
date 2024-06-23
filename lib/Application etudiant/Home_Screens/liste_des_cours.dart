@@ -11,16 +11,17 @@ class ListedesCours extends StatefulWidget {
 class _ListedesCoursState extends State<ListedesCours> {
   // Example list of courses with associated links
   final List<Course> courses = [
-    Course('Mathematics Basics', 'https://drive.google.com/drive/folders/1UR2Ns5E05GhHK1O-sbWjCtAJ7J_xMasr'),
-    Course('Introduction to Programming', 'https://www.example.com/intro_programming'),
-    Course('Advanced Physics', 'https://www.example.com/advanced_physics'),
-    Course('Chemistry for Beginners', 'https://www.example.com/chemistry_beginners'),
-    Course('History of Art', 'https://www.example.com/history_of_art'),
-    Course('Creative Writing', 'https://www.example.com/creative_writing'),
-    Course('Data Science 101', 'https://www.example.com/data_science_101'),
-    Course('Mobile App Development', 'https://www.example.com/mobile_app_development'),
-    Course('Web Development Essentials', 'https://www.example.com/web_dev_essentials'),
-    Course('Artificial Intelligence', 'https://www.example.com/artificial_intelligence'),
+    Course('Apprendre PHP et MySQL', 'https://drive.google.com/drive/folders/1UR2Ns5E05GhHK1O-sbWjCtAJ7J_xMasr'),
+    Course('Apprendre Python', 'https://drive.google.com/open?id=1D8e8HFrpokDyGQyzaXlTucvc7qEmrczE'),
+    Course('Développent web ', 'https://drive.google.com/drive/u/0/folders/1Cyjert26SxAkLlLI8eU0bMG8oS0-CjPC'),
+    Course('Introduction to Python Programming', 'https://www.udemy.com/course/introduction-to-python-for-beginners/learn/lecture/40044936#overview'),
+    Course('Learn Fundamentals of Programming in Machine Learning', 'https://www.udemy.com/course/learn-fundamentals-of-programming-in-machine-learning/learn/lecture/43227350#overview'),
+    Course('UX Design Career Guide: Essential Skills for Growth, Success', 'https://www.udemy.com/course/ui-ux-design-course-free-learn-online-by-prasad-kantamneni/learn/lecture/41340012#overview'),
+    Course('Soft skills to be happy and productive in science / academia', 'https://www.udemy.com/course/soft-skills-x/'),
+    Course('Mathematics for Engineering', 'https://www.udemy.com/course/mathematics-for-engineering/'),
+    Course('Mathematics Problem Solving using the Math Model Method', 'https://www.udemy.com/course/mathematics-problem-solving-using-the-math-model-method/'),
+    Course('Random Variable & Random Process: Problem Solving Techniques', 'https://www.udemy.com/course/random-variable-random-process-problem-solving-techniques/'),
+    Course('Flutter 101-Your Ultimate Guide to Flutter Development', 'https://www.udemy.com/course/flutter-101/'),
   ];
 
   Future<void> _launchUrl(String url) async {
