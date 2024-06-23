@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
@@ -194,3 +195,5 @@ class _ProfileEtudiantState extends State<ProfileEnseignant> {
   }
 
 }
+=======
+>>>>>>> 16ca3d70fffacc2a6ffc3e2ee9c2a0fca8285808

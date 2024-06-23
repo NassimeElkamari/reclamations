@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/details_reclamtion.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/non_trait%C3%A9es.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/profile.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/trait%C3%A9es.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/recamation_trait%C3%A9e.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/sign_in_enseignant.dart';
@@ -363,12 +362,21 @@ Future<void> _logout(BuildContext context) async {
             ),
             ListTile(
               leading: Icon(
+<<<<<<< HEAD
                 Icons.logout_outlined,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
               title: Text('Déconnexion '),
               onTap: () {
                 _confirmLogout(context);
+=======
+                Icons.logout,
+                color: Color.fromARGB(255, 28, 51, 128),
+              ),
+              title: Text('Deconnexion'),
+              onTap: () {
+                
+>>>>>>> 16ca3d70fffacc2a6ffc3e2ee9c2a0fca8285808
               },
             ),
            
@@ -378,3 +386,4 @@ Future<void> _logout(BuildContext context) async {
     );
   }
 }
+
