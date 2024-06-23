@@ -13,12 +13,13 @@ class WelcomeScreen extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
+          color: Color.fromARGB(255, 228, 240, 255),
+         /* gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 62, 114, 226),
-              Color.fromARGB(255, 255, 237, 255),
+            Color.fromARGB(255, 255, 226, 203),
+              Color.fromARGB(255, 121, 152, 192),
             ],
-          ),
+          ),*/
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
               'Welcome Back',
               style: TextStyle(
                 fontSize: 30,
-                color: Colors.white,
+                color: Color.fromARGB(255, 238, 116, 17),
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w900,
               ),
@@ -51,9 +52,9 @@ class WelcomeScreen extends StatelessWidget {
                 height: 53,
                 width: 320,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 253, 239, 255),
+                  color:Color.fromARGB(255, 55, 105, 172),
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Color.fromARGB(255, 112, 10, 104)),
+                  border: Border.all(color: Color.fromARGB(255, 238, 116, 17),),
                 ),
                 child: const Center(
                   child: Text(
@@ -64,7 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                       letterSpacing: 1,
                       wordSpacing: 6,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromARGB(255, 4, 31, 119),
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -82,9 +83,9 @@ class WelcomeScreen extends StatelessWidget {
                 height: 53,
                 width: 320,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 253, 239, 255),
+                  color: Color.fromARGB(255, 55, 105, 172),
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Color.fromARGB(255, 112, 10, 104)),
+                  border: Border.all(color: Color.fromARGB(255, 238, 116, 17),),
                 ),
                 child: const Center(
                   child: Text(
@@ -95,7 +96,7 @@ class WelcomeScreen extends StatelessWidget {
                       letterSpacing: 1,
                       wordSpacing: 5,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromARGB(255, 4, 31, 119),
+                      color: Colors.white
                     ),
                   ),
                 ),

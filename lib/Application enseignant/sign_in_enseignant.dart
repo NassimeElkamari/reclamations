@@ -1,16 +1,15 @@
- // Importez la page d'accueil de l'admin
+// Importez la page d'accueil de l'admin
 // ignore_for_file: prefer_const_constructors, unused_import, use_build_context_synchronously
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20admin/navigatorBarAdmi.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20commune/Welcome.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart';// Importez la page de récupération du mot de passe
+import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Forgot_password_old.dart'; // Importez la page de récupération du mot de passe
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/Home_enseignant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class SignInEnseignant extends StatefulWidget {
   const SignInEnseignant({Key? key}) : super(key: key);
@@ -25,12 +24,11 @@ class _SignInEnseignantState extends State<SignInEnseignant> {
 
   final _formSignInKey = GlobalKey<FormState>();
 
- // Enregistrer l'email du professeur connecté
-Future<void> _saveEmailenseignant(String email) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString("emailProfConnecte", email);
-}
-
+  // Enregistrer l'email du professeur connecté
+  Future<void> _saveEmailenseignant(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("emailProfConnecte", email);
+  }
 
   Future<void> _signIn(BuildContext context) async {
     try {
@@ -58,7 +56,7 @@ Future<void> _saveEmailenseignant(String email) async {
         await _saveEmailenseignant(emailAddress.text);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) =>HomeEnseignant2 ()),
+          MaterialPageRoute(builder: (context) => HomeEnseignant2()),
         );
       } else {
         // Aucun utilisateur trouvé dans les deux collections
@@ -67,7 +65,8 @@ Future<void> _saveEmailenseignant(String email) async {
           dialogType: DialogType.error,
           animType: AnimType.rightSlide,
           title: 'Erreur',
-          desc: 'Aucun utilisateur trouvé pour cet email ou mot de passe incorrect.',
+          desc:
+              'Aucun utilisateur trouvé pour cet email ou mot de passe incorrect.',
           btnCancelOnPress: () {},
           btnOkOnPress: () {},
         ).show();
@@ -81,7 +80,7 @@ Future<void> _saveEmailenseignant(String email) async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 87, 118, 184),
+      backgroundColor: Color.fromARGB(255, 55, 105, 172),
       body: Column(
         children: [
           SizedBox(height: 38),
@@ -109,10 +108,9 @@ Future<void> _saveEmailenseignant(String email) async {
               child: Text(
                 'Welcome back',
                 style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.w900,
-                  color: Color.fromARGB(255, 214, 228, 255),
-                ),
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white),
               ),
             ),
           ),
@@ -136,7 +134,7 @@ Future<void> _saveEmailenseignant(String email) async {
                       Container(
                         margin: EdgeInsets.only(top: 1, left: 40),
                         child: Image.asset(
-                          "images/login.png",
+                          "images/new login.png",
                           height: 260,
                         ),
                       ),
@@ -152,16 +150,22 @@ Future<void> _saveEmailenseignant(String email) async {
                         decoration: InputDecoration(
                           label: Text(
                             'Email',
-                            style: TextStyle(color: Color.fromARGB(255, 9, 61, 156)),
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 55, 105, 172),
+                            ),
                           ),
                           hintText: 'Entrez votre Email',
-                          hintStyle: TextStyle(color: Color.fromARGB(66, 0, 8, 53)),
+                          hintStyle:
+                              TextStyle(color: Color.fromARGB(66, 0, 8, 53)),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(31, 2, 19, 56)),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(31, 2, 19, 56)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(31, 1, 4, 51)),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 238, 116, 17),
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -180,16 +184,23 @@ Future<void> _saveEmailenseignant(String email) async {
                         decoration: InputDecoration(
                           label: Text(
                             'Mot de passe',
-                            style: TextStyle(color: Color.fromARGB(255, 9, 61, 156)),
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 55, 105, 172),
+                            ),
                           ),
                           hintText: 'Entrez votre mot de passe',
-                          hintStyle: TextStyle(color: Color.fromARGB(31, 2, 19, 56)),
+                          hintStyle:
+                              TextStyle(color: Color.fromARGB(31, 2, 19, 56)),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(31, 1, 4, 51)),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 238, 116, 17),
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 238, 116, 17),
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -202,14 +213,15 @@ Future<void> _saveEmailenseignant(String email) async {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ForgotPasswordOld()),
+                                MaterialPageRoute(
+                                    builder: (context) => ForgotPasswordOld()),
                               );
                             },
                             child: Text(
                               'Mot de passe oublié ?',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 115, 124, 163),
+                                color: Color.fromARGB(255, 238, 116, 17),
                               ),
                             ),
                           ),
@@ -219,12 +231,27 @@ Future<void> _saveEmailenseignant(String email) async {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all<Color>(
+                              Color.fromARGB(255, 55, 105, 172),
+                            ),
+                           shadowColor:
+                            WidgetStateProperty.all<Color>(
+                              Color.fromARGB(255, 238, 116, 17),
+                            ), 
+                          ),
                           onPressed: () async {
-                            if (_formSignInKey.currentState?.validate() ?? false) {
+                            if (_formSignInKey.currentState?.validate() ??
+                                false) {
                               await _signIn(context);
                             }
                           },
-                          child: Text('Se connecter'),
+                          child: Text(
+                            'Se connecter',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 228, 240, 255),
+                                fontSize: 19),
+                          ),
                         ),
                       ),
                       SizedBox(height: 25.0),
