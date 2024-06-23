@@ -3,21 +3,18 @@
 import 'dart:async';
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/details_reclamtion.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/non_trait%C3%A9es.dart';
-
 import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/setting.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/menu/trait%C3%A9es.dart';
-import 'package:application_gestion_des_reclamations_pfe/Application%20enseignant/recamation_trait%C3%A9e.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeEnseignant2 extends StatefulWidget {
+class non_traitees extends StatefulWidget {
   @override
-  _HomeEnseignantState createState() => _HomeEnseignantState();
+  _non_traiteesState createState() => _non_traiteesState();
 }
 
-class _HomeEnseignantState extends State<HomeEnseignant2> {
+class _non_traiteesState extends State<non_traitees> {
   final TextEditingController searchController = TextEditingController();
   bool isSearchClicked = false;
   String? _emailProfessorConnecte;
@@ -47,9 +44,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 data['Document ID'] = doc.id;
                 return data;
               }).toList();
-              nonTreatedReclamationsCount = _reclamations
-                  .where((reclamation) => reclamation['status'] == false)
-                  .length;
+              nonTreatedReclamationsCount = _reclamations.where((reclamation) => reclamation['status'] == false).length;
             });
           });
         });
@@ -81,8 +76,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
       var doc = querySnapshot.docs.first;
       String nom = doc.get('nom');
       String prenom = doc.get('prenom');
-      String profileImageUrl = doc
-          .get('profile'); // Assuming the URL field is named 'profileImageUrl'
+      String profileImageUrl = doc.get('profile'); // Assuming the URL field is named 'profileImageUrl'
 
       setState(() {
         _nomProfessorConnecte = '$nom $prenom';
@@ -101,6 +95,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('reclamations')
           .where('email', isEqualTo: _emailProfessorConnecte)
+          .where('status', isEqualTo: false)
           .get();
       setState(() {
         _reclamations = querySnapshot.docs.map((doc) {
@@ -108,25 +103,26 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
           data['Document ID'] = doc.id;
           return data;
         }).toList();
-        nonTreatedReclamationsCount = _reclamations
-            .where((reclamation) => reclamation['status'] == false)
-            .length;
+        nonTreatedReclamationsCount = _reclamations.where((reclamation) => reclamation['status'] == false).length;
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 80,
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Home",
+          "Reclamations \n non traitées",
           style: TextStyle(
-            color: Color.fromARGB(255, 55, 105, 172),
-            fontSize: 31,
+            color: Color.fromARGB(255, 238, 116, 17),
+            fontSize: 25,
             fontWeight: FontWeight.bold,
             fontFamily: 'Roboto',
             shadows: [
@@ -138,36 +134,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
             ],
           ),
         ),
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                onPressed: () {
-// Handle notification icon tap
-                },
-                icon: Icon(Icons.notifications,
-                    color: Color.fromARGB(255, 28, 51, 128)),
-              ),
-              if (nonTreatedReclamationsCount > 0)
-                Positioned(
-                  right: 11,
-                  top: 11,
-                  child: CircleAvatar(
-                    radius: 8.0,
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    child: Text(
-                      nonTreatedReclamationsCount.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
+      
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -188,7 +155,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                   Map<String, dynamic> reclamation = _reclamations[index];
                   return GestureDetector(
                       onTap: () {
-                        if (reclamation['status'] == false) {
+                      
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -198,17 +165,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                               ),
                             ),
                           );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => reclamation_Traitee(
-                                reclamationDetails: reclamation,
-                                reclamationId: reclamation['Document ID'],
-                              ),
-                            ),
-                          );
-                        }
+                       
                       },
                       child: Card(
                         color: Color.fromARGB(255, 55, 105, 172),
@@ -236,88 +193,7 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
                 },
               ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromARGB(255, 255, 255, 255),
-                   Color.fromARGB(255, 55, 105, 172),
-                  ],
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CircleAvatar(
-                    radius: 30, // Augmente la taille de l'image
-                    backgroundImage:NetworkImage(_profileImageUrl!)
-                      
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    _nomProfessorConnecte != null
-                        ? 'Pr. $_nomProfessorConnecte'
-                        : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    _emailProfessorConnecte ?? '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.notification_important,
-                color: Color.fromARGB(255, 28, 51, 128),
-              ),
-              title: Text('Pas traiter'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => non_traitees()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.check,
-                color: Color.fromARGB(255, 28, 51, 128),
-              ),
-              title: Text('Traiter'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => traitees()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.settings,
-                color: Color.fromARGB(255, 28, 51, 128),
-              ),
-              title: Text('Setting'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+     
     );
   }
 }
