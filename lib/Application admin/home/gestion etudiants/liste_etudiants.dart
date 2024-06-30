@@ -24,6 +24,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
           child: Text(
             " Liste des Étudiants",
@@ -34,7 +35,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
             ),
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
+        backgroundColor: Color.fromARGB(255, 55, 105, 172),
       ),
       backgroundColor: Colors.white,
       body: Column(
@@ -45,11 +46,26 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search),
+                suffixIcon: Icon(Icons.search,color: Color.fromARGB(255, 55, 105, 172),),
                 labelText: 'Rechercher un étudiant',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
+                labelStyle: TextStyle(
+                  color: Color.fromARGB(255, 55, 105, 172),
                 ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color.fromARGB(255, 55, 105, 172),
+                  ),
+                  
+                  borderRadius: BorderRadius.circular(30),
+                  
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                 borderSide: BorderSide(
+                    color: Color.fromARGB(255, 55, 105, 172),
+                    
+                  ),
+                )
               ),
               onChanged: (value) {
                 setState(() {}); // Rafraîchir l'affichage lors de la saisie
@@ -94,7 +110,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 13, 41, 133),
+                          color: Color.fromARGB(255, 238, 116, 17),
                           width: 2
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -111,7 +127,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                         title: Text(
                           '$nom $prenom',
                           style: TextStyle(
-                            color: Color.fromARGB(255, 13, 41, 133),
+                            color: Color.fromARGB(255, 55, 105, 172),
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
@@ -119,7 +135,7 @@ class _ListeDesEtudiantsState extends State<ListeDesEtudiants> {
                         subtitle: Text(
                           'Apoge: $apoge',
                           style: TextStyle(
-                            color: Color.fromARGB(255, 13, 41, 133),
+                            color: Color.fromARGB(255, 55, 105, 172),
                           ),
                         ),
                         onTap: () {

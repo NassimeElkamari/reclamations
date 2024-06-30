@@ -20,7 +20,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
         title: Text(
           'Déconnexion',
           style: TextStyle(
-            color: Color.fromARGB(255, 28, 51, 128),
+            color: Color.fromARGB(255, 55, 105, 172),
           ),
         ),
         content: Text('Voulez-vous vraiment vous déconnecter?'),
@@ -32,7 +32,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
             child: Text(
               'Annuler',
               style: TextStyle(
-                color: Color.fromARGB(255, 28, 51, 128),
+                color: Color.fromARGB(255, 55, 105, 172),
               ),
             ),
           ),
@@ -52,7 +52,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
             child: Text(
               'Déconnecter',
               style: TextStyle(
-                color: Color.fromARGB(255, 28, 51, 128),
+                color: Color.fromARGB(255, 55, 105, 172),
               ),
             ),
           ),
@@ -67,9 +67,10 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
           child: Text(
-            "  Admin profil",
+            "Admin profil",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
             ),
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
+        backgroundColor: Color.fromARGB(255, 55, 105, 172),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -107,7 +108,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                 width: 150,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Color.fromARGB(255, 28, 51, 128),
+                    color: Color.fromARGB(255, 55, 105, 172),
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(8),
@@ -120,7 +121,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 28, 51, 128),
+                        color: Color.fromARGB(255, 55, 105, 172),
                       ),
                     ),
                   ),

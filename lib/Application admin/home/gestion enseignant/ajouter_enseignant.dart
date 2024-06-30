@@ -69,6 +69,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -96,8 +97,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
             ),
           ),
         ),
-        backgroundColor:
-            Color.fromARGB(255, 28, 51, 128), // Couleur de fond de l'AppBar
+        backgroundColor:Color.fromARGB(255, 55, 105, 172), // Couleur de fond de l'AppBar
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -122,6 +122,9 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Nom',
+                   labelStyle: TextStyle(
+                    color: Color.fromARGB(255, 55, 105, 172),
+                  ),
                   hintText: 'Entrer votre Nom',
                   hintStyle: TextStyle(
                     color: Color.fromARGB(66, 0, 8, 53),
@@ -156,6 +159,9 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Prenom',
+                   labelStyle: TextStyle(
+                    color: Color.fromARGB(255, 55, 105, 172),
+                  ),
                   hintText: 'Entrer votre Prenom',
                   hintStyle: TextStyle(
                     color: Color.fromARGB(66, 0, 8, 53),
@@ -190,6 +196,9 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Email',
+                  labelStyle: TextStyle(
+                    color: Color.fromARGB(255, 55, 105, 172),
+                  ),
                   hintText: 'Entrer votre Email',
                   hintStyle: TextStyle(
                     color: Color.fromARGB(66, 0, 8, 53),
@@ -219,7 +228,7 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                   Text(
                     'Choisissez la filliere:',
                     style: TextStyle(
-                        fontSize: 17, color: Color.fromARGB(255, 9, 61, 156)),
+                        fontSize: 17, color:Color.fromARGB(255, 55, 105, 172),),
                   ),
                   DropdownButtonFormField<String>(
                     value: _selectedFiliere,
@@ -241,6 +250,9 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
                     }).toList(),
                     decoration: InputDecoration(
                       hintText: 'Sélectionnez une filliere',
+                       hintStyle: TextStyle(
+                    color: Color.fromARGB(255, 169, 170, 172),
+                  ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -262,7 +274,10 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
               child: TextFormField(
                 controller: profileController,
                 decoration: InputDecoration(
-                  labelText: 'Profil', // Modifier le libellé du champ
+                  labelText: 'Profil', 
+                   labelStyle: TextStyle(
+                    color: Color.fromARGB(255, 55, 105, 172),
+                  ),// Modifier le libellé du champ
                   hintText:
                       'Entrer le profil de l\'enseignant', // Modifier le texte d'aide
                   hintStyle: TextStyle(
@@ -289,9 +304,9 @@ class _AjouterEnseignantState extends State<AjouterEnseignant> {
               margin: EdgeInsets.all(30),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 28, 51, 128),
+                  backgroundColor: Color.fromARGB(255, 55, 105, 172),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(40),
                   ),
                 ),
                 onPressed: ajouterEnseignant,

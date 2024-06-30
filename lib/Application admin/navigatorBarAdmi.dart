@@ -32,7 +32,7 @@ class _NavigatorBarEtudiantState extends State<NavigatorBarAdmin> {
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: Color.fromARGB(255, 28, 51, 128),
+        color: Color.fromARGB(255, 55, 105, 172),
         height: 60,
         animationDuration: Duration(milliseconds: 300),
         index: _selecedIndex,

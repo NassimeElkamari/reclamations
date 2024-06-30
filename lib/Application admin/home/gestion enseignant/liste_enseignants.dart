@@ -24,6 +24,7 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
           child: Text(
             "      Enseignants",
@@ -34,7 +35,7 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
             ),
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
+        backgroundColor: Color.fromARGB(255, 55, 105, 172),
         actions: [
           IconButton(
             icon: Icon(Icons.person_add),
@@ -56,15 +57,15 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search, color: Color.fromARGB(255, 13, 41, 133)),
+                suffixIcon: Icon(Icons.search, color: Color.fromARGB(255, 238, 116, 17),),
                 labelText: 'Rechercher un enseignant',
-                labelStyle: TextStyle(color: Color.fromARGB(255, 13, 41, 133)),
+                labelStyle: TextStyle(color: Color.fromARGB(255, 55, 105, 172),),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color.fromARGB(255, 13, 41, 133)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 238, 116, 17),),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color.fromARGB(255, 13, 41, 133)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 238, 116, 17),),
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
@@ -135,7 +136,7 @@ class _MyWidgetState extends State<ListeDesEnseignants> {
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color.fromARGB(255, 28, 51, 128),
+                            color: Color.fromARGB(255, 55, 105, 172),
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(10),
