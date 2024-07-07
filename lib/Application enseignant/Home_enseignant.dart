@@ -30,10 +30,40 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
 
   StreamSubscription<QuerySnapshot>? _reclamationsSubscription;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail().then((_) {
+      if (_emailProfessorConnecte != null) {
+        _loadProfessorDetails(_emailProfessorConnecte!).then((_) {
+          _loadReclamations();
+          _reclamationsSubscription = FirebaseFirestore.instance
+              .collection('reclamations')
+              .where('email', isEqualTo: _emailProfessorConnecte)
+              .snapshots()
+              .listen((querySnapshot) {
+            setState(() {
+              _reclamations = querySnapshot.docs.map((doc) {
+                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                data['Document ID'] = doc.id;
+                return data;
+              }).toList();
+              nonTreatedReclamationsCount = _reclamations
+                  .where((reclamation) => reclamation['status'] == false)
+                  .length;
+            });
+          });
+        });
+      }
+    });
+  }
 
-Future<void> _logout(BuildContext context) async {
+  Future<void> _logout(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('isLoggedIn');
+      await prefs.remove('userType');
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
             SignInEnseignant(), // Replace with your login screen
@@ -48,6 +78,7 @@ Future<void> _logout(BuildContext context) async {
       );
     }
   }
+
   void _confirmLogout(BuildContext context) {
     showDialog(
       context: context,
@@ -74,6 +105,7 @@ Future<void> _logout(BuildContext context) async {
       },
     );
   }
+
   @override
   void dispose() {
     _reclamationsSubscription?.cancel();
@@ -98,7 +130,7 @@ Future<void> _logout(BuildContext context) async {
       var doc = querySnapshot.docs.first;
       String nom = doc.get('nom');
       String prenom = doc.get('prenom');
-      String profileImageUrl = doc.get('profile'); // Assuming the URL field is named 'profileImageUrl'
+      String profileImageUrl = doc.get('profile'); // Assuming the URL field is named 'profile'
 
       setState(() {
         _nomProfessorConnecte = '$nom $prenom';
@@ -159,7 +191,7 @@ Future<void> _logout(BuildContext context) async {
             children: [
               IconButton(
                 onPressed: () {
-// Handle notification icon tap
+                  // Handle notification icon tap
                 },
                 icon: Icon(Icons.notifications,
                     color: Color.fromARGB(255, 28, 51, 128)),
@@ -271,9 +303,14 @@ Future<void> _logout(BuildContext context) async {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CircleAvatar(
-                      radius: 30, // Augmente la taille de l'image
-                      backgroundImage: NetworkImage(_profileImageUrl!)),
+                  _profileImageUrl != null
+                      ? CircleAvatar(
+                          radius: 30, // Augmente la taille de l'image
+                          backgroundImage: NetworkImage(_profileImageUrl!))
+                      : CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.grey,
+                        ),
                   SizedBox(height: 10),
                   Text(
                     _nomProfessorConnecte != null
@@ -295,15 +332,17 @@ Future<void> _logout(BuildContext context) async {
                 ],
               ),
             ),
-             ListTile(
+            ListTile(
               leading: Icon(
                 Icons.account_circle,
                 color: Color.fromARGB(255, 28, 51, 128),
               ),
               title: Text('profile'),
               onTap: () {
-               Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfileEnseignant()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProfileEnseignant()));
               },
             ),
             ListTile(
@@ -342,11 +381,9 @@ Future<void> _logout(BuildContext context) async {
                 _confirmLogout(context);
               },
             ),
-           
           ],
         ),
       ),
     );
   }
 }
-
