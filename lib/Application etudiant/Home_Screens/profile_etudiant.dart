@@ -433,7 +433,7 @@ class _ProfileEtudiantState extends State<ProfileEtudiant> {
       String? apogeConnecte = prefs.getString('apogeConnecte');
       if (apogeConnecte == null) {
         print('No apoge found in SharedPreferences');
-        return;
+        return; 
       }
 
       // Récupérer l'ID du document correspondant à l'apogée 20035326

@@ -28,6 +28,7 @@ class _DetailsPageState extends State<DetailsPage> {
       
     super.initState();
     _sujetController =TextEditingController(text: widget.reclamationData['sujet']);
+   
     _nomEtudiantController =TextEditingController(text: widget.reclamationData['nomEtudiant']);
     _nomEnseignantController =TextEditingController(text: widget.reclamationData['nomEnseignant']);
     _descriptionController =TextEditingController(text: widget.reclamationData['description']);
@@ -71,30 +72,65 @@ class _DetailsPageState extends State<DetailsPage> {
    
     super.dispose();
   }
-  void _deleteReclamation() async {
-  String? documentId = widget.reclamationData['Document ID'];
-  
+void deleteReclamation(BuildContext context) async {
+  String? documentId = widget.reclamationData['idReclamation'];
   if (documentId != null) {
     try {
-      await FirebaseFirestore.instance
-          .collection('reclamations')
-          .doc(documentId)
-          .delete();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Réclamation supprimée avec succès')),
+      bool confirmDelete = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Confirmer la suppression"),
+            content: Text("Êtes-vous sûr de vouloir supprimer cette réclamation ?"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Annuler"),
+                onPressed: () {
+                  Navigator.of(context).pop(false); // Return false to indicate cancellation
+                },
+              ),
+              TextButton(
+                child: Text("Supprimer"),
+                onPressed: () {
+                  Navigator.of(context).pop(true); // Return true to indicate confirmation
+                },
+              ),
+            ],
+          );
+        },
       );
 
-      // Retour à la page précédente après la suppression
-      Navigator.pop(context);
+      if (confirmDelete == true) {
+        await FirebaseFirestore.instance
+            .collection('reclamations')
+            .doc(documentId)
+            .delete();
+            widget.reclamationData['deleted']==true ;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Réclamation supprimée avec succès')),
+        );
+
+        // Retour à la page précédente après la suppression
+        Navigator.pop(context);
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la suppression de la réclamation')),
+        SnackBar(
+          content: Text('Erreur lors de la suppression de la réclamation : $e'),
+        ),
       );
+      print('Erreur lors de la suppression de la réclamation : $e');
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Impossible de trouver l\'identifiant de la réclamation.'),
+      ),
+    );
+    print('Impossible de trouver l\'identifiant de la réclamation.');
   }
 }
-
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +159,7 @@ class _DetailsPageState extends State<DetailsPage> {
         actions: [
           IconButton(
           onPressed: () {
-             _deleteReclamation();
+            deleteReclamation(context) ;
               // Appeler la fonction de suppression
           },
           icon: Icon(
@@ -133,46 +169,40 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
         ],
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 15,
-          ),
-          _buildDetailSection("Sujet :", widget.reclamationData['sujet']),
-          _buildDetailSection(
-              "Nom étudiant :", widget.reclamationData['nomEtudiant']),
-          _buildDetailSection(
-              "Nom de l'enseignant:", widget.reclamationData['nomEnseignant']),
-          _buildDetailSection(
-              "Description:", widget.reclamationData['description'],
-              isDescription: true),
-          _buildDetailSection(
-              "Date :",
-              (widget.reclamationData['date'] as Timestamp)
-                  .toDate()
-                  .toString()),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: ElevatedButton(
-  style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(
-      Color.fromARGB(255, 238, 116, 17),
+      body:ListView(
+  children: [
+    SizedBox(
+      height: 15,
     ),
-  ),
-  onPressed: () {
-    Navigator.of(context).pop(); // Ferme le modal actuel
-    _showEditModal(context); // Affiche le modal d'édition
-  },
-  child: Text(
-    'Modifier',
-    style: TextStyle(color: Colors.white),
-  ),
-),
-
-           
+    _buildDetailSection("Sujet :", widget.reclamationData['sujet']),
+    _buildDetailSection("Nom étudiant :", widget.reclamationData['nomEtudiant']),
+    _buildDetailSection("Nom de l'enseignant:", widget.reclamationData['nomEnseignant']),
+    _buildDetailSection("Description:", widget.reclamationData['description'], isDescription: true),
+    if (widget.reclamationData["status"]) ...[
+      _buildDetailSection("Réponse de l'enseignant:", widget.reclamationData['reponse']),
+    ],
+    _buildDetailSection("Date :", (widget.reclamationData['date'] as Timestamp).toDate().toString()),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+            Color.fromARGB(255, 238, 116, 17),
           ),
-        ],
+        ),
+        onPressed: () {
+          Navigator.of(context).pop(); // Close the current modal
+          _showEditModal(context); // Show the edit modal
+        },
+        child: Text(
+          'Modifier',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
+    ),
+  ],
+)
+
     );
   }
 
@@ -421,38 +451,50 @@ class _DetailsPageState extends State<DetailsPage> {
       ],
     );
   }
+  
+Future<void> _updateReclamationInfo() async {
+  try {
+    // Récupérer l'ID du document de la réclamation
+    String? documentId = widget.reclamationData['idReclamation'];
+    // Récupérer l'email du professeur sélectionné
+    String? professorEmail = professorEmails[_selectedProfessor];
 
-  Future<void> _updateReclamationInfo() async {
-    try {
-      String? documentId = widget.reclamationData['Document ID'];
-      String? professorEmail = professorEmails[_selectedProfessor];
+    // Vérifier si l'ID du document n'est pas null
+    if (documentId != null) {
+      // Mettre à jour le document de la réclamation avec les nouvelles valeurs des champs d'entrée
+      await FirebaseFirestore.instance
+          .collection('reclamations')
+          .doc(documentId)
+          .update({
+        'sujet': _selectedChoice,
+        'nomEnseignant': _selectedProfessor,
+        'description': _descriptionController.text,
+        'email': professorEmail,
+      });
 
-      if (documentId != null) {
-        await FirebaseFirestore.instance
-            .collection('reclamations')
-            .doc(documentId)
-            .update({
-          'sujet': _selectedChoice,
-          'nomEnseignant': _selectedProfessor,
-          'description': _descriptionController.text,
-          'email': professorEmail,
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Réclamation mise à jour avec succès')),
-        );
-
-        setState(() {
-          widget.reclamationData['sujet'] = _selectedChoice;
-          widget.reclamationData['nomEnseignant'] = _selectedProfessor;
-          widget.reclamationData['description'] = _descriptionController.text;
-          widget.reclamationData['email'] = professorEmail;
-        });
-      }
-    } catch (e) {
+      // Afficher un message de réussite
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la mise à jour de la réclamation')),
+        SnackBar(content: Text('Réclamation mise à jour avec succès')),
+      );
+
+      // Mettre à jour l'état local avec les nouvelles valeurs
+      setState(() {
+        widget.reclamationData['sujet'] = _selectedChoice;
+        widget.reclamationData['nomEnseignant'] = _selectedProfessor;
+        widget.reclamationData['description'] = _descriptionController.text;
+        widget.reclamationData['email'] = professorEmail;
+      });
+    } else {
+      // Afficher un message d'erreur si l'ID du document est null
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('ID de document non trouvé')),
       );
     }
+  } catch (e) {
+    // Afficher un message d'erreur en cas d'échec de mise à jour
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erreur lors de la mise à jour de la réclamation')),
+    );
   }
+}
 }

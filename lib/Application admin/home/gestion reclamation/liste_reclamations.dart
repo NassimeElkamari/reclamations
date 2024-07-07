@@ -49,7 +49,7 @@ class _MyWidgetState extends State<ListeDesReclamations> {
             ),
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 28, 51, 128),
+        backgroundColor:Color.fromARGB(255, 55, 105, 172),
         actions: [
           IconButton(
             onPressed: () {
@@ -73,15 +73,15 @@ class _MyWidgetState extends State<ListeDesReclamations> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search, color: Color.fromARGB(255, 13, 41, 133)),
+                suffixIcon: Icon(Icons.search, color: Color.fromARGB(255, 55, 105, 172),),
                 labelText: 'Rechercher une réclamation',
-                labelStyle: TextStyle(color: Color.fromARGB(255, 13, 41, 133)),
+                labelStyle: TextStyle(color:Color.fromARGB(255, 55, 105, 172),),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color.fromARGB(255, 13, 41, 133)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 55, 105, 172),),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color.fromARGB(255, 13, 41, 133)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 55, 105, 172),),
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
@@ -151,7 +151,7 @@ class _MyWidgetState extends State<ListeDesReclamations> {
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color.fromARGB(255, 28, 51, 128),
+                            color: Color.fromARGB(255, 55, 105, 172),
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(10),

@@ -2,6 +2,7 @@
 
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/AjouterReclamation.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/apropos_application.dart';
+import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/corbeille.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/liste_des_cours.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/mesReclamations.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/login.dart';
@@ -204,6 +205,13 @@ class _HomeBodyEtudiantState extends State<HomeBodyEtudiant> {
                   // Action pour l'option "Guide d'utilisation"
                   print('Option "Guide d\'utilisation" sélectionnée');
                 } else if (value == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Corbeille ()),
+                  );
+
+                  // Gérez les autres options si nécessaire
+
                   // Action pour l'option "Corbeille"
                   print('Option "Corbeille" sélectionnée');
                 } else if (value == 3) {

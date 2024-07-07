@@ -58,36 +58,64 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
   }
 
   Future<void> _ajouterReclamation() async {
-    if (_selectedProfessor != null) {
-      emailProf = professorEmails[_selectedProfessor]; // Get the email of the selected professor
-    }
-
-    try {
-      await FirebaseFirestore.instance.collection('reclamations').add({
-        'nomEtudiant': '${_nomController.text} ${_prenomController.text}',
-        'apogeEtudiant': _apogeController.text,
-        'sujet': _selectedChoice,
-        'description': _descriptionController.text,
-        'nomEnseignant': _selectedProfessor,
-        'date': FieldValue.serverTimestamp(),
-        'email': emailProf,
-        'status' :false ,
-        'reponse' :" " ,
-
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Réclamation ajoutée avec succès')),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
-      );
-    }
+  if (_selectedProfessor != null) {
+    emailProf = professorEmails[_selectedProfessor]; // Get the email of the selected professor
   }
+
+  try {
+    // Generate a document reference with a specific ID
+    DocumentReference docRef = FirebaseFirestore.instance.collection('reclamations').doc();
+
+    await docRef.set({
+      'idReclamation': docRef.id, // Set the document ID as a field in the document
+      'nomEtudiant': '${_nomController.text} ${_prenomController.text}',
+      'apogeEtudiant': _apogeController.text,
+      'sujet': _selectedChoice,
+      'description': _descriptionController.text,
+      'nomEnseignant': _selectedProfessor,
+      'date': FieldValue.serverTimestamp(),
+      'email': emailProf,
+      'status': false,
+      'reponse': " ",
+    });
+
+   // await _sendNotificationToProfessor(emailProf);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Réclamation ajoutée avec succès')),
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erreur lors de l\'ajout de la réclamation')),
+    );
+  }
+}
+
+// Fonction pour récupérer le dernier ID de réclamation depuis Firestore
+Future<int> _dernierIdReclamation() async {
+  // Récupérer la référence à la collection de réclamations triée par ID descendant
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('reclamations')
+      .orderBy('idReclamation', descending: true)
+      .limit(1)
+      .get();
+
+  // Vérifier s'il y a des documents
+  if (querySnapshot.docs.isNotEmpty) {
+    // Récupérer le dernier document (avec l'ID le plus élevé)
+    var doc = querySnapshot.docs.first;
+
+    // Récupérer et retourner l'ID de réclamation
+    return doc['idReclamation'];
+  } else {
+    // Si la collection est vide, retourner 0 comme premier ID
+    return 0;
+  }
+}
+
 
 
   @override

@@ -145,7 +145,7 @@ Future<void> _saveApoge(String apoge) async {
                 CustomTextForm(
                   hinttext: "Enter Your Email",
                   mycontroller: email,
-                  obscureText: false,
+                  obscureText: false, validator: (value) {  },
                 ),
                 Container(height: 10),
                 const Text("Password", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: Color.fromARGB(255, 28, 51, 128),)),
@@ -154,7 +154,7 @@ Future<void> _saveApoge(String apoge) async {
                   hinttext: "Enter Your Password",
                   mycontroller: password,
                   obscureText: true,
-                  obscuringCharacter: '*',
+                  obscuringCharacter: '*', validator: (value) {  },
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 10, bottom: 20),

@@ -24,7 +24,6 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   String? _selectedFiliere;
-  //liste des fillieres
   List<String> _filieres = [
     'Sciences Mathématiques Appliquées (SMA)',
     'Sciences Mathématiques Informatiques (SMI)',
@@ -33,33 +32,26 @@ class _SignUpState extends State<SignUp> {
     'Sciences de la Vie (SVI)',
     "Sciences de la Terre et de l'Univers (STU)",
   ];
-  // Contrôleurs pour les champs de saisie
   TextEditingController nomEntre = TextEditingController();
   TextEditingController prenomEntre = TextEditingController();
   TextEditingController appogeEntre = TextEditingController();
   TextEditingController emailEntre = TextEditingController();
   TextEditingController passwordEntre = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // Form key for validation
 
-  // Méthode pour enregistrer l'apogée dans SharedPreferences
   Future<void> _saveApoge(String apoge) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('apogeConnecte', apoge);
   }
 
-  // Méthode pour l'inscription de l'utilisateur
   Future<void> signUp() async {
-    // Vérifier si les champs obligatoires sont remplis
-    if (appogeEntre.text.isNotEmpty &&
-        emailEntre.text.isNotEmpty &&
-        passwordEntre.text.isNotEmpty) {
+    if (_formKey.currentState!.validate()) {
       try {
-        // Vérifier si l'apogée de l'étudiant existe dans la bAAase de données
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('etudiants')
             .where('appoge', isEqualTo: appogeEntre.text)
             .get();
 
-        // Si l'apogée existe, créer le compte de l'utilisateur
         if (querySnapshot.docs.isNotEmpty) {
           final credential =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -67,7 +59,6 @@ class _SignUpState extends State<SignUp> {
             password: passwordEntre.text,
           );
 
-          // Enregistrer les informations de l'utilisateur dans Firestore
           await FirebaseFirestore.instance.collection('etudiantsActives').add({
             'nom': nomEntre.text,
             'prenom': prenomEntre.text,
@@ -78,21 +69,17 @@ class _SignUpState extends State<SignUp> {
             'password': passwordEntre.text
           });
 
-          // Enregistrer l'apogée dans SharedPreferences
           await _saveApoge(appogeEntre.text);
 
-          // Rediriger vers l'interface ProfileEtudiant
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),
           );
 
-          // Afficher un message de confirmation
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Compte activé avec succès!'),
           ));
         } else {
-          // Afficher un message d'erreur si l'apogée n'est pas trouvée
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content:
                 Text('Apogée non trouvé. Veuillez vérifier vos informations.'),
@@ -108,7 +95,6 @@ class _SignUpState extends State<SignUp> {
         print(e);
       }
     } else {
-      // Afficher un message si les champs obligatoires ne sont pas remplis
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Veuillez remplir les champs obligatoires'),
       ));
@@ -116,232 +102,213 @@ class _SignUpState extends State<SignUp> {
   }
 
   String? apogeConnecte;
+
+  // Validation function to check if the input contains only letters
+  String? _validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Ce champ est obligatoire';
+    }
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+      return 'Veuillez entrer uniquement des lettres';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Interface utilisateur de l'écran d'inscription
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Bouton de retour
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WelcomeScreen()));
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Color.fromARGB(179, 45, 11, 90),
+        child: Form(
+          key: _formKey, // Assign the form key
+          child: ListView(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 10,
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                // Titre de la page
-                Center(
-                  child: const Text("SignUp",
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color:  Color.fromARGB(255, 33, 55, 128),)),
-                ),
-                Container(height: 10),
-                // Description de la page
-                Center(
-                  child: const Text("SignUp To Continue Using The App",
-                      style: TextStyle(color:  Color.fromARGB(255, 141, 149, 179),)),
-                ),
-                Container(height: 20),
-                // Champ pour le nom
-                const Text(
-                  "Nom ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 8),
-                CustomTextForm(
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WelcomeScreen()));
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Color.fromARGB(179, 45, 11, 90),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: const Text("SignUp",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 33, 55, 128),
+                        )),
+                  ),
+                  Container(height: 10),
+                  Center(
+                    child: const Text(
+                        "SignUp To Continue Using The App",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 141, 149, 179),
+                        )),
+                  ),
+                  Container(height: 20),
+                  const Text(
+                    "Nom ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(height: 8),
+                  CustomTextForm(
                     hinttext: "Enter votre nom",
                     mycontroller: nomEntre,
-                    obscureText: false),
-                Container(height: 20),
-                // Champ pour le prénom
-                const Text(
-                  "Prenom ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 8),
-                CustomTextForm(
+                    obscureText: false,
+                    validator: _validateName, // Apply the validator
+                  ),
+                  Container(height: 20),
+                  const Text(
+                    "Prenom ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(height: 8),
+                  CustomTextForm(
                     hinttext: "Enter votre prenom",
                     mycontroller: prenomEntre,
-                    obscureText: false),
-                Container(height: 20),
-                // Champ pour l'apogée
-                const Text(
-                  "Appoge ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 8),
-                CustomTextForm(
+                    obscureText: false,
+                    validator: _validateName, // Apply the validator
+                  ),
+                  Container(height: 20),
+                  const Text(
+                    "Appoge ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(height: 8),
+                  CustomTextForm(
                     hinttext: "Enter votre Appoge",
                     mycontroller: appogeEntre,
-                    obscureText: false),
-                Container(height: 20),
-                // Champ pour l'email
-                const Text(
-                  "Email",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 8),
-                CustomTextForm(
+                    obscureText: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ce champ est obligatoire';
+                      }
+                      return null;
+                    },
+                  ),
+                  Container(height: 20),
+                  const Text(
+                    "Email",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(height: 8),
+                  CustomTextForm(
                     hinttext: "Enter Your Email",
                     mycontroller: emailEntre,
-                    obscureText: false),
-                Container(height: 8),
-                Text(
-                  "Filière ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Container(height: 8),
-                Container(
-                  height: 50, // Hauteur du champ de sélection
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50), // Bord arrondi
-                    border: Border.all(), // Bordure avec style par défaut
-                     color:  Color.fromARGB(255, 223, 230, 252), // Couleur de fond grise
-                  ),
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedFiliere,
-                    items: _filieres.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                            fontSize: 12, // Taille de la police réduite
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedFiliere = newValue;
-                      });
+                    obscureText: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ce champ est obligatoire';
+                      }
+                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return 'Veuillez entrer un email valide';
+                      }
+                      return null;
                     },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ), // Padding pour le contenu
-                      border: InputBorder
-                          .none, // Supprimer la bordure de DropdownButtonFormField
+                  ),
+                  Container(height: 8),
+                  Text(
+                    "Filière ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(height: 8),
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(),
+                      color: Color.fromARGB(255, 223, 230, 252),
+                    ),
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedFiliere,
+                      items: _filieres.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedFiliere = newValue!;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ce champ est obligatoire';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ),
-
-                Container(height: 8),
-                const Text(
-                  "Email",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-
-                Container(height: 8),
-                CustomTextForm(
+                  SizedBox(
+                    height: 15,
+                  ),
+                  const Text(
+                    "Password",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Container(height: 8),
+                  CustomTextForm(
                     hinttext: "Enter Your Password",
                     mycontroller: passwordEntre,
-                    obscureText: true),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 20),
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgotPasswordEtudiant()));
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Ce champ est obligatoire';
+                      }
+                      if (value.length < 6) {
+                        return 'Le mot de passe doit comporter au moins 6 caractères';
+                      }
+                      return null;
                     },
-                    child: const Text(
-                      "Forgot Password ?",
-                      style: TextStyle(
-                        fontSize: 14,
+                  ),
+                  Container(height: 30),
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Color.fromARGB(255, 33, 55, 128)),
+                    child: Center(
+                      child: InkWell(
+                        onTap: () {
+                          signUp();
+                        },
+                        child: Text(
+                          "SignUp",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20,),
-                
-              ],
-            ),
-            // Bouton d'inscription
-            CustomButtonAuth(
-              title: "SignUp",
-              onPressed: signUp,
-            ),
-            SizedBox(height: 20,),
-            // Texte pour se connecter
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Login()));
-              },
-              child: const Center(
-                child: Text.rich(TextSpan(children: [
-                  TextSpan(
-                    text: "Have An Account ? ",
+                  SizedBox(
+                    height: 8,
                   ),
-                  TextSpan(
-                      text: "Login",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 25, 5, 80),
-                          fontWeight: FontWeight.bold)),
-                ])),
+                ],
               ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ErrorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Erreur'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error,
-              size: 80,
-              color: Colors.red,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Aucun étudiant trouvé avec ce numéro d\'apogée.',
-              style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Retourner à l'écran précédent
-              },
-              child: Text('Retour'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
