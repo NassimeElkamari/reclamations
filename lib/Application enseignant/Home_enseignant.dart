@@ -30,35 +30,6 @@ class _HomeEnseignantState extends State<HomeEnseignant2> {
 
   StreamSubscription<QuerySnapshot>? _reclamationsSubscription;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadEmail().then((_) {
-      if (_emailProfessorConnecte != null) {
-        _loadProfessorDetails(_emailProfessorConnecte!).then((_) {
-          _loadReclamations();
-          _reclamationsSubscription = FirebaseFirestore.instance
-              .collection('reclamations')
-              .where('email', isEqualTo: _emailProfessorConnecte)
-              .snapshots()
-              .listen((querySnapshot) {
-            setState(() {
-              _reclamations = querySnapshot.docs.map((doc) {
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                data['Document ID'] = doc.id;
-                return data;
-              }).toList();
-              nonTreatedReclamationsCount = _reclamations
-                  .where((reclamation) => reclamation['status'] == false)
-                  .length;
-            });
-          });
-        });
-      }
-    });
-  }
-
-
 
 Future<void> _logout(BuildContext context) async {
     try {

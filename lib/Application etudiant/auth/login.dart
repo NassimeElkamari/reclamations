@@ -70,6 +70,11 @@ Future<void> _saveApoge(String apoge) async {
             .doc(etudiant.id)
             .update({'fcmToken': fcmToken});
 
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('isLoggedIn', true);
+            await prefs.setString('userType', 'etudiant');
+
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => NavigatorBarEtudiant()),

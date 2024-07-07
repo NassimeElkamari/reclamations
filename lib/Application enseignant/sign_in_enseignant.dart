@@ -55,14 +55,19 @@ class _SignInEnseignantState extends State<SignInEnseignant> {
         );
       } else if (enseignantQuery.docs.isNotEmpty) {
         await _saveEmailenseignant(emailAddress.text);
-         String? fcmToken = await FirebaseMessaging.instance.getToken();
-        
+        String? fcmToken = await FirebaseMessaging.instance.getToken();
+
         // Update user's FCM token in Firestore
         final enseignant = enseignantQuery.docs.first;
         await FirebaseFirestore.instance
             .collection('enseignants')
             .doc(enseignant.id)
             .update({'fcmToken': fcmToken});
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('userType', 'enseignant');
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeEnseignant2()),
@@ -244,10 +249,9 @@ class _SignInEnseignantState extends State<SignInEnseignant> {
                             backgroundColor: WidgetStateProperty.all<Color>(
                               Color.fromARGB(255, 55, 105, 172),
                             ),
-                           shadowColor:
-                            WidgetStateProperty.all<Color>(
+                            shadowColor: WidgetStateProperty.all<Color>(
                               Color.fromARGB(255, 238, 116, 17),
-                            ), 
+                            ),
                           ),
                           onPressed: () async {
                             if (_formSignInKey.currentState?.validate() ??
