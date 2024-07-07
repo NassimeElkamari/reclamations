@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/Home_Screens/ButtomnavigatorBar.dart';
+import 'package:application_gestion_des_reclamations_pfe/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class AjouterReclamation extends StatefulWidget {
   const AjouterReclamation({super.key});
@@ -80,6 +84,7 @@ class _AjouterReclamationState extends State<AjouterReclamation> {
     });
 
    // await _sendNotificationToProfessor(emailProf);
+    await _sendNotificationToProfessor(emailProf);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Réclamation ajoutée avec succès')),
@@ -115,6 +120,49 @@ Future<int> _dernierIdReclamation() async {
     return 0;
   }
 }
+
+Future<void> _sendNotificationToProfessor(String? emailProf) async {
+    if (emailProf == null) return;
+
+    try {
+      // Get the FCM token of the professor
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('enseignants')
+          .where('email', isEqualTo: emailProf)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        String fcmToken = querySnapshot.docs.first['fcmToken'];
+
+        AccessTokenFirebase accessTokenFirebase = AccessTokenFirebase();
+        String token = await accessTokenFirebase.getAccessToken();
+        print('TTTT*******************************$token');
+
+        // Construct the notification message
+        String studentName = '${_nomController.text} ${_prenomController.text}';
+        String notificationBody =
+            'Vous avez une nouvelle réclamation de la part de $studentName';
+
+        // Send the notification using FCM
+        await http.post(
+          Uri.parse(
+              'https://fcm.googleapis.com/v1/projects/final-pfe-project/messages:send'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode({
+            "message": {
+              "token": fcmToken,
+              "notification": {"body": notificationBody, "title": "FsTetouan"}
+            }
+          }),
+        );
+      }
+    } catch (e) {
+      print('Error sending notification: $e');
+    }
+  }
+
 
 
 

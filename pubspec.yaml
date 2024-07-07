@@ -53,6 +53,11 @@ dependencies:
   shared_preferences: ^2.2.3
   mailer: ^6.1.0
   video_player: ^2.8.7
+  firebase_messaging: ^15.0.2
+  flutter_local_notifications: ^17.2.1+1
+  http: ^1.2.1
+  googleapis_auth: ^1.6.0
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   
@@ -83,6 +88,7 @@ flutter:
     - images/home_etudiant.png
     - images/student_girl.png
     - assets/Guide des étapes de la méthode de connexion à Rosetta Stone à travers SSO.pdf
+    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

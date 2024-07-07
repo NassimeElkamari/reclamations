@@ -4,9 +4,11 @@ import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/auth/signup.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/custombuttonauth.dart';
 import 'package:application_gestion_des_reclamations_pfe/Application%20etudiant/components/textformfield.dart';
+import 'package:application_gestion_des_reclamations_pfe/firebase_options.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import necessary for SharedPreferences
 
@@ -56,6 +58,17 @@ Future<void> _saveApoge(String apoge) async {
         print('User $prenom $nom is currently signed in!');
         
         await _saveApoge(apogee); // Save the apogee number in SharedPreferences
+
+       
+
+        // Get FCM token
+        String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+        // Update user's FCM token in Firestore
+        await FirebaseFirestore.instance
+            .collection('etudiantsActives')
+            .doc(etudiant.id)
+            .update({'fcmToken': fcmToken});
 
         Navigator.pushReplacement(
           context,

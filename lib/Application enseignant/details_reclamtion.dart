@@ -1,7 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:convert';
+
+import 'package:application_gestion_des_reclamations_pfe/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DetailsReclamationPage extends StatefulWidget {
   final Map<String, dynamic> reclamationDetails;
@@ -26,12 +30,69 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
         widget.reclamationDetails['description'] ?? '';
   }
 
+  Future<void> _sendNotificationToStudent(
+      String? apogeEtudiant, String message) async {
+    try {
+      // Get the FCM token of the student
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('etudiantsActives')
+          .where('apoge', isEqualTo: apogeEtudiant)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Log the document data for debugging
+        print('Document data: ${querySnapshot.docs.first.data()}');
+
+        if (querySnapshot.docs.first.data().containsKey('fcmToken')) {
+          String fcmToken = querySnapshot.docs.first['fcmToken'];
+          print('fcmToken: $fcmToken');
+
+          AccessTokenFirebase accessTokenFirebase = AccessTokenFirebase();
+          String token = await accessTokenFirebase.getAccessToken();
+
+          // Send the notification using FCM
+          final response = await http.post(
+            Uri.parse(
+                'https://fcm.googleapis.com/v1/projects/final-pfe-project/messages:send'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode({
+              "message": {
+                "token": fcmToken,
+                "notification": {
+                  "body": message,
+                  "title": "Fs Tetouan"
+                }
+              }
+            }),
+          );
+
+          if (response.statusCode == 200) {
+            print('Notification sent successfully');
+          } else {
+            print(
+                'Failed to send notification: ${response.statusCode} ${response.body}');
+          }
+        } else {
+          print('Error: fcmToken field does not exist in the document');
+        }
+      } else {
+        print('Error: No document found with apoge $apogeEtudiant');
+      }
+    } catch (e) {
+      print('Error sending notification: $e');
+    }
+  }
+
   Future<void> _updateReclamation() async {
     // Get the document ID of the reclamation to update
     String? reclamationId = widget.reclamationDetails['Document ID'];
 
     // Get the new response from the text field
     String reponse = _reponseController.text;
+    print(reponse);
 
     // Check if reclamationId is not null
     if (reclamationId == null) {
@@ -53,6 +114,14 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
       setState(() {
         widget.reclamationDetails['reponse'] = reponse;
       });
+
+      print(widget.reclamationDetails);
+
+      // Notify the student about the response
+      String apogeEtudiant = widget.reclamationDetails['apogeEtudiant'];
+      String enseignant = widget.reclamationDetails['nomEnseignant'];
+      String message = 'Mr. $enseignant a répondu à votre réclamation.';
+      await _sendNotificationToStudent(apogeEtudiant, message);
 
       // Show a success message or navigate back
       ScaffoldMessenger.of(context).showSnackBar(
@@ -259,15 +328,16 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
               SizedBox(
                 width: 200, // Définir la largeur souhaitée
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: () {
                     _updateReclamation();
-                    print('************************************************************************************************************************************************************************************************************${widget.reclamationDetails['Document ID']}');
+                    print(
+                        '************************************************************************************************************************************************************************************************************${widget.reclamationDetails['Document ID']}');
                   },
                   child: Text(
                     'Envoyer',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize:18,
+                      fontSize: 18,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -278,7 +348,8 @@ class _DetailsReclamationPageState extends State<DetailsReclamationPage> {
                       borderRadius:
                           BorderRadius.circular(30), // Bordure arrondie
                       side: BorderSide(
-                        color: Color.fromARGB(255, 238, 168, 112), // Couleur de la bordure
+                        color: Color.fromARGB(
+                            255, 238, 168, 112), // Couleur de la bordure
                         width: 2, // Épaisseur de la bordure
                       ),
                     ),

@@ -8,6 +8,7 @@ import 'package:application_gestion_des_reclamations_pfe/Application%20enseignan
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,6 +55,14 @@ class _SignInEnseignantState extends State<SignInEnseignant> {
         );
       } else if (enseignantQuery.docs.isNotEmpty) {
         await _saveEmailenseignant(emailAddress.text);
+         String? fcmToken = await FirebaseMessaging.instance.getToken();
+        
+        // Update user's FCM token in Firestore
+        final enseignant = enseignantQuery.docs.first;
+        await FirebaseFirestore.instance
+            .collection('enseignants')
+            .doc(enseignant.id)
+            .update({'fcmToken': fcmToken});
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeEnseignant2()),
